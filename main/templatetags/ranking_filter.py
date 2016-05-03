@@ -49,21 +49,21 @@ def bad_count_rank(bad_count_list_ordered, music_id_and_myself_id):
 
             # BAD数が前後で重複した場合
             if bad_count_now == bad_count_before:
-                # 同一ランクをつける
-                duplicate_rank = bad_count_num
-
-                # 自分の記録が見つかれば myrank にランキングを格納
+                # 指定されたユーザーの記録が見つかれば rank にランクを格納
                 if bad_count.user.id == myself_id:
                     found = True
-                    myrank = duplicate_rank
+                    myrank = tmp_rank
 
-                bad_count_num = bad_count_num + 1
+                bad_count_num += 1
 
             # BAD数が重複しなかった場合
             else:
-                bad_count_num = bad_count_num + 1
+                bad_count_num += 1
 
-                # 自分の記録が見つかれば myrank にランキングを格納
+                # 一時ランクを更新
+                tmp_rank = bad_count_num
+
+                # 自分の記録が見つかれば rank にランクを格納
                 if bad_count.user.id == myself_id:
                     found = True
                     myrank = bad_count_num

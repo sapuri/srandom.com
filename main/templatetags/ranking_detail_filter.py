@@ -41,7 +41,12 @@ def count_medal_total(medal_list):
 
     return medal_num
 
-# 指定された曲の平均BAD数を返す
+'''
+指定された曲の平均BAD数を返す
+@param list|bad_count_list: 曲で絞り込み済のBAD数リスト
+@param CustomUser|user: 指定されたユーザー
+@return int|bad_count_avg: 平均BAD数
+'''
 @register.filter
 def bad_count_avg(bad_count_list, music):
     if not bad_count_list:
@@ -73,7 +78,7 @@ def bad_count_rank(bad_count_list_ordered, user):
 
     bad_count_num = 0   # BAD数の個数
     bad_count_now = -1  # 現在のBAD数
-    rank = -1         # ランク
+    rank = -1           # ランク
     found = False       # BAD数を登録済であればTrueを返す
 
     for bad_count in bad_count_list_ordered:
@@ -82,21 +87,21 @@ def bad_count_rank(bad_count_list_ordered, user):
 
         # BAD数が前後で重複した場合
         if bad_count_now == bad_count_before:
-            # 同一ランクをつける
-            duplicate_rank = bad_count_num
-
-            # 指定されたユーザーの記録が見つかれば rank にランキングを格納
+            # 指定されたユーザーの記録が見つかれば rank にランクを格納
             if bad_count.user.id == user.id:
                 found = True
-                rank = duplicate_rank
+                rank = tmp_rank
 
-            bad_count_num = bad_count_num + 1
+            bad_count_num += 1
 
         # BAD数が重複しなかった場合
         else:
-            bad_count_num = bad_count_num + 1
+            bad_count_num += 1
 
-            # 自分の記録が見つかれば myrank にランキングを格納
+            # 一時ランクを更新
+            tmp_rank = bad_count_num
+
+            # 自分の記録が見つかれば rank にランクを格納
             if bad_count.user.id == user.id:
                 found = True
                 rank = bad_count_num
