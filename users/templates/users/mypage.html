@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load custom_filter %}
+{% load bootstrap3 %}
+
+{% block extrahead %}
+<meta name="description" content="スパランドットコムのプロフィールページです。">
+{% endblock %}
+
+{% block title %}{{ user.player_name|default:user.username }} - スパランドットコム{% endblock %}
+
+{% block content %}
+<h1 class="page-header">{% bootstrap_icon "book" %} プロフィール</h1>
+<h2>
+    {% if user.premium %}
+    <span class="premium">★</span>
+    {% endif %}
+    {{ user.player_name|default:user.username }}
+</h2>
+<p class="username"><a href="https://twitter.com/{{ user.username }}" target="_blank">@{{ user.username }}</a></p>
+<p>ポプともID: {{ user.split_poputomo_id|default:'------' }}</p>
+<p>都道府県: {{ user.location|default:'------' }}</p>
+<p>プロフィール:<br>{{ user.profile|default:'------' }}</p>
+<p>登録日時: {{ user.date_joined|date:"Y/n/d G:i" }}</p>
+{% ifequal user myself %}
+<p>最終ログイン日時: {{ user.last_login|date:"Y/n/d G:i" }}</p>
+{% endifequal %}
+
+{% ifequal user myself %}
+<a href="{% url 'users:settings' %}" class="btn btn-default">{% bootstrap_icon "pencil" %} 編集する</a>
+{% endifequal %}
+
+<h2 class="clear-data page-header">
+    {% if user.cleardata_privacy == 2 and user == myself %}
+    {% bootstrap_icon "star-empty" %} クリア状況 (非公開)
+    {% else %}
+    {% bootstrap_icon "star-empty" %} クリア状況
+    {% endif %}
+</h2>
+{% if user.cleardata_privacy == 1 or user == myself %}
+    <p>グラフをクリックすると各レベルごとの詳しいクリア状況を確認できます。</p>
+    {% for s_lv in s_lv_range %}
+    Lv{{ s_lv }}
+    <div class="clear-graph graph">
+        <a href="{% url 'users:cleardata' user.username s_lv %}"><span class="bar" style="width: {{ percentage_of_clear|get_at_index:forloop.revcounter0 }}%;">{{ percentage_of_clear|get_at_index:forloop.revcounter0 }}%</span></a>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>クリアデータは非公開に設定されています。</p>
+{% endif %}
+
+<h2 class="updated-recently page-header">
+    {% if user.updated_recently_privacy == 2 and user == myself %}
+    {% bootstrap_icon "dashboard" %} 最近更新した曲 (非公開)
+    {% else %}
+    {% bootstrap_icon "dashboard" %} 最近更新した曲
+    {% endif %}
+</h2>
+{% if user.updated_recently_privacy == 1 or user == myself %}
+    <table class="music-list table table-condensed">
+        <thead>
+            <th>Lv</th>
+            <th>曲名</th>
+            <th>難易度</th>
+            <th>BPM</th>
+            <th>メダル</th>
+            <th>BAD数</th>
+            <th>更新日時</th>
+        </thead>
+        <tbody>
+            {% for recent in recent_medal %}
+                {% if recent.int == 1 %}
+                <tr class="perfect">
+                {% elif recent.int == 2 or recent.int == 3 or recent.int == 4 %}
+                <tr class="fullconbo">
+                {% elif extra_option_list|is_hard:recent.music %}
+                <tr class="hard-cleared">
+                {% else %}
+                    {% if recent.int == 7 or recent.int == 6 or recent.int == 5 %}
+                    <tr class="cleared">
+                    {% elif recent.int == 10 or recent.int == 9 or recent.int == 8 %}
+                    <tr class="failed">
+                    {% elif recent.int == 11 %}
+                    <tr class="easy-cleared">
+                    {% else %}
+                    <tr class="no-play">
+                    {% endif %}
+                {% endif %}
+                    <td class="level">{{ recent.music.level }}</td>
+                    <td class="title"><a href="{% url 'main:ranking_detail' recent.music.id %}">{{ recent.music.title }}</a></td>
+                    <td class="difficulty">{{ recent.music.difficulty }}</td>
+                    <td class="bpm">{{ recent.music.bpm|default:'-' }}</td>
+                    <td class="medal">
+                        {% if recent.int != 12 %}
+                        <img src="/static/img/medal/{{ recent.int }}.gif" width="16" height="16"/>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td class="bad_count">
+                        {% if bad_count_list|bad_count_int:recent.music != None %}
+                        {{ bad_count_list|bad_count_int:recent.music }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td class="updated_at">{{ recent.updated_at|date:"Y/n/d G:i"|default:'-' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>最近更新した曲は非公開に設定されています。</p>
+{% endif %}
+{% endblock %}

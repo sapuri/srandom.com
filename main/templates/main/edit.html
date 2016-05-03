@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block extrahead %}
+<meta name="description" content="スパランドットコムの記録編集ページです。">
+{% endblock %}
+
+{% block title %}{{ music.title }}({{ music.difficulty }})を編集 - スパランドットコム{% endblock %}
+
+{% block content %}
+<h1 class="page-header">{% bootstrap_icon "pencil" %} {{ music.title }} ({{ music.difficulty }})</h1>
+
+<form class="edit-form form" action="./?next={{ request.META.HTTP_REFERER }}" method="post">{% csrf_token %}
+    {% bootstrap_form medal_form %}
+    {% bootstrap_form bad_count_form %}
+    {% bootstrap_form extra_option_form %}
+    <div class="form-group"><div class="checkbox"><label for="tweet"><input id="tweet" name="tweet" type="checkbox" />{% bootstrap_icon "link" %} 更新内容をツイートする</label></div></div>
+    {% buttons %}
+    <br>
+    <input class="btn btn-primary" type="submit" value="保存する">
+    <br>
+    <a href="/delete/{{ music.id }}/"><span class="btn btn-danger" style="margin-top:60px;">{% bootstrap_icon "trash" %} 記録を削除する</span></a>
+    {% endbuttons %}
+</form>
+{% endblock %}

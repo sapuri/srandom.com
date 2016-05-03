@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load custom_filter %}
+{% load bootstrap3 %}
+
+{% block extrahead %}
+<meta name="description" content="スパランドットコムのランキングページです。">
+{% endblock %}
+
+{% block title %}ランキング - スパランドットコム{% endblock %}
+
+{% block content %}
+<h1 class="page-header">{% bootstrap_icon "globe" %} ランキング</h1>
+
+<p>参照するS乱レベルを選択してください。</p>
+<p>※ 動的にランキングを生成するので、ランキングページの読み込みにかなり時間がかかります。</p>
+
+{% for s_lv in s_lv_range %}
+<a href="{% url 'main:ranking' s_lv %}" class="no-decoration"><h3 id="lv{{ s_lv }}" class="level-folder special">Lv{{ s_lv }}</h3></a>
+{% endfor %}
+{% endblock %}

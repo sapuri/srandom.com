@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}登録ユーザー一覧 - スパランドットコム{% endblock %}
+
+{% block extrahead %}
+<meta name="description" content="スパランドットコムの登録ユーザー一覧ページです。">
+
+<style>
+    .user-list th {
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="page-header">登録ユーザー一覧</h1>
+
+<p>プレイヤー名を公開に設定しているユーザーのみを表示しています。</p>
+
+<table class="user-list table table-striped table-bordered table-condensed">
+    <thead>
+        <th>ユーザー名</th>
+        <th>プレイヤー名</th>
+        <th>地域</th>
+        <th>登録日時</th>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            {% ifequal user.username myself.username %}
+            <tr id="myself">
+            {% else %}
+            <tr>
+            {% endifequal %}
+                <td><a href="{% url 'users:mypage' user.username %}">{{ user.username }}</a></td>
+                <td>{{ user.player_name|default:'-' }}</td>
+                <td>{{ user.location|default:'-' }}</td>
+                <td>{{ user.date_joined|date:'Y/n/d G:i' }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

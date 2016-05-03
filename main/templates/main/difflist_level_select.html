@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load custom_filter %}
+{% load bootstrap3 %}
+
+{% block title %}S乱難易度表 - スパランドットコム{% endblock %}
+
+{% block extrahead %}
+<meta name="description" content="スパランドットコムのS乱難易度表ページです。">
+{% endblock %}
+
+{% block content %}
+<h1 class="page-header">{% bootstrap_icon "list-alt" %} S乱難易度表</h1>
+
+{% if messages %}
+<ul id="message-box">
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+        <li class="{{ message.tags }}">{% bootstrap_icon "ok-sign" %} {{ message }}</li>
+        {% elif message.tags == 'error' %}
+        <li class="{{ message.tags }}">{% bootstrap_icon "remove-sign" %} {{ message }}</li>
+        {% else %}
+        <li class="{{ message.tags }}">{% bootstrap_icon "info-sign" %} {{ message }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
+<a href="{% url 'main:difflist_all' %}" class="no-decoration"><h3 id="lv{{ s_lv }}" class="level-folder">All</h3></a>
+
+{% for s_lv in s_lv_range %}
+<a href="{% url 'main:difflist' s_lv %}" class="no-decoration"><h3 id="lv{{ s_lv }}" class="level-folder">Lv{{ s_lv }}</h3></a>
+{% endfor %}
+
+<script>
+/* メッセージボックス */
+$(function () {
+    $(document).ready(function() {
+        $("#message-box").stop().fadeIn(1200).delay(1500).fadeOut("slow");
+    });
+});
+</script>
+{% endblock %}

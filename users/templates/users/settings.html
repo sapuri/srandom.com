@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block extrahead %}
+<meta name="description" content="スパランドットコムの設定ページです。">
+{% endblock %}
+
+{% block title %}設定 - スパランドットコム{% endblock %}
+
+{% block content %}
+<div class="settings">
+    <h1 class="page-header">{% bootstrap_icon "cog" %} 設定</h1>
+
+    {% if messages %}
+    <ul id="message-box">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{% bootstrap_icon "info-sign" %} {{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <section class="settings-panel">
+        <h2 class="settings-header page-header">{% bootstrap_icon "user" %} アカウント</h2>
+        <form class="settings-form form" action="./" method="post">{% csrf_token %}
+            {% bootstrap_form custom_user_form %}
+            <h2 class="settings-header page-header">{% bootstrap_icon "ok" %} 公開設定</h2>
+            {% bootstrap_form privacy_form %}
+            {% buttons %}
+            <input class="btn btn-primary" type="submit" value="保存する">
+            {% endbuttons %}
+        </form>
+    </section>
+    <section class="settings-panel settings-panel-danger">
+        <h2 class="settings-header page-header">{% bootstrap_icon "trash" %} アカウント削除</h2>
+        <p class="danger">一度アカウントを削除すると、二度と元に戻せません。十分ご注意ください。</p>
+        <br>
+        {% buttons %}
+        <a href="{% url 'users:deactivate' %}"><span class="btn btn-danger">{% bootstrap_icon "alert" %} アカウントを削除する</span></a>
+        {% endbuttons %}
+    </section>
+</div><!-- settings -->
+
+<script>
+/* メッセージボックス */
+$(function () {
+    $(document).ready(function() {
+        $("#message-box").stop().fadeIn(1200).delay(1500).fadeOut("slow");
+    });
+});
+</script>
+{% endblock %}

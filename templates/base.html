@@ -1,0 +1,157 @@
+{% load staticfiles %}
+{% load bootstrap3 %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}スパランドットコム - ポップンミュージックのスパラン愛好家のためのクリア状況管理サイト{% endblock %}</title>
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="/static/css/style.css?v=20160323">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+    {% block extrahead %}{% endblock %}
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-74740013-1', 'auto');
+        ga('send', 'pageview');
+        {% if user.is_authenticated %}ga('set', 'userId', '{{ myself.username }}');{% endif %}
+    </script> -->
+</head>
+<body>
+    <nav id="header" class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle" data-toggle="collapse" data-target=".target">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'main:index' %}">スパランドットコム</a>
+            </div>
+            {% if user and not user.is_anonymous %}
+            <div class="collapse navbar-collapse target">
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'main:level_select' %}">公式難易度表</a></li>
+                    <li><a href="{% url 'main:difflist_level_select' %}">S乱難易度表</a></li>
+                    <li><a href="{% url 'main:ranking_level_select' %}">ランキング</a></li>
+                    <li><a href="{% url 'main:omikuji' %}">おみくじ</a></li>
+                    {% if not myself.premium %}
+                    <li><a href="{% url 'main:premium' %}" class="premium">プレミアムユーザー</a></li>
+                    {% endif %}
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown-toggle" data-toggle="dropdown">
+                        {% if myself.premium %}
+                        <a href="{% url 'users:mypage' myself.username %}"><span class="premium">★{{ myself.username }}</span> <span class="caret"></span></a>
+                        {% else %}
+                        <a href="{% url 'users:mypage' myself.username %}">@{{ myself.username }} <span class="caret"></span></a>
+                        {% endif %}
+                    </li>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'users:mypage' myself.username %}">{% bootstrap_icon "user" %} マイページ</a></li>
+                        <li><a href="{% url 'users:settings' %}">{% bootstrap_icon "cog" %} 設定</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{% url 'auth:logout' %}?next={% url 'main:index' %}">{% bootstrap_icon "log-out" %} ログアウト</a></li>
+                    </ul>
+                </ul>
+            </div>
+            {% else %}
+            <div class="collapse navbar-collapse target">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url 'social:begin' 'twitter' %}">{% bootstrap_icon "log-in" %} Twitterでログイン</a></li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </nav><!-- /#header -->
+
+    <div id="main" class="container">
+        <div class="content col-xs-12 col-md-10">
+            {% block content %}
+                {{ content }}
+            {% endblock %}
+        </div><!-- /#main -->
+
+        <div class="sidebar col-xs-12 col-md-2">
+            {% if user and not user.is_anonymous %}
+                {% if not myself.premium %}
+                <div class="ad-area ad-area-1 hidden-md hidden-lg">
+                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                    <!-- サイドバー - スパランドットコム -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-6195130822330787"
+                         data-ad-slot="1781717557"
+                         data-ad-format="auto"></ins>
+                    <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div><!-- /.ad-area -->
+                {% endif %}
+            <p>{% bootstrap_icon "th-list" %} メニュー</p>
+            <ul>
+                <li><a class="no-decoration" href="{% url 'main:index' %}">トップ</a></li>
+                <li><a class="no-decoration" href="{% url 'main:level_select' %}">{% bootstrap_icon "list-alt" %} 公式難易度表</a></li>
+                <li><a class="no-decoration" href="{% url 'main:difflist_level_select' %}">{% bootstrap_icon "list-alt" %} S乱難易度表</a></li>
+                <li><a class="no-decoration" href="{% url 'main:ranking_level_select' %}">{% bootstrap_icon "king" %} ランキング</a></li>
+                <li><a class="no-decoration" href="{% url 'main:omikuji' %}">{% bootstrap_icon "gift" %} おみくじ</a></li>
+                <li><a class="no-decoration" href="{% url 'main:premium' %}">{% bootstrap_icon "star" %} プレミアムユーザー</a></li>
+                <li><a class="no-decoration" href="{% url 'users:mypage' myself.username %}">{% bootstrap_icon "user" %} マイページ</a></li>
+                <li><a class="no-decoration" href="{% url 'users:settings' %}">{% bootstrap_icon "cog" %} 設定</a></li>
+            </ul>
+                {% if not myself.premium %}
+                <div class="ad-area ad-area-2">
+                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                    <!-- サイドバー - スパランドットコム -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-6195130822330787"
+                         data-ad-slot="1781717557"
+                         data-ad-format="auto"></ins>
+                    <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div><!-- /.ad-area -->
+                {% endif %}
+            {% endif %}
+        </div><!-- /.sidebar -->
+    </div><!-- /#main -->
+
+    {% if user and not user.is_anonymous %}
+        {% if not myself.premium %}
+        <div class="ad-area ad-area-3 hidden-xs hidden-sm">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- フッター - スパランドットコム -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6195130822330787"
+                 data-ad-slot="2501571159"
+                 data-ad-format="auto"></ins>
+            <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div><!-- /.ad-area -->
+        {% endif %}
+    {% endif %}
+
+    <div id="footer">
+        <div class="container">
+            <div class="footer-left">
+                <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://srandom.com" data-text="スパランドットコム - ポップンミュージックのスパラン愛好家のためのクリア状況管理サイト" data-lang="ja">ツイート</a>
+                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                <p>スパランドットコム - ポップンミュージックのスパラン愛好家のためのクリア状況管理サイト</p>
+            </div>
+            <div class="footer-right">
+                <p>開発・運営: <a href="https://twitter.com/darum1system" target="_blank">@darum1system</a></p>
+                <p>Copyright &copy; {% now 'Y' %} srandom.com. All Rights Reserved.</p>
+            </div>
+        </div><!-- /.container -->
+    </div><!-- /#footer -->
+    {% bootstrap_javascript %}
+</body>
+</html>

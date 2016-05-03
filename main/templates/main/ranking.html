@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load custom_filter %}
+{% load ranking_filter %}
+{% load bootstrap3 %}
+
+{% block extrahead %}
+<meta name="description" content="スパランドットコムのランキングページです。(Lv{{ sran_level }})">
+{% endblock %}
+
+{% block title %}ランキング(Lv{{ sran_level }}) - スパランドットコム{% endblock %}
+
+{% block content %}
+<h1 class="page-header">{% bootstrap_icon "globe" %} ランキング</h1>
+
+<p><a href="{% url 'main:ranking_level_select' %}">{% bootstrap_icon "arrow-left" %} レベル選択へ戻る</a></p>
+
+<h3 id="lv{{ sran_level }}" class="level-folder special">Lv{{ sran_level }}</h3>
+<div id="lv{{ sran_level }}-table">
+<table class="music-list table table-condensed">
+    <thead>
+        <th>Lv</th>
+        <th>曲名</th>
+        <th>難易度</th>
+        <th>BAD数</th>
+        <th>平均BAD数</th>
+        <th>順位</th>
+    </thead>
+    <tbody>
+        {% for music in music_list %}
+            {% if medal_list|medal_int:music == 1 and bad_count_list|bad_count_int:music == 0 %}
+            <tr class="perfect">
+            {% elif bad_count_list|bad_count_int:music == 0 %}
+            <tr class="fullconbo">
+            {% elif extra_option_list|is_hard:music %}
+            <tr class="hard-cleared">
+            {% else %}
+                {% for medal in medal_list %}
+                    {% if medal.music.id == music.id %}
+                        {% if medal.int == 7 or medal.int == 6 or medal.int == 5 %}
+                        <tr class="cleared">
+                        {% elif medal.int == 10 or medal.int == 9 or medal.int == 8 %}
+                        <tr class="failed">
+                        {% elif medal.int == 11 %}
+                        <tr class="easy-cleared">
+                        {% else %}
+                        <tr class="no-play">
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+                <td class="level">{{ music.level }}</td>
+                <td class="title"><a href="{% url 'main:ranking_detail' music.id %}">{{ music.title }}</a></td>
+                <td class="difficulty">{{ music.difficulty }}</td>
+                <td class="bad_count">
+                    {% if bad_count_list|bad_count_int:music != None %}
+                    {{ bad_count_list|bad_count_int:music }}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td class="bad_count_avg">
+                    {% if bad_count_list_all|bad_count_avg:music != None %}
+                    {{ bad_count_list_all|bad_count_avg:music }}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td class="rank">
+                    {# 曲IDと自ユーザーIDをコンマで区切った文字列を作成 #}
+                    {% with music.id|join_comma:myself.id as music_id_and_myself_id %}
+                        {# 順位を出力 #}
+                        {{ bad_count_list_all|bad_count_rank:music_id_and_myself_id }}
+                    {% endwith %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

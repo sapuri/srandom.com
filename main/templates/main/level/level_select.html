@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load custom_filter %}
+{% load bootstrap3 %}
+
+{% block title %}公式難易度表 - スパランドットコム{% endblock %}
+
+{% block extrahead %}
+<meta name="description" content="スパランドットコムの公式難易度表ページです。">
+{% endblock %}
+
+{% block content %}
+<h1 class="page-header">{% bootstrap_icon "list-alt" %} 公式難易度表</h1>
+
+{% if messages %}
+<ul id="message-box">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{% bootstrap_icon "info-sign" %} {{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% for lv in lv_range %}
+<a href="{% url 'main:level' lv %}" class="no-decoration"><h3 id="lv{{ lv }}" class="level-folder">Lv{{ lv }}</h3></a>
+{% endfor %}
+
+<script>
+/* メッセージボックス */
+$(function () {
+    $(document).ready(function() {
+        $("#message-box").stop().fadeIn(1200).delay(1500).fadeOut("slow");
+    });
+});
+</script>
+{% endblock %}

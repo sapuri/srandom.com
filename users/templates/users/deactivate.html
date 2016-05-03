@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}アカウントを削除 - スパランドットコム{% endblock %}
+
+{% block extrahead %}
+<meta name="description" content="スパランドットコムのアカウント削除ページです。">
+{% endblock %}
+
+{% block content %}
+<h1 class="page-header">{% bootstrap_icon "trash" %} アカウントを削除</h1>
+
+<form action="./" method="post">{% csrf_token %}
+    <h2 class="danger">{% bootstrap_icon "alert" %}</h2>
+    <p class="danger">一度アカウントを削除すると、二度と同じ Twitter アカウントではログインできなくなります。</p>
+    <p class="danger">本当にアカウント "@{{ myself.username }}" を削除しますか？</p>
+    <br>
+    {% buttons %}
+    <input class="btn btn-danger" type="submit" value="アカウントを削除する">
+    {% endbuttons %}
+</form>
+{% endblock %}

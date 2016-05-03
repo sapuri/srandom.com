@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block extrahead %}
+<meta name="description" content="スパランドットコムの記録削除ページです。">
+{% endblock %}
+
+{% block title %}{{ music.title }}({{ music.difficulty }})を削除 - スパランドットコム{% endblock %}
+
+{% block content %}
+<h1 class="page-header">{% bootstrap_icon "pencil" %} {{ music.title }} ({{ music.difficulty }})</h1>
+
+<form action="./?next={% url 'main:difflist_level_select' %}" method="post">{% csrf_token %}
+    <p class="danger">{% bootstrap_icon "alert" %} 本当に "{{ music.title }} ({{ music.difficulty }})" の記録を削除しますか？</p>
+    <br>
+    {% buttons %}
+    <input class="btn btn-danger" type="submit" value="記録を削除する">
+    {% endbuttons %}
+</form>
+{% endblock %}

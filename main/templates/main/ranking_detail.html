@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load custom_filter %}
+{% load ranking_detail_filter %}
+{% load bootstrap3 %}
+
+{% block extrahead %}
+<meta name="description" content="スパランドットコムのランキング詳細ページです。">
+{% endblock %}
+
+{% block title %}{{ music.title }}({{ music.difficulty }})のランキング - スパランドットコム{% endblock %}
+
+{% block content %}
+<h1 class="page-header">{% bootstrap_icon "king" %} {{ music.title }} ({{ music.difficulty }})</h1>
+
+{% if messages %}
+<ul id="message-box">
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+        <li class="{{ message.tags }}">{% bootstrap_icon "ok-sign" %} {{ message }}</li>
+        {% elif message.tags == 'error' %}
+        <li class="{{ message.tags }}">{% bootstrap_icon "remove-sign" %} {{ message }}</li>
+        {% else %}
+        <li class="{{ message.tags }}">{% bootstrap_icon "info-sign" %} {{ message }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
+<p><a href="{% url 'main:ranking' music.sran_level %}">{% bootstrap_icon "arrow-left" %} ランキングページへ戻る</a></p>
+
+<h2 class="page-header">楽曲情報</h2>
+<p>曲名をクリックすると記録を編集できます。</p>
+<table class="table table-condensed">
+    <thead>
+        <th>Lv</th>
+        <th>S乱Lv</th>
+        <th>曲名</th>
+        <th>難易度</th>
+        <th>BPM</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="level">{{ music.level }}</td>
+            <td class="sran_level">{{ music.sran_level }}</td>
+            <td class="title"><a href="{% url 'main:edit' music.id %}">{{ music.title }}</a></td>
+            <td class="difficulty">{{ music.difficulty.difficulty_short }}</td>
+            <td class="bpm">{{ music.bpm }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2 class="page-header">クリア分布</h2>
+<table class="table table-condensed">
+    <thead>
+        <th><img src="/static/img/medal/1.gif" width="16" height="16"/></th>
+        <th><img src="/static/img/medal/2.gif" width="16" height="16"/></th>
+        <th><img src="/static/img/medal/3.gif" width="16" height="16"/></th>
+        <th><img src="/static/img/medal/4.gif" width="16" height="16"/></th>
+        <th><img src="/static/img/medal/5.gif" width="16" height="16"/></th>
+        <th><img src="/static/img/medal/6.gif" width="16" height="16"/></th>
+        <th><img src="/static/img/medal/7.gif" width="16" height="16"/></th>
+        <th><img src="/static/img/medal/8.gif" width="16" height="16"/></th>
+        <th><img src="/static/img/medal/9.gif" width="16" height="16"/></th>
+        <th><img src="/static/img/medal/10.gif" width="16" height="16"/></th>
+        <th><img src="/static/img/medal/11.gif" width="16" height="16"/></th>
+        <th>合計</th>
+        <th>平均BAD数</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ medal_list|count_medal:1 }}</td>
+            <td>{{ medal_list|count_medal:2 }}</td>
+            <td>{{ medal_list|count_medal:3 }}</td>
+            <td>{{ medal_list|count_medal:4 }}</td>
+            <td>{{ medal_list|count_medal:5 }}</td>
+            <td>{{ medal_list|count_medal:6 }}</td>
+            <td>{{ medal_list|count_medal:7 }}</td>
+            <td>{{ medal_list|count_medal:8 }}</td>
+            <td>{{ medal_list|count_medal:9 }}</td>
+            <td>{{ medal_list|count_medal:10 }}</td>
+            <td>{{ medal_list|count_medal:11 }}</td>
+            <td>{{ medal_list|count_medal_total }}</td>
+            <td>
+                {% if bad_count_list|bad_count_avg:music != None %}
+                {{ bad_count_list|bad_count_avg:music }}
+                {% else %}
+                -
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h2 class="page-header">ランキング</h2>
+<table class="music-list table table-condensed">
+    <thead>
+        <th>順位</th>
+        <th>プレイヤー名</th>
+        <th>メダル</th>
+        <th>BAD数</th>
+        <th>更新日時</th>
+    </thead>
+    <tbody>
+        {% for bad_count in bad_count_list %}
+            {% for user in users %}
+                {% if bad_count.user == user %}
+                    {% if medal_list|medal_int:user == 1 and bad_count_list|bad_count_int:user == 0 %}
+                    <tr class="perfect">
+                    {% elif bad_count_list|bad_count_int:user == 0 %}
+                    <tr class="fullconbo">
+                    {% elif extra_option_list|is_hard:user %}
+                    <tr class="hard-cleared">
+                    {% else %}
+                        {% if medal_list|medal_int:user == 7 or medal_list|medal_int:user == 6 or medal_list|medal_int:user == 5 %}
+                        <tr class="cleared">
+                        {% elif medal_list|medal_int:user == 10 or medal_list|medal_int:user == 9 or medal_list|medal_int:user == 8 %}
+                        <tr class="failed">
+                        {% elif medal_list|medal_int:user == 11 %}
+                        <tr class="easy-cleared">
+                        {% else %}
+                        <tr class="no-play">
+                        {% endif %}
+                    {% endif %}
+                        <td class="rank">
+                            {% if bad_count.user == myself %}
+                            <b>{{ bad_count_list|bad_count_rank:user|default:'-' }}</b>
+                            {% else %}
+                            {{ bad_count_list|bad_count_rank:user|default:'-' }}
+                            {% endif %}
+                        </td>
+                        <td class="player_name">
+                            {% if user.player_name_privacy == 1 %}
+                            <a href="{% url 'users:mypage' bad_count.user %}">{{ bad_count.user.player_name|default:bad_count.user }}</a>
+                            {% else %}
+                            匿名希望さん
+                            {% endif %}
+                        </td>
+                        <td class="medal">
+                            {% if medal_list|medal_int:user %}
+                            <img src="/static/img/medal/{{ medal_list|medal_int:user }}.gif" width="16" height="16"/>
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td class="bad_count">
+                            {% if bad_count_list|bad_count_int:bad_count.user != None %}
+                            {{ bad_count_list|bad_count_int:bad_count.user }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td class="updated_at">{{ bad_count_list|bad_count_updated_at:user|date:"Y/n/d G:i"|default:'-' }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+/* メッセージボックス */
+$(function () {
+    $(document).ready(function() {
+        $("#message-box").stop().fadeIn(1200).delay(1500).fadeOut("slow");
+    });
+});
+</script>
+{% endblock %}

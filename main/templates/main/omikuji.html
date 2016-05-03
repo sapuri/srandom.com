@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block extrahead %}
+<meta name="description" content="スパランドットコムのおみくじページです。今日のスパランおすすめ曲をランダムに選びます！">
+{% endblock %}
+
+{% block title %}おみくじ - スパランドットコム{% endblock %}
+
+{% block content %}
+<h1 class="page-header">{% bootstrap_icon "gift" %} おみくじ</h1>
+
+{% if messages %}
+<ul id="message-box">
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+        <li class="{{ message.tags }}">{% bootstrap_icon "ok-sign" %} {{ message }}</li>
+        {% elif message.tags == 'error' %}
+        <li class="{{ message.tags }}">{% bootstrap_icon "remove-sign" %} {{ message }}</li>
+        {% else %}
+        <li class="{{ message.tags }}">{% bootstrap_icon "info-sign" %} {{ message }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
+<p>今日は何が出るかな〜？</p>
+<br>
+<form class="edit-form form" action="./" method="post">{% csrf_token %}
+    {% bootstrap_form sran_level_form %}
+    <div class="form-group"><div class="checkbox"><label for="tweet"><input id="tweet" name="tweet" type="checkbox" />{% bootstrap_icon "link" %} おみくじの結果をツイートする</label></div></div>
+    {% buttons %}
+    <br>
+    <input class="btn btn-primary" type="submit" value="おみくじを引く">
+    {% endbuttons %}
+</form>
+
+{% if music %}
+<div id="result">
+    <h2 class="page-header">結果</h2>
+    <p><a href="{% url 'main:ranking_detail' music.id %}">{{ music.title }} ({{ music.difficulty.difficulty_short }})</a> を引きました！</p>
+    <table class="music-list table table-condensed">
+        <thead>
+            <th>Lv</th>
+            <th>曲名</th>
+            <th>難易度</th>
+            <th>BPM</th>
+            <th>メダル</th>
+            <th>BAD数</th>
+            <th>更新日時</th>
+        </thead>
+        <tbody>
+            {% if medal.int == 1 and bad_count.int == 0 %}
+            <tr class="perfect">
+            {% elif bad_count.int == 0 %}
+            <tr class="fullconbo">
+            {% elif extra_option.hard %}
+            <tr class="hard-cleared">
+            {% else %}
+                {% if medal.int == 7 or medal.int == 6 or medal.int == 5 %}
+                <tr class="cleared">
+                {% elif medal.int == 10 or medal.int == 9 or medal.int == 8 %}
+                <tr class="failed">
+                {% elif medal.int == 11 %}
+                <tr class="easy-cleared">
+                {% else %}
+                <tr class="no-play">
+                {% endif %}
+            {% endif %}
+                <td class="level">{{ music.level }} ({{ music.sran_level }})</td>
+                <td class="title"><a href="{% url 'main:edit' music.id %}">{{ music.title }}</a></td>
+                <td class="difficulty">{{ music.difficulty }}</td>
+                <td class="bpm">{{ music.bpm|default:'-' }}</td>
+                <td class="medal">
+                    {% if medal.int %}
+                    <img src="/static/img/medal/{{ medal.int }}.gif" width="16" height="16"/>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td class="bad_count">
+                    {% if bad_count.int != None %}
+                    {{ bad_count.int }}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td class="updated_at">{{ bad_count.updated_at|date:"Y/n/d G:i"|default:'-' }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<script>
+/* メッセージボックス */
+$(function () {
+    $(document).ready(function() {
+        $("#message-box").stop().fadeIn(1200).delay(1500).fadeOut("slow");
+    });
+});
+</script>
+{% endblock %}
