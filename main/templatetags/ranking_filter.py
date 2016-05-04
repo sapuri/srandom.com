@@ -13,8 +13,8 @@ def bad_count_avg(bad_count_list, music):
 
     for bad_count in bad_count_list:
         if bad_count.music.id == music.id:
-            bad_count_sum = bad_count_sum + bad_count.int()
-            bad_count_num = bad_count_num + 1
+            bad_count_sum += bad_count.int()
+            bad_count_num += 1
 
     # BAD数の平均を計算 (小数点以下四捨五入)
     bad_count_avg = round(bad_count_sum / bad_count_num)
@@ -49,7 +49,7 @@ def bad_count_rank(bad_count_list_ordered, music_id_and_myself_id):
 
             # BAD数が前後で重複した場合
             if bad_count_now == bad_count_before:
-                # 指定されたユーザーの記録が見つかれば rank にランクを格納
+                # 指定されたユーザーの記録が見つかれば myrank にランクを格納
                 if bad_count.user.id == myself_id:
                     found = True
                     myrank = tmp_rank
@@ -63,7 +63,7 @@ def bad_count_rank(bad_count_list_ordered, music_id_and_myself_id):
                 # 一時ランクを更新
                 tmp_rank = bad_count_num
 
-                # 自分の記録が見つかれば rank にランクを格納
+                # 自分の記録が見つかれば myrank にランクを格納
                 if bad_count.user.id == myself_id:
                     found = True
                     myrank = bad_count_num

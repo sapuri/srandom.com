@@ -18,7 +18,7 @@ def count_medal(medal_list, medal_int):
     for medal in medal_list:
         if medal.int() == medal_int:
             # メダルをカウント
-            medal_num = medal_num + 1
+            medal_num += 1
 
     return medal_num
 
@@ -37,7 +37,7 @@ def count_medal_total(medal_list):
     for medal in medal_list:
         if medal.int() != 12:
             # メダルをカウント
-            medal_num = medal_num + 1
+            medal_num += 1
 
     return medal_num
 
@@ -57,8 +57,8 @@ def bad_count_avg(bad_count_list, music):
 
     for bad_count in bad_count_list:
         if bad_count.music.id == music.id:
-            bad_count_sum = bad_count_sum + bad_count.int()
-            bad_count_num = bad_count_num + 1
+            bad_count_sum += bad_count.int()
+            bad_count_num += 1
 
     # BAD数の平均を計算 (小数点以下四捨五入)
     bad_count_avg = round(bad_count_sum / bad_count_num)
