@@ -4,8 +4,9 @@ from twitter import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import Http404
+from django.http import HttpResponse, Http404
 from datetime import datetime
+import json
 
 from .models import Music, Medal, Bad_Count, Extra_Option
 from users.models import CustomUser
@@ -397,7 +398,7 @@ def ranking(request, sran_level):
     '''
     myself = request.user
 
-    # S乱レベルIDを取得
+    # 最高S乱レベル
     max_s_lv = 17
 
     # S乱レベルを数値に変換
@@ -417,20 +418,98 @@ def ranking(request, sran_level):
     bad_count_list = Bad_Count.objects.filter(user=myself)
     extra_option_list = Extra_Option.objects.filter(user=myself)
 
-    # 全てのBAD数を取得 (BAD数で昇順)
-    bad_count_list_all = Bad_Count.objects.order_by('bad_count')
-
     context = {
         'myself': myself,
         'sran_level': sran_level,
         'music_list': music_list,
         'bad_count_list': bad_count_list,
-        'bad_count_list_all': bad_count_list_all,
         'medal_list': medal_list,
         'extra_option_list': extra_option_list
     }
 
     return render(request, 'main/ranking.html', context)
+
+def get_bad_count_avg(request, music_id):
+    '''
+    指定された曲の平均BAD数を返す
+    @param {int} music_id: 曲ID
+    @return {json}
+    '''
+    if request.user.is_authenticated() and request.is_ajax():
+        bad_count_list = Bad_Count.objects.filter(music=music_id)
+        if not bad_count_list:
+            bad_count_avg = -1
+        else:
+            bad_count_sum = 0   # BAD数の合計
+            bad_count_num = 0   # BAD数の個数
+
+            for bad_count in bad_count_list:
+                bad_count_sum += bad_count.int()
+                bad_count_num += 1
+
+            # BAD数の平均を計算 (小数点以下四捨五入)
+            bad_count_avg = round(bad_count_sum / bad_count_num)
+
+        context = {
+            'bad_count_avg': bad_count_avg
+        }
+
+        json_str = json.dumps(context, ensure_ascii=False)
+        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
+    else:
+        return HttpResponse('invalid access')
+
+def get_myrank(request, music_id):
+    '''
+    指定された曲の順位を返す
+    @param {int} music_id: 曲ID
+    @return {json}
+    '''
+    if request.user.is_authenticated() and request.is_ajax():
+        myself = request.user
+
+        # 該当曲のBAD数リストを取得（昇順）
+        bad_count_list = Bad_Count.objects.filter(music=music_id).order_by('bad_count')
+
+        bad_count_num = 0   # BAD数の個数
+        bad_count_now = -1  # 現在のBAD数
+        myrank = 0          # 自ランク
+        found = False       # BAD数を登録済であればTrueを返す
+
+        for bad_count in bad_count_list:
+            bad_count_before = bad_count_now
+            bad_count_now = bad_count.bad_count
+
+            # BAD数が前後で重複した場合
+            if bad_count_now == bad_count_before:
+                # 指定されたユーザーの記録が見つかれば myrank にランクを格納
+                if bad_count.user.id == myself.id:
+                    found = True
+                    myrank = tmp_rank
+
+                bad_count_num += 1
+
+            # BAD数が重複しなかった場合
+            else:
+                bad_count_num += 1
+
+                # 一時ランクを更新
+                tmp_rank = bad_count_num
+
+                # 自分の記録が見つかれば myrank にランクを格納
+                if bad_count.user.id == myself.id:
+                    found = True
+                    myrank = bad_count_num
+
+        context = {
+            'myrank': myrank,
+            'bad_count_num': bad_count_num
+        }
+
+        json_str = json.dumps(context, ensure_ascii=False)
+        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
+    else:
+        return HttpResponse('invalid access')
 
 @login_required
 def ranking_detail(request, music_id):
