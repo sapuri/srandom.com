@@ -1,4 +1,5 @@
-var SERVER_URL = 'http://127.0.0.1:8000/';
+// var SERVER_URL = 'http://127.0.0.1:8000/';
+var SERVER_URL = 'http://srandom.com/';
 
 // ローディング画像を表示
 function showLoadingImage(selector) {
