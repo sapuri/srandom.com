@@ -57,13 +57,17 @@ def mypage(request, username):
         percentage_of_clear[sran_level - 1] = round(percentage_of_clear[sran_level - 1])
 
     recent_medal = Medal.objects.filter(user=user).order_by('-updated_at')[:20]
+    bad_count_list = Bad_Count.objects.filter(user=user).order_by('-id')
+    extra_option_list = Extra_Option.objects.filter(user=user).order_by('-id')
 
     context = {
         'user': user,
         'myself': myself,
         's_lv_range': s_lv_range,
         'percentage_of_clear': percentage_of_clear,
-        'recent_medal': recent_medal
+        'recent_medal': recent_medal,
+        'bad_count_list': bad_count_list,
+        'extra_option_list': extra_option_list
     }
     return render(request, 'users/mypage.html', context)
 
@@ -136,11 +140,19 @@ def cleardata(request, username, sran_level):
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level')
 
+    # ユーザーごとにデータを取得
+    medal_list = Medal.objects.filter(user=user)
+    bad_count_list = Bad_Count.objects.filter(user=user)
+    extra_option_list = Extra_Option.objects.filter(user=user)
+
     context = {
         'user': user,
         'myself': myself,
         'sran_level': sran_level,
-        'music_list': music_list
+        'music_list': music_list,
+        'medal_list': medal_list,
+        'bad_count_list': bad_count_list,
+        'extra_option_list': extra_option_list
     }
     return render(request, 'users/cleardata.html', context)
 
