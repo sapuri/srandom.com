@@ -78,7 +78,6 @@ function getLatestUpdatedAt(music_id) {
             if (response.is_active) {
                 // ゼロパディング
                 response.day = ("0" + response.day).slice(-2);
-                response.hour = ("0" + response.hour).slice(-2);
                 response.minute = ("0" + response.minute).slice(-2);
                 updated_at = response.year+'/'+response.month+'/'+response.day+' '+response.hour+':'+response.minute;
             }

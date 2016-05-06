@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^api/get_latest_updated_at/(?P<music_id>\d+)/$', views.get_latest_updated_at, name='get_latest_updated_at'),
     url(r'^api/get_bad_count_avg/(?P<music_id>\d+)/$', views.get_bad_count_avg, name='get_bad_count_avg'),
     url(r'^api/get_myrank/(?P<music_id>\d+)/$', views.get_myrank, name='get_myrank'),
+    url(r'^api/get_medal_count/(?P<music_id>\d+)/$', views.get_medal_count, name='get_medal_count'),
 ]

@@ -2,68 +2,68 @@ from django import template
 
 register = template.Library()
 
-@register.filter
-def count_medal(medal_list, medal_int):
-    '''
-    指定された種類のメダルを数える
-    @param list|medal_list: 曲で絞込済みのメダルリスト
-    @param int|medal_int: 指定されたメダル
-    @return int|medal_num: 指定されたメダルの枚数
-    '''
-    if not medal_list and (medal_int < 1 or medal_int > 11):
-        return 0
+# @register.filter
+# def count_medal(medal_list, medal_int):
+#     '''
+#     指定された種類のメダルを数える
+#     @param list|medal_list: 曲で絞込済みのメダルリスト
+#     @param int|medal_int: 指定されたメダル
+#     @return int|medal_num: 指定されたメダルの枚数
+#     '''
+#     if not medal_list and (medal_int < 1 or medal_int > 11):
+#         return 0
+#
+#     medal_num = 0
+#
+#     for medal in medal_list:
+#         if medal.int() == medal_int:
+#             # メダルをカウント
+#             medal_num += 1
+#
+#     return medal_num
 
-    medal_num = 0
+# @register.filter
+# def count_medal_total(medal_list):
+#     '''
+#     未クリア以外の全てのメダルを数える
+#     @param list|medal_list: 曲で絞込済みのメダルリスト
+#     @return int|medal_num: 指定されたメダルの枚数
+#     '''
+#     if not medal_list:
+#         return 0
+#
+#     medal_num = 0
+#
+#     for medal in medal_list:
+#         if medal.int() != 12:
+#             # メダルをカウント
+#             medal_num += 1
+#
+#     return medal_num
 
-    for medal in medal_list:
-        if medal.int() == medal_int:
-            # メダルをカウント
-            medal_num += 1
-
-    return medal_num
-
-@register.filter
-def count_medal_total(medal_list):
-    '''
-    未クリア以外の全てのメダルを数える
-    @param list|medal_list: 曲で絞込済みのメダルリスト
-    @return int|medal_num: 指定されたメダルの枚数
-    '''
-    if not medal_list:
-        return 0
-
-    medal_num = 0
-
-    for medal in medal_list:
-        if medal.int() != 12:
-            # メダルをカウント
-            medal_num += 1
-
-    return medal_num
-
-'''
-指定された曲の平均BAD数を返す
-@param list|bad_count_list: 曲で絞り込み済のBAD数リスト
-@param CustomUser|user: 指定されたユーザー
-@return int|bad_count_avg: 平均BAD数
-'''
-@register.filter
-def bad_count_avg(bad_count_list, music):
-    if not bad_count_list:
-        return None
-
-    bad_count_sum = 0   # BAD数の合計
-    bad_count_num = 0   # BAD数の個数
-
-    for bad_count in bad_count_list:
-        if bad_count.music.id == music.id:
-            bad_count_sum += bad_count.int()
-            bad_count_num += 1
-
-    # BAD数の平均を計算 (小数点以下四捨五入)
-    bad_count_avg = round(bad_count_sum / bad_count_num)
-
-    return bad_count_avg
+# '''
+# 指定された曲の平均BAD数を返す
+# @param list|bad_count_list: 曲で絞り込み済のBAD数リスト
+# @param CustomUser|user: 指定されたユーザー
+# @return int|bad_count_avg: 平均BAD数
+# '''
+# @register.filter
+# def bad_count_avg(bad_count_list, music):
+#     if not bad_count_list:
+#         return None
+# 
+#     bad_count_sum = 0   # BAD数の合計
+#     bad_count_num = 0   # BAD数の個数
+#
+#     for bad_count in bad_count_list:
+#         if bad_count.music.id == music.id:
+#             bad_count_sum += bad_count.int()
+#             bad_count_num += 1
+#
+#     # BAD数の平均を計算 (小数点以下四捨五入)
+#     bad_count_avg = round(bad_count_sum / bad_count_num)
+#
+#     return bad_count_avg
 
 @register.filter
 def bad_count_rank(bad_count_list_ordered, user):

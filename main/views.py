@@ -131,7 +131,7 @@ def difflist(request, sran_level):
 #     # ユーザごとにデータを取得
 #     music_list = Music.objects.order_by('level', 'title')
 #     s_lv_range = range(17, 0, -1)
-# 
+#
 #     context = {
 #         'myself': myself,
 #         'music_list': music_list,
@@ -797,6 +797,31 @@ def get_myrank(request, music_id):
         context = {
             'myrank': myrank,
             'bad_count_num': bad_count_num
+        }
+
+        json_str = json.dumps(context, ensure_ascii=False)
+        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
+    else:
+        return HttpResponse('invalid access')
+
+@login_required
+def get_medal_count(request, music_id):
+    '''
+    指定された曲の各メダルの枚数を返す
+    @param {int} music_id 曲ID
+    @return {json} 各メダルの枚数, メダルの総数
+    '''
+    if request.is_ajax():
+        medal_count_list = []
+        medal_count_total = 0
+        for i in range(1, 12):
+            medal_count = Medal.objects.filter(medal=i, music=music_id).count()
+            medal_count_list.append(medal_count)
+            medal_count_total += medal_count
+
+        context = {
+            'medal_count_list': medal_count_list,
+            'medal_count_total': medal_count_total
         }
 
         json_str = json.dumps(context, ensure_ascii=False)

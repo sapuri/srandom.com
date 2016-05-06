@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load custom_filter %}
 {% load ranking_detail_filter %}
 {% load bootstrap3 %}
@@ -68,25 +69,19 @@
     </thead>
     <tbody>
         <tr>
-            <td>{{ medal_list|count_medal:1 }}</td>
-            <td>{{ medal_list|count_medal:2 }}</td>
-            <td>{{ medal_list|count_medal:3 }}</td>
-            <td>{{ medal_list|count_medal:4 }}</td>
-            <td>{{ medal_list|count_medal:5 }}</td>
-            <td>{{ medal_list|count_medal:6 }}</td>
-            <td>{{ medal_list|count_medal:7 }}</td>
-            <td>{{ medal_list|count_medal:8 }}</td>
-            <td>{{ medal_list|count_medal:9 }}</td>
-            <td>{{ medal_list|count_medal:10 }}</td>
-            <td>{{ medal_list|count_medal:11 }}</td>
-            <td>{{ medal_list|count_medal_total }}</td>
-            <td>
-                {% if bad_count_list|bad_count_avg:music != None %}
-                {{ bad_count_list|bad_count_avg:music }}
-                {% else %}
-                -
-                {% endif %}
-            </td>
+            <td id="medal-1"></td>
+            <td id="medal-2"></td>
+            <td id="medal-3"></td>
+            <td id="medal-4"></td>
+            <td id="medal-5"></td>
+            <td id="medal-6"></td>
+            <td id="medal-7"></td>
+            <td id="medal-8"></td>
+            <td id="medal-9"></td>
+            <td id="medal-10"></td>
+            <td id="medal-11"></td>
+            <td id="medal-total"></td>
+            <td id="bad_count_avg"></td>
         </tr>
     </tbody>
 </table>
@@ -156,4 +151,8 @@
         {% endfor %}
     </tbody>
 </table>
+
+<script src="{% static 'js/ranking_detail.js' %}"></script>
+<script>getMedalCount({{ music.id }});</script>
+<script>getBadCountAvg({{ music.id }});</script>
 {% endblock %}
