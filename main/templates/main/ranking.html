@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load bootstrap3 %}
-{% load custom_filter %}
 
 {% block title %}ランキング(Lv{{ sran_level }}) - スパランドットコム{% endblock %}
 
 {% block extrahead %}
 <meta name="description" content="スパランドットコムのランキングページです。(Lv{{ sran_level }})">
+<script src="{% static 'js/music_list.js' %}"></script>
 <script src="{% static 'js/ranking.js' %}"></script>
 {% endblock %}
 
@@ -28,48 +28,24 @@
     </thead>
     <tbody>
         {% for music in music_list %}
-            <tr id="music-{{ music.id }}"
-            {% if medal_list|medal_int:music == 1 and bad_count_list|bad_count_int:music == 0 %}
-            class="perfect"
-            {% elif bad_count_list|bad_count_int:music == 0 %}
-            class="fullconbo"
-            {% elif extra_option_list|is_hard:music %}
-            class="hard-cleared"
-            {% else %}
-                {% for medal in medal_list %}
-                    {% if medal.music.id == music.id %}
-                        {% if medal.int == 7 or medal.int == 6 or medal.int == 5 %}
-                        class="cleared"
-                        {% elif medal.int == 10 or medal.int == 9 or medal.int == 8 %}
-                        class="failed"
-                        {% elif medal.int == 11 %}
-                        class="easy-cleared"
-                        {% else %}
-                        class="no-play"
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-            >
-                <td class="level">{{ music.level }}</td>
-                <td class="title"><a href="{% url 'main:ranking_detail' music.id %}">{{ music.title }}</a></td>
-                <td class="difficulty">{{ music.difficulty }}</td>
-                <td class="bad_count">
-                    {% if bad_count_list|bad_count_int:music != None %}
-                    {{ bad_count_list|bad_count_int:music }}
-                    {% else %}
-                    -
-                    {% endif %}
-                </td>
-                <td class="bad_count_avg">
-                    <div class="loading"></div>
-                    <script>getBadCountAvg({{ music.id }});</script>
-                </td>
-                <td class="rank">
-                    <div class="loading"></div>
-                    <script>getMyRank({{ music.id }});</script>
-                </td>
-            </tr>
+        <tr id="music-{{ music.id }}">
+            <script>getClearStatus({{ music.id }});</script>
+            <td class="level">{{ music.level }}</td>
+            <td class="title"><a href="{% url 'main:ranking_detail' music.id %}">{{ music.title }}</a></td>
+            <td class="difficulty">{{ music.difficulty }}</td>
+            <td class="bad_count">
+                <div class="loading"></div>
+                <script>getBadCount({{ music.id }});</script>
+            </td>
+            <td class="bad_count_avg">
+                <div class="loading"></div>
+                <script>getBadCountAvg({{ music.id }});</script>
+            </td>
+            <td class="rank">
+                <div class="loading"></div>
+                <script>getMyRank({{ music.id }});</script>
+            </td>
+        </tr>
         {% endfor %}
     </tbody>
 </table>

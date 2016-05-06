@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
+{% block title %}{{ music.title }}({{ music.difficulty }})を編集 - スパランドットコム{% endblock %}
+
 {% block extrahead %}
 <meta name="description" content="スパランドットコムの記録編集ページです。">
 {% endblock %}
-
-{% block title %}{{ music.title }}({{ music.difficulty }})を編集 - スパランドットコム{% endblock %}
 
 {% block content %}
 <h1 class="page-header">{% bootstrap_icon "pencil" %} {{ music.title }} ({{ music.difficulty }})</h1>

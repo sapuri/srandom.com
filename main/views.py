@@ -64,18 +64,10 @@ def level(request, level):
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(level=level_id).order_by('sran_level', 'title')
 
-    # 自ユーザーの記録を取得
-    medal_list = Medal.objects.filter(user=myself)
-    bad_count_list = Bad_Count.objects.filter(user=myself)
-    extra_option_list = Extra_Option.objects.filter(user=myself)
-
     context = {
         'myself': myself,
         'level': level,
-        'music_list': music_list,
-        'medal_list': medal_list,
-        'bad_count_list': bad_count_list,
-        'extra_option_list': extra_option_list
+        'music_list': music_list
     }
 
     return render(request, 'main/level/level.html', context)
@@ -121,46 +113,31 @@ def difflist(request, sran_level):
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
 
-    # 自ユーザーの記録を取得
-    medal_list = Medal.objects.filter(user=myself)
-    bad_count_list = Bad_Count.objects.filter(user=myself)
-    extra_option_list = Extra_Option.objects.filter(user=myself)
-
     context = {
         'myself': myself,
         'sran_level': sran_level,
-        'music_list': music_list,
-        'medal_list': medal_list,
-        'bad_count_list': bad_count_list,
-        'extra_option_list': extra_option_list
+        'music_list': music_list
     }
 
     return render(request, 'main/difflist.html', context)
 
-@login_required
-def difflist_all(request):
-    '''
-    難易度表(全レベル)
-    '''
-    myself = request.user
-
-    # ユーザごとにデータを取得
-    music_list = Music.objects.order_by('level', 'title')
-    s_lv_range = range(17, 0, -1)
-    medal_list = Medal.objects.filter(user=myself)
-    bad_count_list = Bad_Count.objects.filter(user=myself)
-    extra_option_list = Extra_Option.objects.filter(user=myself)
-
-    context = {
-        'music_list': music_list,
-        's_lv_range': s_lv_range,
-        'medal_list': medal_list,
-        'bad_count_list': bad_count_list,
-        'extra_option_list': extra_option_list,
-        'myself': myself
-    }
-    return render(request, 'main/difflist_all.html', context)
-
+# @login_required
+# def difflist_all(request):
+#     '''
+#     難易度表(全レベル)
+#     '''
+#     myself = request.user
+#
+#     # ユーザごとにデータを取得
+#     music_list = Music.objects.order_by('level', 'title')
+#     s_lv_range = range(17, 0, -1)
+# 
+#     context = {
+#         'myself': myself,
+#         'music_list': music_list,
+#         's_lv_range': s_lv_range
+#     }
+#     return render(request, 'main/difflist_all.html', context)
 
 # 記録編集
 @login_required
@@ -413,18 +390,10 @@ def ranking(request, sran_level):
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
 
-    # 自ユーザーの記録を取得
-    medal_list = Medal.objects.filter(user=myself)
-    bad_count_list = Bad_Count.objects.filter(user=myself)
-    extra_option_list = Extra_Option.objects.filter(user=myself)
-
     context = {
         'myself': myself,
         'sran_level': sran_level,
-        'music_list': music_list,
-        'bad_count_list': bad_count_list,
-        'medal_list': medal_list,
-        'extra_option_list': extra_option_list
+        'music_list': music_list
     }
 
     return render(request, 'main/ranking.html', context)
@@ -567,6 +536,111 @@ def premium(request):
     return render(request, 'main/premium.html', context)
 
 # ---------- API ---------- #
+@login_required
+def get_clear_status(request, music_id):
+    '''
+    指定された曲のクリア状況を返す
+    @param {int} music_id 曲ID
+    @return {json} クリア状況
+    '''
+    if request.is_ajax():
+        myself = request.user
+
+        # BAD数を取得
+        try:
+            bad_count = Bad_Count.objects.get(music=music_id, user=myself)
+            bad_count = bad_count.bad_count
+        except:
+            bad_count = None
+
+        # メダルを取得
+        try:
+            medal = Medal.objects.get(music=music_id, user=myself)
+            medal = medal.medal
+        except:
+            medal = None
+
+        # エクストラオプションを取得
+        try:
+            extra_option = Extra_Option.objects.get(music=music_id, user=myself)
+        except:
+            extra_option = None
+
+        if medal:
+            if medal == 1 and bad_count == 0:
+                clear_status = 'perfect'
+            elif bad_count == 0:
+                clear_status = 'fullcombo'
+            elif extra_option and extra_option.hard:
+                clear_status = 'hard-cleared'
+            elif medal == 5 or medal == 6 or medal == 7:
+                clear_status = 'cleared'
+            elif medal == 8 or medal == 9 or medal == 10:
+                clear_status = 'failed'
+            elif medal == 11:
+                clear_status = 'easy-cleared'
+            else:
+                clear_status = 'no-play'
+        else:
+            clear_status = 'no-play'
+
+        context = {
+            'clear_status': clear_status
+        }
+
+        json_str = json.dumps(context, ensure_ascii=False)
+        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
+    else:
+        return HttpResponse('invalid access')
+
+@login_required
+def get_bad_count(request, music_id):
+    '''
+    指定された曲のBAD数を返す
+    @param {int} music_id 曲ID
+    @return {json} BAD数
+    '''
+    if request.is_ajax():
+        myself = request.user
+        try:
+            bad_count = Bad_Count.objects.get(music=music_id, user=myself)
+            bad_count = bad_count.bad_count
+        except:
+            bad_count = None
+
+        context = {
+            'bad_count': bad_count
+        }
+
+        json_str = json.dumps(context, ensure_ascii=False)
+        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
+    else:
+        return HttpResponse('invalid access')
+
+@login_required
+def get_medal(request, music_id):
+    '''
+    指定された曲のメダルを返す
+    @param {int} music_id 曲ID
+    @return {json} メダル(int)
+    '''
+    if request.is_ajax():
+        myself = request.user
+        try:
+            medal = Medal.objects.get(music=music_id, user=myself)
+            medal = medal.medal
+        except:
+            medal = None
+
+        context = {
+            'medal': medal
+        }
+
+        json_str = json.dumps(context, ensure_ascii=False)
+        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
+    else:
+        return HttpResponse('invalid access')
+
 @login_required
 def get_latest_updated_at(request, music_id):
     '''

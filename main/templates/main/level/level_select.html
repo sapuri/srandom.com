@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load custom_filter %}
 {% load bootstrap3 %}
 
 {% block title %}公式難易度表 - スパランドットコム{% endblock %}
@@ -22,13 +21,4 @@
 {% for lv in lv_range %}
 <a href="{% url 'main:level' lv %}" class="no-decoration"><h3 id="lv{{ lv }}" class="level-folder">Lv{{ lv }}</h3></a>
 {% endfor %}
-
-<script>
-/* メッセージボックス */
-$(function () {
-    $(document).ready(function() {
-        $("#message-box").stop().fadeIn(1200).delay(1500).fadeOut("slow");
-    });
-});
-</script>
 {% endblock %}

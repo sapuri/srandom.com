@@ -3,11 +3,11 @@
 {% load ranking_detail_filter %}
 {% load bootstrap3 %}
 
+{% block title %}{{ music.title }}({{ music.difficulty }})のランキング - スパランドットコム{% endblock %}
+
 {% block extrahead %}
 <meta name="description" content="スパランドットコムのランキング詳細ページです。">
 {% endblock %}
-
-{% block title %}{{ music.title }}({{ music.difficulty }})のランキング - スパランドットコム{% endblock %}
 
 {% block content %}
 <h1 class="page-header">{% bootstrap_icon "king" %} {{ music.title }} ({{ music.difficulty }})</h1>
@@ -156,13 +156,4 @@
         {% endfor %}
     </tbody>
 </table>
-
-<script>
-/* メッセージボックス */
-$(function () {
-    $(document).ready(function() {
-        $("#message-box").stop().fadeIn(1200).delay(1500).fadeOut("slow");
-    });
-});
-</script>
 {% endblock %}

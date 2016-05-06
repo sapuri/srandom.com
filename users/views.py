@@ -8,19 +8,19 @@ from .models import CustomUser
 from main.models import Bad_Count, Medal, Extra_Option, Music
 from .forms import CustomUserForm, PrivacyForm
 
-@login_required
-def list(request):
-    '''
-    登録ユーザー一覧
-    '''
-    # ユーザー名を公開しているユーザーを取得
-    users = CustomUser.objects.filter(is_active=True, player_name_privacy=1).order_by('id')
-    myself = request.user
-    context = {
-        'users': users,
-        'myself': myself,
-    }
-    return render(request, 'users/list.html', context)
+# @login_required
+# def list(request):
+#     '''
+#     登録ユーザー一覧
+#     '''
+#     # ユーザー名を公開しているユーザーを取得
+#     users = CustomUser.objects.filter(is_active=True, player_name_privacy=1).order_by('id')
+#     myself = request.user
+#     context = {
+#         'users': users,
+#         'myself': myself,
+#     }
+#     return render(request, 'users/list.html', context)
 
 @login_required
 def mypage(request, username):
@@ -57,17 +57,13 @@ def mypage(request, username):
         percentage_of_clear[sran_level - 1] = round(percentage_of_clear[sran_level - 1])
 
     recent_medal = Medal.objects.filter(user=user).order_by('-updated_at')[:20]
-    bad_count_list = Bad_Count.objects.filter(user=user).order_by('-id')
-    extra_option_list = Extra_Option.objects.filter(user=user).order_by('-id')
 
     context = {
         'user': user,
         'myself': myself,
         's_lv_range': s_lv_range,
         'percentage_of_clear': percentage_of_clear,
-        'recent_medal': recent_medal,
-        'bad_count_list': bad_count_list,
-        'extra_option_list': extra_option_list
+        'recent_medal': recent_medal
     }
     return render(request, 'users/mypage.html', context)
 
@@ -140,19 +136,11 @@ def cleardata(request, username, sran_level):
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level')
 
-    # ユーザーごとにデータを取得
-    medal_list = Medal.objects.filter(user=user)
-    bad_count_list = Bad_Count.objects.filter(user=user)
-    extra_option_list = Extra_Option.objects.filter(user=user)
-
     context = {
         'user': user,
         'myself': myself,
         'sran_level': sran_level,
-        'music_list': music_list,
-        'medal_list': medal_list,
-        'bad_count_list': bad_count_list,
-        'extra_option_list': extra_option_list
+        'music_list': music_list
     }
     return render(request, 'users/cleardata.html', context)
 

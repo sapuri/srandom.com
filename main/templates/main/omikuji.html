@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
+{% block title %}おみくじ - スパランドットコム{% endblock %}
+
 {% block extrahead %}
 <meta name="description" content="スパランドットコムのおみくじページです。今日のスパランおすすめ曲をランダムに選びます！">
 {% endblock %}
-
-{% block title %}おみくじ - スパランドットコム{% endblock %}
 
 {% block content %}
 <h1 class="page-header">{% bootstrap_icon "gift" %} おみくじ</h1>
@@ -91,13 +91,4 @@
     </table>
 </div>
 {% endif %}
-
-<script>
-/* メッセージボックス */
-$(function () {
-    $(document).ready(function() {
-        $("#message-box").stop().fadeIn(1200).delay(1500).fadeOut("slow");
-    });
-});
-</script>
 {% endblock %}

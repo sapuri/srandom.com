@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
+{% block title %}設定 - スパランドットコム{% endblock %}
+
 {% block extrahead %}
 <meta name="description" content="スパランドットコムの設定ページです。">
 {% endblock %}
-
-{% block title %}設定 - スパランドットコム{% endblock %}
 
 {% block content %}
 <div class="settings">
@@ -39,13 +39,4 @@
         {% endbuttons %}
     </section>
 </div><!-- settings -->
-
-<script>
-/* メッセージボックス */
-$(function () {
-    $(document).ready(function() {
-        $("#message-box").stop().fadeIn(1200).delay(1500).fadeOut("slow");
-    });
-});
-</script>
 {% endblock %}

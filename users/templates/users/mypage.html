@@ -1,12 +1,14 @@
 {% extends "base.html" %}
-{% load custom_filter %}
+{% load staticfiles %}
 {% load bootstrap3 %}
+{% load custom_filter %}
+
+{% block title %}{{ user.player_name|default:user.username }} - スパランドットコム{% endblock %}
 
 {% block extrahead %}
 <meta name="description" content="スパランドットコムのプロフィールページです。">
+<script src="{% static 'js/music_list.js' %}"></script>
 {% endblock %}
-
-{% block title %}{{ user.player_name|default:user.username }} - スパランドットコム{% endblock %}
 
 {% block content %}
 <h1 class="page-header">{% bootstrap_icon "book" %} プロフィール</h1>
@@ -68,43 +70,26 @@
         </thead>
         <tbody>
             {% for recent in recent_medal %}
-                {% if recent.int == 1 %}
-                <tr class="perfect">
-                {% elif recent.int == 2 or recent.int == 3 or recent.int == 4 %}
-                <tr class="fullconbo">
-                {% elif extra_option_list|is_hard:recent.music %}
-                <tr class="hard-cleared">
-                {% else %}
-                    {% if recent.int == 7 or recent.int == 6 or recent.int == 5 %}
-                    <tr class="cleared">
-                    {% elif recent.int == 10 or recent.int == 9 or recent.int == 8 %}
-                    <tr class="failed">
-                    {% elif recent.int == 11 %}
-                    <tr class="easy-cleared">
-                    {% else %}
-                    <tr class="no-play">
-                    {% endif %}
-                {% endif %}
-                    <td class="level">{{ recent.music.level }}</td>
-                    <td class="title"><a href="{% url 'main:ranking_detail' recent.music.id %}">{{ recent.music.title }}</a></td>
-                    <td class="difficulty">{{ recent.music.difficulty }}</td>
-                    <td class="bpm">{{ recent.music.bpm|default:'-' }}</td>
-                    <td class="medal">
-                        {% if recent.int != 12 %}
-                        <img src="/static/img/medal/{{ recent.int }}.gif" width="16" height="16"/>
-                        {% else %}
-                        -
-                        {% endif %}
-                    </td>
-                    <td class="bad_count">
-                        {% if bad_count_list|bad_count_int:recent.music != None %}
-                        {{ bad_count_list|bad_count_int:recent.music }}
-                        {% else %}
-                        -
-                        {% endif %}
-                    </td>
-                    <td class="updated_at">{{ recent.updated_at|date:"Y/n/d G:i"|default:'-' }}</td>
-                </tr>
+            <tr id="music-{{ recent.music.id }}">
+                <script>getClearStatus({{ recent.music.id }});</script>
+                <td class="level">{{ recent.music.level }}</td>
+                <td class="title"><a href="{% url 'main:ranking_detail' recent.music.id %}">{{ recent.music.title }}</a></td>
+                <td class="difficulty">{{ recent.music.difficulty }}</td>
+                <td class="bpm">{{ recent.music.bpm|default:'-' }}</td>
+                <td class="medal">
+                    <div class="loading"></div>
+                    <img>
+                    <script>getMedal({{ recent.music.id }});</script>
+                </td>
+                <td class="bad_count">
+                    <div class="loading"></div>
+                    <script>getBadCount({{ recent.music.id }});</script>
+                </td>
+                <td class="updated_at">
+                    <div class="loading"></div>
+                    <script>getLatestUpdatedAt({{ recent.music.id }});</script>
+                </td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
