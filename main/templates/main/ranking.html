@@ -3,12 +3,12 @@
 {% load bootstrap3 %}
 {% load custom_filter %}
 
+{% block title %}ランキング(Lv{{ sran_level }}) - スパランドットコム{% endblock %}
+
 {% block extrahead %}
 <meta name="description" content="スパランドットコムのランキングページです。(Lv{{ sran_level }})">
 <script src="{% static 'js/ranking.js' %}"></script>
 {% endblock %}
-
-{% block title %}ランキング(Lv{{ sran_level }}) - スパランドットコム{% endblock %}
 
 {% block content %}
 <h1 class="page-header">{% bootstrap_icon "globe" %} ランキング</h1>

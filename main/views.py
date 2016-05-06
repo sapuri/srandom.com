@@ -429,88 +429,6 @@ def ranking(request, sran_level):
 
     return render(request, 'main/ranking.html', context)
 
-def get_bad_count_avg(request, music_id):
-    '''
-    指定された曲の平均BAD数を返す
-    @param {int} music_id: 曲ID
-    @return {json}
-    '''
-    if request.user.is_authenticated() and request.is_ajax():
-        bad_count_list = Bad_Count.objects.filter(music=music_id)
-        if not bad_count_list:
-            bad_count_avg = -1
-        else:
-            bad_count_sum = 0   # BAD数の合計
-            bad_count_num = 0   # BAD数の個数
-
-            for bad_count in bad_count_list:
-                bad_count_sum += bad_count.int()
-                bad_count_num += 1
-
-            # BAD数の平均を計算 (小数点以下四捨五入)
-            bad_count_avg = round(bad_count_sum / bad_count_num)
-
-        context = {
-            'bad_count_avg': bad_count_avg
-        }
-
-        json_str = json.dumps(context, ensure_ascii=False)
-        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
-    else:
-        return HttpResponse('invalid access')
-
-def get_myrank(request, music_id):
-    '''
-    指定された曲の順位を返す
-    @param {int} music_id: 曲ID
-    @return {json}
-    '''
-    if request.user.is_authenticated() and request.is_ajax():
-        myself = request.user
-
-        # 該当曲のBAD数リストを取得（昇順）
-        bad_count_list = Bad_Count.objects.filter(music=music_id).order_by('bad_count')
-
-        bad_count_num = 0   # BAD数の個数
-        bad_count_now = -1  # 現在のBAD数
-        myrank = 0          # 自ランク
-        found = False       # BAD数を登録済であればTrueを返す
-
-        for bad_count in bad_count_list:
-            bad_count_before = bad_count_now
-            bad_count_now = bad_count.bad_count
-
-            # BAD数が前後で重複した場合
-            if bad_count_now == bad_count_before:
-                # 指定されたユーザーの記録が見つかれば myrank にランクを格納
-                if bad_count.user.id == myself.id:
-                    found = True
-                    myrank = tmp_rank
-
-                bad_count_num += 1
-
-            # BAD数が重複しなかった場合
-            else:
-                bad_count_num += 1
-
-                # 一時ランクを更新
-                tmp_rank = bad_count_num
-
-                # 自分の記録が見つかれば myrank にランクを格納
-                if bad_count.user.id == myself.id:
-                    found = True
-                    myrank = bad_count_num
-
-        context = {
-            'myrank': myrank,
-            'bad_count_num': bad_count_num
-        }
-
-        json_str = json.dumps(context, ensure_ascii=False)
-        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
-    else:
-        return HttpResponse('invalid access')
-
 @login_required
 def ranking_detail(request, music_id):
     '''
@@ -647,3 +565,167 @@ def premium(request):
         'myself': myself
     }
     return render(request, 'main/premium.html', context)
+
+# ---------- API ---------- #
+@login_required
+def get_latest_updated_at(request, music_id):
+    '''
+    指定された曲の最新の更新日時を返す
+    @param {int} music_id 曲ID
+    @return {json} 更新日時
+    '''
+    if request.is_ajax():
+        myself = request.user
+        try:
+            bad_count = Bad_Count.objects.get(music=music_id, user=myself)
+        except:
+            bad_count = None
+        try:
+            medal = Medal.objects.get(music=music_id, user=myself)
+        except:
+            medal = None
+        try:
+            extra_option = Extra_Option.objects.get(music=music_id, user=myself)
+        except:
+            extra_option = None
+
+        # 最新の更新日時を取得
+        if bad_count and medal and extra_option:
+            bad_count_updated_at = bad_count.updated_at
+            medal_updated_at = medal.updated_at
+            extra_option_updated_at = extra_option.updated_at
+            latest = max(bad_count_updated_at, medal_updated_at, extra_option_updated_at)
+        elif bad_count and medal:
+            bad_count_updated_at = bad_count.updated_at
+            medal_updated_at = medal.updated_at
+            extra_option_updated_at = None
+            latest = max(bad_count_updated_at, medal_updated_at)
+        elif medal and extra_option:
+            bad_count_updated_at = None
+            medal_updated_at = medal.updated_at
+            extra_option_updated_at = extra_option.updated_at
+            latest = max(medal_updated_at, extra_option_updated_at)
+        elif bad_count:
+            bad_count_updated_at = bad_count.updated_at
+            medal_updated_at = None
+            extra_option_updated_at = None
+            latest = bad_count_updated_at
+        elif medal:
+            bad_count_updated_at = None
+            medal_updated_at = medal.updated_at
+            extra_option_updated_at = None
+            latest = medal_updated_at
+        elif extra_option:
+            bad_count_updated_at = None
+            medal_updated_at = None
+            extra_option_updated_at = extra_option.updated_at
+            latest = extra_option_updated_at
+        else:
+            bad_count_updated_at = None
+            medal_updated_at = None
+            extra_option_updated_at = None
+            latest = None
+
+        if latest:
+            context = {
+                'is_active': True,
+                'year': latest.year,
+                'month': latest.month,
+                'day': latest.day,
+                'hour': latest.hour + 9,    # UTC+9
+                'minute': latest.minute,
+                'second': latest.second
+            }
+        else:
+            context = {
+                'is_active': False
+            }
+
+        json_str = json.dumps(context, ensure_ascii=False)
+        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
+    else:
+        return HttpResponse('invalid access')
+
+@login_required
+def get_bad_count_avg(request, music_id):
+    '''
+    指定された曲の平均BAD数を返す
+    @param {int} music_id 曲ID
+    @return {json} 平均BAD数
+    '''
+    if request.is_ajax():
+        bad_count_list = Bad_Count.objects.filter(music=music_id)
+        if not bad_count_list:
+            bad_count_avg = -1
+        else:
+            bad_count_sum = 0   # BAD数の合計
+            bad_count_num = 0   # BAD数の個数
+
+            for bad_count in bad_count_list:
+                bad_count_sum += bad_count.int()
+                bad_count_num += 1
+
+            # BAD数の平均を計算 (小数点以下四捨五入)
+            bad_count_avg = round(bad_count_sum / bad_count_num)
+
+        context = {
+            'bad_count_avg': bad_count_avg
+        }
+
+        json_str = json.dumps(context, ensure_ascii=False)
+        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
+    else:
+        return HttpResponse('invalid access')
+
+@login_required
+def get_myrank(request, music_id):
+    '''
+    指定された曲の順位を返す
+    @param {int} music_id 曲ID
+    @return {json} 順位
+    '''
+    if request.is_ajax():
+        myself = request.user
+
+        # 該当曲のBAD数リストを取得（昇順）
+        bad_count_list = Bad_Count.objects.filter(music=music_id).order_by('bad_count')
+
+        bad_count_num = 0   # BAD数の個数
+        bad_count_now = -1  # 現在のBAD数
+        myrank = 0          # 自ランク
+        found = False       # BAD数を登録済であればTrueを返す
+
+        for bad_count in bad_count_list:
+            bad_count_before = bad_count_now
+            bad_count_now = bad_count.bad_count
+
+            # BAD数が前後で重複した場合
+            if bad_count_now == bad_count_before:
+                # 指定されたユーザーの記録が見つかれば myrank にランクを格納
+                if bad_count.user.id == myself.id:
+                    found = True
+                    myrank = tmp_rank
+
+                bad_count_num += 1
+
+            # BAD数が重複しなかった場合
+            else:
+                bad_count_num += 1
+
+                # 一時ランクを更新
+                tmp_rank = bad_count_num
+
+                # 自分の記録が見つかれば myrank にランクを格納
+                if bad_count.user.id == myself.id:
+                    found = True
+                    myrank = bad_count_num
+
+        context = {
+            'myrank': myrank,
+            'bad_count_num': bad_count_num
+        }
+
+        json_str = json.dumps(context, ensure_ascii=False)
+        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
+    else:
+        return HttpResponse('invalid access')

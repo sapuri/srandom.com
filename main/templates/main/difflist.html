@@ -1,11 +1,13 @@
 {% extends "base.html" %}
-{% load custom_filter %}
+{% load staticfiles %}
 {% load bootstrap3 %}
+{% load custom_filter %}
 
 {% block title %}S乱難易度表(Lv{{ sran_level }}) - スパランドットコム{% endblock %}
 
 {% block extrahead %}
 <meta name="description" content="スパランドットコムのS乱難易度表ページです。(Lv{{ sran_level }})">
+<script src="{% static 'js/music_list.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -41,27 +43,29 @@
     </thead>
     <tbody>
         {% for music in music_list %}
+            <tr id="music-{{ music.id }}"
             {% if medal_list|medal_int:music == 1 and bad_count_list|bad_count_int:music == 0 %}
-            <tr class="perfect">
+            class="perfect"
             {% elif bad_count_list|bad_count_int:music == 0 %}
-            <tr class="fullconbo">
+            class="fullconbo"
             {% elif extra_option_list|is_hard:music %}
-            <tr class="hard-cleared">
+            class="hard-cleared"
             {% else %}
                 {% for medal in medal_list %}
                     {% if medal.music.id == music.id %}
                         {% if medal.int == 7 or medal.int == 6 or medal.int == 5 %}
-                        <tr class="cleared">
+                        class="cleared"
                         {% elif medal.int == 10 or medal.int == 9 or medal.int == 8 %}
-                        <tr class="failed">
+                        class="failed"
                         {% elif medal.int == 11 %}
-                        <tr class="easy-cleared">
+                        class="easy-cleared"
                         {% else %}
-                        <tr class="no-play">
+                        class="no-play"
                         {% endif %}
                     {% endif %}
                 {% endfor %}
             {% endif %}
+            >
                 <td class="level">{{ music.level }}</td>
                 <td class="title"><a href="{% url 'main:edit' music.id %}">{{ music.title }}</a></td>
                 <td class="difficulty">{{ music.difficulty }}</td>
@@ -80,7 +84,10 @@
                     -
                     {% endif %}
                 </td>
-                <td class="updated_at">{{ bad_count_list|bad_count_updated_at:music|date:"Y/n/d G:i"|default:'-' }}</td>
+                <td class="updated_at">
+                    <div class="loading"></div>
+                    <script>getLatestUpdatedAt({{ music.id }});</script>
+                </td>
             </tr>
         {% endfor %}
     </tbody>
@@ -88,29 +95,4 @@
 </div>
 
 <p class="pagetop"><a href="#top">{% bootstrap_icon "menu-up" %}</a></p>
-
-<script>
-/* メッセージボックス */
-$(function () {
-    $(document).ready(function() {
-        $("#message-box").stop().fadeIn(1200).delay(1500).fadeOut("slow");
-    });
-});
-
-/* トップに戻るボタン */
-$(document).ready(function() {
-    var pagetop = $('.pagetop');
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 1000) {
-            pagetop.fadeIn();
-        } else {
-            pagetop.fadeOut();
-        }
-    });
-    pagetop.click(function () {
-        $('body, html').animate({ scrollTop: 0 }, 500);
-        return false;
-    });
-});
-</script>
 {% endblock %}
