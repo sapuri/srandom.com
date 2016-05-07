@@ -28,7 +28,7 @@ function getBadCount(music_id) {
         function(response) {
             hideLoadingImage(selector);
             var bad_count = '-';
-            if (response.bad_count) {
+            if (response.bad_count != null) {
                 bad_count = response.bad_count;
             }
             // BAD数を描画

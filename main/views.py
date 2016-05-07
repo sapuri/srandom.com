@@ -569,9 +569,9 @@ def get_clear_status(request, music_id):
         if medal:
             if medal == 1 and bad_count == 0:
                 clear_status = 'perfect'
-            elif bad_count == 0:
+            elif (medal == 2 or medal == 3 or medal == 4) and bad_count == 0:
                 clear_status = 'fullcombo'
-            elif extra_option and extra_option.hard:
+            elif (medal >= 1 and medal <= 7) and extra_option and extra_option.hard:
                 clear_status = 'hard-cleared'
             elif medal == 5 or medal == 6 or medal == 7:
                 clear_status = 'cleared'
