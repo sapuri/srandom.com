@@ -4,18 +4,20 @@ function getBadCountAvg(music_id) {
     showLoadingImage(selector);
     $.ajax({
         url: SERVER_URL+'api/get_bad_count_avg/'+music_id+'/',
-        type: 'GET',
-        success: function(response){
+        type: 'GET'
+    })
+    .then(
+        function(response) {
             hideLoadingImage(selector);
             if (response.bad_count_avg == -1) response.bad_count_avg = '-';
             // 平均BAD数を描画
             $(selector).text(response.bad_count_avg);
         },
-        error: function(err) {
+        function(err) {
             hideLoadingImage(selector);
             console.log(err);
         }
-    })
+    );
 }
 
 /* 順位を取得 */
@@ -25,15 +27,17 @@ function getMyRank(music_id) {
     $.ajax({
         url: SERVER_URL+'api/get_myrank/'+music_id+'/',
         type: 'GET',
-        success: function(response){
+    })
+    .then(
+        function(response) {
             hideLoadingImage(selector);
             if (response.myrank == 0) response.myrank = '-';
             // 順位を描画
             $(selector).text(response.myrank+' / '+response.bad_count_num);
         },
-        error: function(err) {
+        function(err) {
             hideLoadingImage(selector);
             console.log(err);
         }
-    })
+    );
 }

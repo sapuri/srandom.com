@@ -3,15 +3,17 @@ function getClearStatus(music_id) {
     var selector = 'tr#music-'+music_id;
     $.ajax({
         url: SERVER_URL+'api/get_clear_status/'+music_id+'/',
-        type: 'GET',
-        success: function(response){
+        type: 'GET'
+    })
+    .then(
+        function(response) {
             $(selector).addClass(response.clear_status);
             $(selector+' script').remove();
         },
-        error: function(err) {
+        function(err) {
             console.log(err);
         }
-    })
+    );
 }
 
 /* BAD数を取得 */
@@ -20,8 +22,10 @@ function getBadCount(music_id) {
     showLoadingImage(selector);
     $.ajax({
         url: SERVER_URL+'api/get_bad_count/'+music_id+'/',
-        type: 'GET',
-        success: function(response){
+        type: 'GET'
+    })
+    .then(
+        function(response) {
             hideLoadingImage(selector);
             var bad_count = '-';
             if (response.bad_count) {
@@ -30,11 +34,11 @@ function getBadCount(music_id) {
             // BAD数を描画
             $(selector).text(bad_count);
         },
-        error: function(err) {
+        function(err) {
             hideLoadingImage(selector);
             console.log(err);
         }
-    })
+    );
 }
 
 /* メダルを取得 */
@@ -43,8 +47,10 @@ function getMedal(music_id) {
     showLoadingImage(selector);
     $.ajax({
         url: SERVER_URL+'api/get_medal/'+music_id+'/',
-        type: 'GET',
-        success: function(response){
+        type: 'GET'
+    })
+    .then(
+        function(response) {
             hideLoadingImage(selector);
             if (response.medal && response.medal != 12) {
                 // 未プレイ以外ならメダルを描画
@@ -58,11 +64,11 @@ function getMedal(music_id) {
                 $(selector).text('-');
             }
         },
-        error: function(err) {
+        function(err) {
             hideLoadingImage(selector);
             console.log(err);
         }
-    })
+    );
 }
 
 /* 最新の更新日時を取得 */
@@ -71,8 +77,10 @@ function getLatestUpdatedAt(music_id) {
     showLoadingImage(selector);
     $.ajax({
         url: SERVER_URL+'api/get_latest_updated_at/'+music_id+'/',
-        type: 'GET',
-        success: function(response){
+        type: 'GET'
+    })
+    .then(
+        function(response) {
             hideLoadingImage(selector);
             var updated_at = '-';
             if (response.is_active) {
@@ -84,9 +92,9 @@ function getLatestUpdatedAt(music_id) {
             // 更新日時を描画
             $(selector).text(updated_at);
         },
-        error: function(err) {
+        function(err) {
             hideLoadingImage(selector);
             console.log(err);
         }
-    })
+    );
 }
