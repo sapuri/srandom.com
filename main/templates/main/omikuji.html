@@ -1,12 +1,11 @@
 {% extends "base.html" %}
-{% load staticfiles %}
 {% load bootstrap3 %}
 
 {% block title %}おみくじ - スパランドットコム{% endblock %}
 
 {% block extrahead %}
 <meta name="description" content="スパランドットコムのおみくじページです。今日のスパランおすすめ曲をランダムに選びます！">
-<script src="{% static 'js/music_list.js' %}"></script>
+<script src="/static/js/music_list.js?v=20160507"></script>
 {% endblock %}
 
 {% block content %}
