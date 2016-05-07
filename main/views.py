@@ -4,6 +4,7 @@ from twitter import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, Http404
 from datetime import datetime
 import json
@@ -541,28 +542,40 @@ def get_clear_status(request, music_id):
     '''
     指定された曲のクリア状況を返す
     @param {int} music_id 曲ID
+    @param {int} ?user_id ユーザーID
     @return {json} クリア状況
     '''
     if request.is_ajax():
-        myself = request.user
+        # ユーザーを取得
+        try:
+            # クエリでユーザーIDが指定されればそのユーザーを取得
+            user_id = request.GET['user_id']
+            user = get_object_or_404(CustomUser, pk=user_id)
+
+            # 権限を確認
+            if user != request.user:
+                if user.is_active == False or user.cleardata_privacy == 2:
+                    raise PermissionDenied
+        except KeyError:
+            user = request.user
 
         # BAD数を取得
         try:
-            bad_count = Bad_Count.objects.get(music=music_id, user=myself)
+            bad_count = Bad_Count.objects.get(music=music_id, user=user)
             bad_count = bad_count.bad_count
         except:
             bad_count = None
 
         # メダルを取得
         try:
-            medal = Medal.objects.get(music=music_id, user=myself)
+            medal = Medal.objects.get(music=music_id, user=user)
             medal = medal.medal
         except:
             medal = None
 
         # エクストラオプションを取得
         try:
-            extra_option = Extra_Option.objects.get(music=music_id, user=myself)
+            extra_option = Extra_Option.objects.get(music=music_id, user=user)
         except:
             extra_option = None
 
@@ -598,12 +611,25 @@ def get_bad_count(request, music_id):
     '''
     指定された曲のBAD数を返す
     @param {int} music_id 曲ID
+    @param {int} ?user_id ユーザーID
     @return {json} BAD数
     '''
     if request.is_ajax():
-        myself = request.user
+        # ユーザーを取得
         try:
-            bad_count = Bad_Count.objects.get(music=music_id, user=myself)
+            # クエリでユーザーIDが指定されればそのユーザーを取得
+            user_id = request.GET['user_id']
+            user = get_object_or_404(CustomUser, pk=user_id)
+
+            # 権限を確認
+            if user != request.user:
+                if user.is_active == False or user.cleardata_privacy == 2:
+                    raise PermissionDenied
+        except KeyError:
+            user = request.user
+
+        try:
+            bad_count = Bad_Count.objects.get(music=music_id, user=user)
             bad_count = bad_count.bad_count
         except:
             bad_count = None
@@ -622,12 +648,25 @@ def get_medal(request, music_id):
     '''
     指定された曲のメダルを返す
     @param {int} music_id 曲ID
+    @param {int} ?user_id ユーザーID
     @return {json} メダル(int)
     '''
     if request.is_ajax():
-        myself = request.user
+        # ユーザーを取得
         try:
-            medal = Medal.objects.get(music=music_id, user=myself)
+            # クエリでユーザーIDが指定されればそのユーザーを取得
+            user_id = request.GET['user_id']
+            user = get_object_or_404(CustomUser, pk=user_id)
+
+            # 権限を確認
+            if user != request.user:
+                if user.is_active == False or user.cleardata_privacy == 2:
+                    raise PermissionDenied
+        except KeyError:
+            user = request.user
+
+        try:
+            medal = Medal.objects.get(music=music_id, user=user)
             medal = medal.medal
         except:
             medal = None
@@ -646,20 +685,33 @@ def get_latest_updated_at(request, music_id):
     '''
     指定された曲の最新の更新日時を返す
     @param {int} music_id 曲ID
+    @param {int} ?user_id ユーザーID
     @return {json} 更新日時
     '''
     if request.is_ajax():
-        myself = request.user
+        # ユーザーを取得
         try:
-            bad_count = Bad_Count.objects.get(music=music_id, user=myself)
+            # クエリでユーザーIDが指定されればそのユーザーを取得
+            user_id = request.GET['user_id']
+            user = get_object_or_404(CustomUser, pk=user_id)
+
+            # 権限を確認
+            if user != request.user:
+                if user.is_active == False or user.cleardata_privacy == 2:
+                    raise PermissionDenied
+        except KeyError:
+            user = request.user
+
+        try:
+            bad_count = Bad_Count.objects.get(music=music_id, user=user)
         except:
             bad_count = None
         try:
-            medal = Medal.objects.get(music=music_id, user=myself)
+            medal = Medal.objects.get(music=music_id, user=user)
         except:
             medal = None
         try:
-            extra_option = Extra_Option.objects.get(music=music_id, user=myself)
+            extra_option = Extra_Option.objects.get(music=music_id, user=user)
         except:
             extra_option = None
 
@@ -756,10 +808,22 @@ def get_myrank(request, music_id):
     '''
     指定された曲の順位を返す
     @param {int} music_id 曲ID
+    @param {int} ?user_id ユーザーID
     @return {json} 順位
     '''
     if request.is_ajax():
-        myself = request.user
+        # ユーザーを取得
+        try:
+            # クエリでユーザーIDが指定されればそのユーザーを取得
+            user_id = request.GET['user_id']
+            user = get_object_or_404(CustomUser, pk=user_id)
+
+            # 権限を確認
+            if user != request.user:
+                if user.is_active == False or user.cleardata_privacy == 2:
+                    raise PermissionDenied
+        except KeyError:
+            user = request.user
 
         # 該当曲のBAD数リストを取得（昇順）
         bad_count_list = Bad_Count.objects.filter(music=music_id).order_by('bad_count')
@@ -776,7 +840,7 @@ def get_myrank(request, music_id):
             # BAD数が前後で重複した場合
             if bad_count_now == bad_count_before:
                 # 指定されたユーザーの記録が見つかれば myrank にランクを格納
-                if bad_count.user.id == myself.id:
+                if bad_count.user.id == user.id:
                     found = True
                     myrank = tmp_rank
 
@@ -790,7 +854,7 @@ def get_myrank(request, music_id):
                 tmp_rank = bad_count_num
 
                 # 自分の記録が見つかれば myrank にランクを格納
-                if bad_count.user.id == myself.id:
+                if bad_count.user.id == user.id:
                     found = True
                     myrank = bad_count_num
 
