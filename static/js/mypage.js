@@ -1,9 +1,37 @@
+/* 各レベルのクリア率を取得 */
+function getPercentageOfClear(user_id) {
+    for (var i = 17; i >= 1; i--) {
+        var selector = 'div#slv-'+i+' a span.bar';
+        showLoadingImage(selector);
+    }
+    $.ajax({
+        url: SERVER_URL+'users/api/get_percentage_of_clear/'+user_id+'/',
+        type: 'GET'
+    })
+    .then(
+        function(response) {
+            for (var i = 17; i >= 1; i--) {
+                var selector = 'div#slv-'+i+' a span.bar';
+                $(selector).attr('style', 'width: '+response.percentage_of_clear[i-1]+'%');
+                $(selector).text(response.percentage_of_clear[i-1]+'%');
+            }
+        },
+        function(err) {
+            hideLoadingImage(selector);
+            console.log(err);
+        }
+    );
+}
+
 /* クリア状況を取得 */
-function getClearStatus(music_id) {
+function getClearStatus(music_id, user_id) {
     var selector = 'tr#music-'+music_id;
     $.ajax({
         url: SERVER_URL+'api/get_clear_status/'+music_id+'/',
-        type: 'GET'
+        type: 'GET',
+        data: {
+            user_id: user_id
+        }
     })
     .then(
         function(response) {
@@ -17,16 +45,18 @@ function getClearStatus(music_id) {
 }
 
 /* BAD数を取得 */
-function getBadCount(music_id) {
+function getBadCount(music_id, user_id) {
     var selector = 'tr#music-'+music_id+' .bad_count';
     showLoadingImage(selector);
     $.ajax({
         url: SERVER_URL+'api/get_bad_count/'+music_id+'/',
-        type: 'GET'
+        type: 'GET',
+        data: {
+            user_id: user_id
+        }
     })
     .then(
         function(response) {
-            hideLoadingImage(selector);
             var bad_count = '-';
             if (response.bad_count != null) {
                 bad_count = response.bad_count;
@@ -42,25 +72,25 @@ function getBadCount(music_id) {
 }
 
 /* メダルを取得 */
-function getMedal(music_id) {
+function getMedal(music_id, user_id) {
     var selector = 'tr#music-'+music_id+' .medal';
     showLoadingImage(selector);
     $.ajax({
         url: SERVER_URL+'api/get_medal/'+music_id+'/',
-        type: 'GET'
+        type: 'GET',
+        data: {
+            user_id: user_id
+        }
     })
     .then(
         function(response) {
-            hideLoadingImage(selector);
             if (response.medal && response.medal != 12) {
                 // 未プレイ以外ならメダルを描画
                 var medal = response.medal;
                 $(selector+' .loading').remove();
-                $(selector+' img').attr({
-                    src: '/static/img/medal/'+medal+'.gif',
-                    width: '16',
-                    height: '16'
-                });
+                $(selector+' img').attr('src', '/static/img/medal/'+medal+'.gif');
+                $(selector+' img').attr('width', '16');
+                $(selector+' img').attr('height', '16');
                 $(selector+' script').remove();
             } else {
                 $(selector).text('-');
@@ -74,16 +104,18 @@ function getMedal(music_id) {
 }
 
 /* 最新の更新日時を取得 */
-function getLatestUpdatedAt(music_id) {
+function getLatestUpdatedAt(music_id, user_id) {
     var selector = 'tr#music-'+music_id+' .updated_at';
     showLoadingImage(selector);
     $.ajax({
         url: SERVER_URL+'api/get_latest_updated_at/'+music_id+'/',
-        type: 'GET'
+        type: 'GET',
+        data: {
+            user_id: user_id
+        }
     })
     .then(
         function(response) {
-            hideLoadingImage(selector);
             var updated_at = '-';
             if (response.is_active) {
                 // ゼロパディング

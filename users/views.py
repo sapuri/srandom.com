@@ -3,10 +3,14 @@ import zenhan
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
+import json
 
 from .models import CustomUser
 from main.models import Bad_Count, Medal, Extra_Option, Music
 from .forms import CustomUserForm, PrivacyForm
+
 
 # @login_required
 # def list(request):
@@ -35,39 +39,13 @@ def mypage(request, username):
     max_s_lv = 17
     s_lv_range = range(max_s_lv, 0, -1)
 
-    music_num = [0] * max_s_lv
-    clear_num = [0] * max_s_lv
-    percentage_of_clear = [0] * max_s_lv
-
-    for sran_level in s_lv_range:
-        sran_level_id = max_s_lv - sran_level + 1
-        music_list = Music.objects.filter(sran_level=sran_level_id)
-        music_num[sran_level - 1] = len(music_list)
-        for music in music_list:
-            try:
-                medal = Medal.objects.get(user=user, music=music)
-                if medal.int() <= 7:
-                    clear_num[sran_level - 1] = clear_num[sran_level - 1] + 1
-            except:
-                pass
-
-        # 各レベルのクリア率を計算
-        percentage_of_clear[sran_level - 1] = clear_num[sran_level - 1] * 100 / music_num[sran_level - 1]
-        # 小数点以下四捨五入
-        percentage_of_clear[sran_level - 1] = round(percentage_of_clear[sran_level - 1])
-
     recent_medal = Medal.objects.filter(user=user).order_by('-updated_at')[:20]
-    bad_count_list = Bad_Count.objects.filter(user=user).order_by('-id')
-    extra_option_list = Extra_Option.objects.filter(user=user).order_by('-id')
 
     context = {
         'user': user,
         'myself': myself,
         's_lv_range': s_lv_range,
-        'percentage_of_clear': percentage_of_clear,
-        'recent_medal': recent_medal,
-        'bad_count_list': bad_count_list,
-        'extra_option_list': extra_option_list
+        'recent_medal': recent_medal
     }
     return render(request, 'users/mypage.html', context)
 
@@ -196,3 +174,55 @@ def deactivate(request):
         'myself': myself,
     }
     return render(request, 'users/deactivate.html', context)
+
+# ---------- API ---------- #
+@login_required
+def get_percentage_of_clear(request, user_id):
+    '''
+    指定されたユーザーの各レベルのクリア率を返す
+    @param {int} user_id ユーザーID
+    @return {json} 各レベルのクリア率
+    '''
+    if request.is_ajax():
+        # ユーザーを取得
+        user = get_object_or_404(CustomUser, pk=user_id)
+
+        # 権限を確認
+        if user != request.user:
+            if user.is_active == False or user.cleardata_privacy == 2:
+                raise PermissionDenied
+
+        max_s_lv = 17
+        s_lv_range = range(max_s_lv, 0, -1)
+
+        music_num = [0] * max_s_lv
+        clear_num = [0] * max_s_lv
+        percentage_of_clear = [0] * max_s_lv
+
+        for sran_level in s_lv_range:
+            sran_level_id = max_s_lv - sran_level + 1
+            music_list = Music.objects.filter(sran_level=sran_level_id)
+            music_num[sran_level - 1] = len(music_list)
+            for music in music_list:
+                try:
+                    medal = Medal.objects.get(user=user, music=music)
+                    if medal.medal <= 7:
+                        clear_num[sran_level - 1] = clear_num[sran_level - 1] + 1
+                except:
+                    pass
+
+            # 各レベルのクリア率を計算
+            percentage_of_clear[sran_level - 1] = clear_num[sran_level - 1] * 100 / music_num[sran_level - 1]
+            # 小数点以下四捨五入
+            percentage_of_clear[sran_level - 1] = round(percentage_of_clear[sran_level - 1])
+
+        context = {
+            'percentage_of_clear': percentage_of_clear,
+            'music_num': music_num,
+            'clear_num': clear_num
+        }
+
+        json_str = json.dumps(context, ensure_ascii=False)
+        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
+    else:
+        return HttpResponse('invalid access')

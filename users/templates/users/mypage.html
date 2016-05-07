@@ -6,6 +6,7 @@
 
 {% block extrahead %}
 <meta name="description" content="スパランドットコムのプロフィールページです。">
+<script src="/static/js/mypage.js?v=20160507"></script>
 {% endblock %}
 
 {% block content %}
@@ -40,10 +41,11 @@
     <p>グラフをクリックすると各レベルごとの詳しいクリア状況を確認できます。</p>
     {% for s_lv in s_lv_range %}
     Lv{{ s_lv }}
-    <div class="clear-graph graph">
-        <a href="{% url 'users:cleardata' user.username s_lv %}"><span class="bar" style="width: {{ percentage_of_clear|get_at_index:forloop.revcounter0 }}%;">{{ percentage_of_clear|get_at_index:forloop.revcounter0 }}%</span></a>
+    <div id="slv-{{ s_lv }}" class="clear-graph graph">
+        <a href="{% url 'users:cleardata' user.username s_lv %}"><span class="bar" style="background-color:#FFFFFF;"><div class="loading"></div></span></a>
     </div>
     {% endfor %}
+    <script>getPercentageOfClear({{ user.id }});</script>
 {% else %}
     <p>クリアデータは非公開に設定されています。</p>
 {% endif %}
@@ -68,42 +70,25 @@
         </thead>
         <tbody>
             {% for recent in recent_medal %}
-            {% if recent.int == 1 %}
-            <tr class="perfect">
-            {% elif recent.int == 2 or recent.int == 3 or recent.int == 4 %}
-            <tr class="fullcombo">
-            {% elif extra_option_list|is_hard:recent.music %}
-            <tr class="hard-cleared">
-            {% else %}
-                {% if recent.int == 7 or recent.int == 6 or recent.int == 5 %}
-                <tr class="cleared">
-                {% elif recent.int == 10 or recent.int == 9 or recent.int == 8 %}
-                <tr class="failed">
-                {% elif recent.int == 11 %}
-                <tr class="easy-cleared">
-                {% else %}
-                <tr class="no-play">
-                {% endif %}
-            {% endif %}
+            <tr id="music-{{ recent.music.id }}">
+                <script>getClearStatus({{ recent.music.id }}, {{ user.id }});</script>
                 <td class="level">{{ recent.music.level }}</td>
                 <td class="title"><a href="{% url 'main:ranking_detail' recent.music.id %}">{{ recent.music.title }}</a></td>
                 <td class="difficulty">{{ recent.music.difficulty }}</td>
                 <td class="bpm">{{ recent.music.bpm|default:'-' }}</td>
                 <td class="medal">
-                    {% if recent.int != 12 %}
-                    <img src="/static/img/medal/{{ recent.int }}.gif" width="16" height="16"/>
-                    {% else %}
-                    -
-                    {% endif %}
+                    <div class="loading"></div>
+                    <img>
+                    <script>getMedal({{ recent.music.id }}, {{ user.id }});</script>
                 </td>
                 <td class="bad_count">
-                    {% if bad_count_list|bad_count_int:recent.music != None %}
-                    {{ bad_count_list|bad_count_int:recent.music }}
-                    {% else %}
-                    -
-                    {% endif %}
+                    <div class="loading"></div>
+                    <script>getBadCount({{ recent.music.id }}, {{ user.id }});</script>
                 </td>
-                <td class="updated_at">{{ recent.updated_at|date:"Y/n/d G:i"|default:'-' }}</td>
+                <td class="updated_at">
+                    <div class="loading"></div>
+                    <script>getLatestUpdatedAt({{ recent.music.id }}, {{ user.id }});</script>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
