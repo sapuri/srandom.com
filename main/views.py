@@ -764,8 +764,8 @@ def get_latest_updated_at(request, music_id):
                 'is_active': True,
                 'year': latest.year,
                 'month': latest.month,
-                'day': latest.day,
-                'hour': latest.hour + 9,    # UTC+9
+                'day': latest_day,
+                'hour': latest_hour,
                 'minute': latest.minute,
                 'second': latest.second
             }
