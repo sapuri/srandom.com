@@ -372,7 +372,6 @@ def ranking(request, sran_level):
 
     return render(request, 'main/ranking.html', context)
 
-@login_required
 def ranking_detail(request, music_id):
     '''
     ランキング: 詳細
@@ -498,7 +497,6 @@ def premium(request):
     return render(request, 'main/premium.html')
 
 # ---------- API ---------- #
-@login_required
 def get_clear_status(request, music_id):
     '''
     指定された曲のクリア状況を返す
@@ -567,7 +565,6 @@ def get_clear_status(request, music_id):
     else:
         return HttpResponse('invalid access')
 
-@login_required
 def get_bad_count(request, music_id):
     '''
     指定された曲のBAD数を返す
@@ -604,7 +601,6 @@ def get_bad_count(request, music_id):
     else:
         return HttpResponse('invalid access')
 
-@login_required
 def get_medal(request, music_id):
     '''
     指定された曲のメダルを返す
@@ -641,7 +637,6 @@ def get_medal(request, music_id):
     else:
         return HttpResponse('invalid access')
 
-@login_required
 def get_latest_updated_at(request, music_id):
     '''
     指定された曲の最新の更新日時を返す
@@ -740,7 +735,6 @@ def get_latest_updated_at(request, music_id):
     else:
         return HttpResponse('invalid access')
 
-@login_required
 def get_bad_count_avg(request, music_id):
     '''
     指定された曲の平均BAD数を返す
@@ -836,7 +830,6 @@ def get_myrank(request, music_id):
     else:
         return HttpResponse('invalid access')
 
-@login_required
 def get_medal_count(request, music_id):
     '''
     指定された曲の各メダルの枚数を返す

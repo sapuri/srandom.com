@@ -24,7 +24,6 @@ from .forms import CustomUserForm, PrivacyForm
 #     }
 #     return render(request, 'users/list.html', context)
 
-@login_required
 def mypage(request, username):
     '''
     マイページ (プロフィールページ)
@@ -93,7 +92,6 @@ def settings(request):
     }
     return render(request, 'users/settings.html', context)
 
-@login_required
 def cleardata(request, username, sran_level):
     '''
     クリア状況
@@ -164,7 +162,6 @@ def deactivate(request):
     return render(request, 'users/deactivate.html')
 
 # ---------- API ---------- #
-@login_required
 def get_percentage_of_clear(request, user_id):
     '''
     指定されたユーザーの各レベルのクリア率を返す
