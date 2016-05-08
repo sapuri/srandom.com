@@ -753,6 +753,13 @@ def get_latest_updated_at(request, music_id):
             latest = None
 
         if latest:
+            # 時間調整
+            latest_hour = latest.hour + 9   # UTC+9
+            latest_day = latest.day
+            if latest_hour > 24:
+                latest_day += 1
+                latest_hour -= 24
+
             context = {
                 'is_active': True,
                 'year': latest.year,
