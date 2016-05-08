@@ -167,4 +167,5 @@ SOCIAL_AUTH_TWITTER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO
 
 
 # django-htmlmin
-HTML_MINIFY = False
+# DEBUG と反対の値になるため通常は指定する必要無し
+# HTML_MINIFY = True

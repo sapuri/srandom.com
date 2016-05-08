@@ -17,12 +17,10 @@ from .forms import CustomUserForm, PrivacyForm
 #     '''
 #     登録ユーザー一覧
 #     '''
-#     # ユーザー名を公開しているユーザーを取得
-#     users = CustomUser.objects.filter(is_active=True, player_name_privacy=1).order_by('id')
-#     myself = request.user
+#     # プレイヤー名を公開しているユーザーを取得
+#     users = CustomUser.objects.filter(is_active=True, player_name_privacy=1)
 #     context = {
-#         'users': users,
-#         'myself': myself,
+#         'users': users
 #     }
 #     return render(request, 'users/list.html', context)
 
@@ -33,17 +31,15 @@ def mypage(request, username):
     @param username: ユーザー名
     '''
     # ユーザーを取得
-    user = get_object_or_404(CustomUser, username=username, is_active=True)
-    myself = request.user
+    selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
 
     max_s_lv = 17
     s_lv_range = range(max_s_lv, 0, -1)
 
-    recent_medal = Medal.objects.filter(user=user).order_by('-updated_at')[:20]
+    recent_medal = Medal.objects.filter(user=selected_user).order_by('-updated_at')[:20]
 
     context = {
-        'user': user,
-        'myself': myself,
+        'selected_user': selected_user,
         's_lv_range': s_lv_range,
         'recent_medal': recent_medal
     }
@@ -56,7 +52,6 @@ def settings(request):
     '''
     # ユーザを取得
     user = request.user
-    myself = request.user
 
     # POSTでアクセスされた場合
     if request.method == 'POST':
@@ -93,8 +88,6 @@ def settings(request):
         privacy_form = PrivacyForm(instance=user)
 
     context = {
-        'user': user,
-        'myself': myself,
         'custom_user_form': custom_user_form,
         'privacy_form': privacy_form
     }
@@ -108,8 +101,7 @@ def cleardata(request, username, sran_level):
     @param sran_level: S乱レベル
     '''
     # ユーザーを取得
-    user = get_object_or_404(CustomUser, username=username, is_active=True)
-    myself = request.user
+    selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
 
     # S乱レベルIDを取得
     max_s_lv = 17
@@ -119,13 +111,12 @@ def cleardata(request, username, sran_level):
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level')
 
     # ユーザーごとにデータを取得
-    medal_list = Medal.objects.filter(user=user)
-    bad_count_list = Bad_Count.objects.filter(user=user)
-    extra_option_list = Extra_Option.objects.filter(user=user)
+    medal_list = Medal.objects.filter(user=selected_user)
+    bad_count_list = Bad_Count.objects.filter(user=selected_user)
+    extra_option_list = Extra_Option.objects.filter(user=selected_user)
 
     context = {
-        'user': user,
-        'myself': myself,
+        'selected_user': selected_user,
         'sran_level': sran_level,
         'music_list': music_list,
         'medal_list': medal_list,
@@ -170,10 +161,7 @@ def deactivate(request):
         # ログアウトページにリダイレクト
         return redirect('/auth/logout/?next=/')
 
-    context = {
-        'myself': myself,
-    }
-    return render(request, 'users/deactivate.html', context)
+    return render(request, 'users/deactivate.html')
 
 # ---------- API ---------- #
 @login_required

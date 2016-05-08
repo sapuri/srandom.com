@@ -96,42 +96,42 @@
     </thead>
     <tbody>
         {% for bad_count in bad_count_list %}
-            {% for user in users %}
-                {% if bad_count.user == user %}
-                    {% if medal_list|medal_int:user == 1 and bad_count_list|bad_count_int:user == 0 %}
+            {% for selected_user in users %}
+                {% if bad_count.user == selected_user %}
+                    {% if medal_list|medal_int:selected_user == 1 and bad_count_list|bad_count_int:selected_user == 0 %}
                     <tr class="perfect">
-                    {% elif bad_count_list|bad_count_int:user == 0 %}
+                    {% elif bad_count_list|bad_count_int:selected_user == 0 %}
                     <tr class="fullcombo">
-                    {% elif extra_option_list|is_hard:user %}
+                    {% elif extra_option_list|is_hard:selected_user %}
                     <tr class="hard-cleared">
                     {% else %}
-                        {% if medal_list|medal_int:user == 7 or medal_list|medal_int:user == 6 or medal_list|medal_int:user == 5 %}
+                        {% if medal_list|medal_int:selected_user == 7 or medal_list|medal_int:selected_user == 6 or medal_list|medal_int:selected_user == 5 %}
                         <tr class="cleared">
-                        {% elif medal_list|medal_int:user == 10 or medal_list|medal_int:user == 9 or medal_list|medal_int:user == 8 %}
+                        {% elif medal_list|medal_int:selected_user == 10 or medal_list|medal_int:selected_user == 9 or medal_list|medal_int:selected_user == 8 %}
                         <tr class="failed">
-                        {% elif medal_list|medal_int:user == 11 %}
+                        {% elif medal_list|medal_int:selected_user == 11 %}
                         <tr class="easy-cleared">
                         {% else %}
                         <tr class="no-play">
                         {% endif %}
                     {% endif %}
                         <td class="rank">
-                            {% if bad_count.user == myself %}
-                            <b>{{ bad_count_list|bad_count_rank:user|default:'-' }}</b>
+                            {% if bad_count.user == user %}
+                            <b>{{ bad_count_list|bad_count_rank:selected_user|default:'-' }}</b>
                             {% else %}
-                            {{ bad_count_list|bad_count_rank:user|default:'-' }}
+                            {{ bad_count_list|bad_count_rank:selected_user|default:'-' }}
                             {% endif %}
                         </td>
                         <td class="player_name">
-                            {% if user.player_name_privacy == 1 %}
+                            {% if selected_user.player_name_privacy == 1 %}
                             <a href="{% url 'users:mypage' bad_count.user %}">{{ bad_count.user.player_name|default:bad_count.user }}</a>
                             {% else %}
                             匿名希望さん
                             {% endif %}
                         </td>
                         <td class="medal">
-                            {% if medal_list|medal_int:user %}
-                            <img src="/static/img/medal/{{ medal_list|medal_int:user }}.gif" width="16" height="16"/>
+                            {% if medal_list|medal_int:selected_user %}
+                            <img src="/static/img/medal/{{ medal_list|medal_int:selected_user }}.gif" width="16" height="16"/>
                             {% else %}
                             -
                             {% endif %}
@@ -143,7 +143,7 @@
                             -
                             {% endif %}
                         </td>
-                        <td class="updated_at">{{ bad_count_list|bad_count_updated_at:user|date:"Y/n/d G:i"|default:'-' }}</td>
+                        <td class="updated_at">{{ bad_count_list|bad_count_updated_at:selected_user|date:"Y/n/d G:i"|default:'-' }}</td>
                     </tr>
                 {% endif %}
             {% endfor %}

@@ -19,9 +19,18 @@
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
         ga('create', 'UA-74740013-1', 'auto');
-        {% if user.is_authenticated %}ga('set', 'userId', '{{ myself.username }}');{% endif %}
+        {% if user.is_authenticated %}ga('set', 'userId', '{{ user.username }}');{% endif %}
         ga('send', 'pageview');
     </script> -->
+    {% if user.is_authenticated and not user.premium %}
+    <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-6195130822330787",
+        enable_page_level_ads: true
+      });
+    </script> -->
+    {% endif %}
 </head>
 <body>
     <nav id="header" class="navbar navbar-default">
@@ -34,27 +43,27 @@
                 </button>
                 <a class="navbar-brand" href="{% url 'main:index' %}">スパランドットコム</a>
             </div>
-            {% if user and not user.is_anonymous %}
+            {% if user.is_authenticated %}
             <div class="collapse navbar-collapse target">
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'main:level_select' %}">公式難易度表</a></li>
                     <li><a href="{% url 'main:difflist_level_select' %}">S乱難易度表</a></li>
                     <li><a href="{% url 'main:ranking_level_select' %}">ランキング</a></li>
                     <li><a href="{% url 'main:omikuji' %}">おみくじ</a></li>
-                    {% if not myself.premium %}
+                    {% if not user.premium %}
                     <li><a href="{% url 'main:premium' %}" class="premium">プレミアムユーザー</a></li>
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown-toggle" data-toggle="dropdown">
-                        {% if myself.premium %}
-                        <a href="{% url 'users:mypage' myself.username %}"><span class="premium">★{{ myself.username }}</span> <span class="caret"></span></a>
+                        {% if user.premium %}
+                        <a href="{% url 'users:mypage' user.username %}"><span class="premium">★{{ user.username }}</span> <span class="caret"></span></a>
                         {% else %}
-                        <a href="{% url 'users:mypage' myself.username %}">@{{ myself.username }} <span class="caret"></span></a>
+                        <a href="{% url 'users:mypage' user.username %}">@{{ user.username }} <span class="caret"></span></a>
                         {% endif %}
                     </li>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'users:mypage' myself.username %}">{% bootstrap_icon "user" %} マイページ</a></li>
+                        <li><a href="{% url 'users:mypage' user.username %}">{% bootstrap_icon "user" %} マイページ</a></li>
                         <li><a href="{% url 'users:settings' %}">{% bootstrap_icon "cog" %} 設定</a></li>
                         <li class="divider"></li>
                         <li><a href="{% url 'auth:logout' %}?next={% url 'main:index' %}">{% bootstrap_icon "log-out" %} ログアウト</a></li>
@@ -73,27 +82,25 @@
 
     <div id="main" class="container">
         <div class="content col-xs-12 col-md-10">
-            {% block content %}
-                {{ content }}
-            {% endblock %}
+            {% block content %}{{ content }}{% endblock %}
         </div><!-- /#main -->
 
         <div class="sidebar col-xs-12 col-md-2">
-            {% if user and not user.is_anonymous %}
-                {% if not myself.premium %}
-                <div class="ad-area ad-area-1 hidden-md hidden-lg">
-                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                    <!-- サイドバー - スパランドットコム -->
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-6195130822330787"
-                         data-ad-slot="1781717557"
-                         data-ad-format="auto"></ins>
-                    <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                </div><!-- /.ad-area -->
-                {% endif %}
+            {% if user.is_authenticated %}
+            {% if not user.premium %}
+            <div class="ad-area ad-area-1 hidden-md hidden-lg">
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- サイドバー - スパランドットコム -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-6195130822330787"
+                     data-ad-slot="1781717557"
+                     data-ad-format="auto"></ins>
+                <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div><!-- /.ad-area -->
+            {% endif %}
             <p>{% bootstrap_icon "th-list" %} メニュー</p>
             <ul>
                 <li><a class="no-decoration" href="{% url 'main:index' %}">トップ</a></li>
@@ -102,10 +109,10 @@
                 <li><a class="no-decoration" href="{% url 'main:ranking_level_select' %}">{% bootstrap_icon "king" %} ランキング</a></li>
                 <li><a class="no-decoration" href="{% url 'main:omikuji' %}">{% bootstrap_icon "gift" %} おみくじ</a></li>
                 <li><a class="no-decoration" href="{% url 'main:premium' %}">{% bootstrap_icon "star" %} プレミアムユーザー</a></li>
-                <li><a class="no-decoration" href="{% url 'users:mypage' myself.username %}">{% bootstrap_icon "user" %} マイページ</a></li>
+                <li><a class="no-decoration" href="{% url 'users:mypage' user.username %}">{% bootstrap_icon "user" %} マイページ</a></li>
                 <li><a class="no-decoration" href="{% url 'users:settings' %}">{% bootstrap_icon "cog" %} 設定</a></li>
             </ul>
-                {% if not myself.premium %}
+                {% if not user.premium %}
                 <div class="ad-area ad-area-2">
                     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                     <!-- サイドバー - スパランドットコム -->
@@ -123,21 +130,19 @@
         </div><!-- /.sidebar -->
     </div><!-- /#main -->
 
-    {% if user and not user.is_anonymous %}
-        {% if not myself.premium %}
-        <div class="ad-area ad-area-3 hidden-xs hidden-sm">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <!-- フッター - スパランドットコム -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-6195130822330787"
-                 data-ad-slot="2501571159"
-                 data-ad-format="auto"></ins>
-            <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div><!-- /.ad-area -->
-        {% endif %}
+    {% if user.is_authenticated and not user.premium %}
+    <div class="ad-area ad-area-3 hidden-xs hidden-sm">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- フッター - スパランドットコム -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-6195130822330787"
+             data-ad-slot="2501571159"
+             data-ad-format="auto"></ins>
+        <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div><!-- /.ad-area -->
     {% endif %}
 
     <div id="footer">

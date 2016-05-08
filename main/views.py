@@ -17,25 +17,17 @@ def index(request):
     '''
     トップページ
     '''
-    myself = request.user
-
-    context = {
-        'myself': myself
-    }
-    return render(request, 'main/index.html', context)
+    return render(request, 'main/index.html')
 
 @login_required
 def level_select(request):
     '''
     公式難易度表: レベル選択
     '''
-    myself = request.user
-
     # レベル 50〜38
     lv_range = range(50, 37, -1)
 
     context = {
-        'myself': myself,
         'lv_range': lv_range
     }
 
@@ -47,8 +39,6 @@ def level(request, level):
     難易度表
     @param level: レベル
     '''
-    myself = request.user
-
     # S乱レベルIDを取得
     max_lv = 50
 
@@ -66,7 +56,6 @@ def level(request, level):
     music_list = Music.objects.filter(level=level_id).order_by('sran_level', 'title')
 
     context = {
-        'myself': myself,
         'level': level,
         'music_list': music_list
     }
@@ -78,13 +67,10 @@ def difflist_level_select(request):
     '''
     難易度表: S乱レベル選択
     '''
-    myself = request.user
-
     # S乱レベル 17〜1
     s_lv_range = range(17, 0, -1)
 
     context = {
-        'myself': myself,
         's_lv_range': s_lv_range
     }
 
@@ -96,8 +82,6 @@ def difflist(request, sran_level):
     難易度表
     @param sran_level: S乱レベル
     '''
-    myself = request.user
-
     # S乱レベルIDを取得
     max_s_lv = 17
 
@@ -115,7 +99,6 @@ def difflist(request, sran_level):
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
 
     context = {
-        'myself': myself,
         'sran_level': sran_level,
         'music_list': music_list
     }
@@ -127,14 +110,12 @@ def difflist(request, sran_level):
 #     '''
 #     難易度表(全レベル)
 #     '''
-#     myself = request.user
 #
 #     # ユーザごとにデータを取得
 #     music_list = Music.objects.order_by('level', 'title')
 #     s_lv_range = range(17, 0, -1)
 #
 #     context = {
-#         'myself': myself,
 #         'music_list': music_list,
 #         's_lv_range': s_lv_range
 #     }
@@ -298,8 +279,7 @@ def edit(request, music_id):
         'music': music,
         'medal_form': medal_form,
         'bad_count_form': bad_count_form,
-        'extra_option_form': extra_option_form,
-        'myself': myself,
+        'extra_option_form': extra_option_form
     }
     return render(request, 'main/edit.html', context)
 
@@ -346,8 +326,7 @@ def delete(request, music_id):
     # 通常アクセスの場合
     else:
         context = {
-            'music': music,
-            'myself': myself
+            'music': music
         }
         return render(request, 'main/delete.html', context)
 
@@ -356,13 +335,10 @@ def ranking_level_select(request):
     '''
     ランキング: S乱レベル選択
     '''
-    myself = request.user
-
     # S乱レベル 17〜1
     s_lv_range = range(17, 0, -1)
 
     context = {
-        'myself': myself,
         's_lv_range': s_lv_range
     }
 
@@ -374,8 +350,6 @@ def ranking(request, sran_level):
     ランキング
     @param sran_level: S乱レベル
     '''
-    myself = request.user
-
     # 最高S乱レベル
     max_s_lv = 17
 
@@ -392,7 +366,6 @@ def ranking(request, sran_level):
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
 
     context = {
-        'myself': myself,
         'sran_level': sran_level,
         'music_list': music_list
     }
@@ -408,9 +381,6 @@ def ranking_detail(request, music_id):
     # 曲を取得
     music = get_object_or_404(Music, pk=music_id)
 
-    # 自ユーザーを取得
-    myself = request.user
-
     # 全ユーザーを取得
     users = CustomUser.objects.filter(is_active=True)
 
@@ -419,7 +389,6 @@ def ranking_detail(request, music_id):
     extra_option_list = Extra_Option.objects.filter(music=music)
 
     context = {
-        'myself': myself,
         'users': users,
         'music': music,
         'medal_list': medal_list,
@@ -435,7 +404,6 @@ def omikuji(request):
     スパランおみくじ
     指定されたS乱レベルの範囲の曲からランダムで選曲
     '''
-    myself = request.user
     sran_level_form = Sran_LevelForm()
     max_s_lv = 17   # 最大S乱レベル
 
@@ -509,7 +477,6 @@ def omikuji(request):
         except:
             extra_option = None
         context = {
-            'myself': myself,
             'sran_level_form': sran_level_form,
             'music': music,
             'medal': medal,
@@ -519,7 +486,6 @@ def omikuji(request):
         return render(request, 'main/omikuji.html', context)
     except:
         context = {
-            'myself': myself,
             'sran_level_form': sran_level_form
         }
         return render(request, 'main/omikuji.html', context)
@@ -529,12 +495,7 @@ def premium(request):
     '''
     プレミアムユーザー登録ページ
     '''
-    myself = request.user
-
-    context = {
-        'myself': myself
-    }
-    return render(request, 'main/premium.html', context)
+    return render(request, 'main/premium.html')
 
 # ---------- API ---------- #
 @login_required

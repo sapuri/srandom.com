@@ -9,33 +9,32 @@
     .user-list th {
         text-align: center;
     }
+    .user-list tr#myself td.index {
+        font-weight: bold;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <h1 class="page-header">登録ユーザー一覧</h1>
-
-<p>プレイヤー名を公開に設定しているユーザーのみを表示しています。</p>
-
+<p>スパランドットコムに登録しているユーザーの一覧です。</p>
+<p>プレイヤー名が「公開する」に設定されているユーザーのみを表示しています。</p>
+<br>
 <table class="user-list table table-striped table-bordered table-condensed">
     <thead>
+        <th></th>
         <th>ユーザー名</th>
         <th>プレイヤー名</th>
         <th>地域</th>
-        <th>登録日時</th>
     </thead>
     <tbody>
-        {% for user in users %}
-            {% ifequal user.username myself.username %}
-            <tr id="myself">
-            {% else %}
-            <tr>
-            {% endifequal %}
-                <td><a href="{% url 'users:mypage' user.username %}">{{ user.username }}</a></td>
-                <td>{{ user.player_name|default:'-' }}</td>
-                <td>{{ user.location|default:'-' }}</td>
-                <td>{{ user.date_joined|date:'Y/n/d G:i' }}</td>
-            </tr>
+        {% for selected_user in users %}
+        <tr{% ifequal selected_user.username user.username %} id="myself"{% endifequal %}>
+            <td class="index">{{ forloop.counter }}</td>
+            <td class="username"><a href="{% url 'users:mypage' selected_user.username %}">@{{ selected_user.username }}</a>{% if selected_user.premium %} <span class="premium">★</span>{% endif %}</td>
+            <td class="player_name">{{ selected_user.player_name|default:'-' }}</td>
+            <td class="location">{{ selected_user.location|default:'-' }}</td>
+        </tr>
         {% endfor %}
     </tbody>
 </table>

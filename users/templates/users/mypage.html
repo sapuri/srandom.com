@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block title %}{{ user.player_name|default:user.username }} - スパランドットコム{% endblock %}
+{% block title %}{{ selected_user.player_name|default:selected_user.username }} - スパランドットコム{% endblock %}
 
 {% block extrahead %}
 <meta name="description" content="スパランドットコムのプロフィールページです。">
@@ -11,52 +11,52 @@
 {% block content %}
 <h1 class="page-header">{% bootstrap_icon "book" %} プロフィール</h1>
 <h2>
-    {% if user.premium %}
+    {% if selected_user.premium %}
     <span class="premium">★</span>
     {% endif %}
-    {{ user.player_name|default:user.username }}
+    {{ selected_user.player_name|default:selected_user.username }}
 </h2>
-<p class="username"><a href="https://twitter.com/{{ user.username }}" target="_blank">@{{ user.username }}</a></p>
-<p>ポプともID: {{ user.split_poputomo_id|default:'------' }}</p>
-<p>都道府県: {{ user.location|default:'------' }}</p>
-<p>プロフィール:<br>{{ user.profile|default:'------' }}</p>
-<p>登録日時: {{ user.date_joined|date:"Y/n/d G:i" }}</p>
-{% ifequal user myself %}
-<p>最終ログイン日時: {{ user.last_login|date:"Y/n/d G:i" }}</p>
+<p class="username"><a href="https://twitter.com/{{ selected_user.username }}" target="_blank">@{{ selected_user.username }}</a></p>
+<p>ポプともID: {{ selected_user.split_poputomo_id|default:'------' }}</p>
+<p>都道府県: {{ selected_user.location|default:'------' }}</p>
+<p>プロフィール:<br>{{ selected_user.profile|default:'------' }}</p>
+<p>登録日時: {{ selected_user.date_joined|date:"Y/n/d G:i" }}</p>
+{% ifequal selected_user user %}
+<p>最終ログイン日時: {{ selected_user.last_login|date:"Y/n/d G:i" }}</p>
 {% endifequal %}
 
-{% ifequal user myself %}
+{% ifequal selected_user user %}
 <a href="{% url 'users:settings' %}" class="btn btn-default">{% bootstrap_icon "pencil" %} 編集する</a>
 {% endifequal %}
 
 <h2 class="clear-data page-header">
-    {% if user.cleardata_privacy == 2 and user == myself %}
+    {% if selected_user.cleardata_privacy == 2 and selected_user == user %}
     {% bootstrap_icon "star-empty" %} クリア状況 (非公開)
     {% else %}
     {% bootstrap_icon "star-empty" %} クリア状況
     {% endif %}
 </h2>
-{% if user.cleardata_privacy == 1 or user == myself %}
+{% if selected_user.cleardata_privacy == 1 or selected_user == user %}
     <p>グラフをクリックすると各レベルごとの詳しいクリア状況を確認できます。</p>
     {% for s_lv in s_lv_range %}
     Lv{{ s_lv }}
     <div id="slv-{{ s_lv }}" class="clear-graph graph">
-        <a href="{% url 'users:cleardata' user.username s_lv %}"><span class="bar" style="background-color:#FFFFFF;"><div class="loading"></div></span></a>
+        <a href="{% url 'users:cleardata' selected_user.username s_lv %}"><span class="bar" style="background-color:#FFFFFF;"><div class="loading"></div></span></a>
     </div>
     {% endfor %}
-    <script>getPercentageOfClear({{ user.id }});</script>
+    <script>getPercentageOfClear({{ selected_user.id }});</script>
 {% else %}
     <p>クリアデータは非公開に設定されています。</p>
 {% endif %}
 
 <h2 class="updated-recently page-header">
-    {% if user.updated_recently_privacy == 2 and user == myself %}
+    {% if selected_user.updated_recently_privacy == 2 and selected_user == user %}
     {% bootstrap_icon "dashboard" %} 最近更新した曲 (非公開)
     {% else %}
     {% bootstrap_icon "dashboard" %} 最近更新した曲
     {% endif %}
 </h2>
-{% if user.updated_recently_privacy == 1 or user == myself %}
+{% if selected_user.updated_recently_privacy == 1 or selected_user == user %}
     <table class="music-list table table-condensed">
         <thead>
             <th>Lv</th>
@@ -70,7 +70,7 @@
         <tbody>
             {% for recent in recent_medal %}
             <tr id="music-{{ recent.music.id }}">
-                <script>getClearStatus({{ recent.music.id }}, {{ user.id }});</script>
+                <script>getClearStatus({{ recent.music.id }}, {{ selected_user.id }});</script>
                 <td class="level">{{ recent.music.level }}</td>
                 <td class="title"><a href="{% url 'main:ranking_detail' recent.music.id %}">{{ recent.music.title }}</a></td>
                 <td class="difficulty">{{ recent.music.difficulty }}</td>
@@ -78,15 +78,15 @@
                 <td class="medal">
                     <div class="loading"></div>
                     <img>
-                    <script>getMedal({{ recent.music.id }}, {{ user.id }});</script>
+                    <script>getMedal({{ recent.music.id }}, {{ selected_user.id }});</script>
                 </td>
                 <td class="bad_count">
                     <div class="loading"></div>
-                    <script>getBadCount({{ recent.music.id }}, {{ user.id }});</script>
+                    <script>getBadCount({{ recent.music.id }}, {{ selected_user.id }});</script>
                 </td>
                 <td class="updated_at">
                     <div class="loading"></div>
-                    <script>getLatestUpdatedAt({{ recent.music.id }}, {{ user.id }});</script>
+                    <script>getLatestUpdatedAt({{ recent.music.id }}, {{ selected_user.id }});</script>
                 </td>
             </tr>
             {% endfor %}

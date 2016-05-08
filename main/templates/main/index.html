@@ -8,9 +8,9 @@
 
 {% block content %}
 <h1 class="page-header">ようこそ！</h1>
-{% if user and not user.is_anonymous %}
-    <p class="big">ようこそ {{ myself.player_name|default:myself.username }}さん！</p>
-    {% if not myself.player_name %}
+{% if user.is_authenticated %}
+    <p class="big">ようこそ {{ user.player_name|default:user.username }}さん！</p>
+    {% if not user.player_name %}
     <p class="big"><a href="{% url 'users:settings' %}">プロフィールを設定</a>してみましょう！</p>
     {% endif %}
     <p><a href="{% url 'main:difflist_level_select' %}">難易度表ページ</a>でクリア状況を記録できます！</p>
