@@ -403,6 +403,8 @@ def omikuji(request):
     スパランおみくじ
     指定されたS乱レベルの範囲の曲からランダムで選曲
     '''
+    myself = request.user
+
     sran_level_form = Sran_LevelForm()
     max_s_lv = 17   # 最大S乱レベル
 
