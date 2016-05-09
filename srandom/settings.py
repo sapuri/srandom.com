@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'bootstrap3',                       # django-bootstrap3
     'social.apps.django_app.default',   # python-social-auth
     'debug_toolbar',                    # django-debug-toolbar
+    'compressor',                       # django-compressor
     'main.apps.MainConfig',             # Main
     'users.apps.UsersConfig',           # Users
 ]
@@ -131,15 +132,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
+STATICFILES_FINDERS = (
+    'compressor.finders.CompressorFinder',
+)
+
 # サーバー時はON
-# STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 STATIC_URL = '/static/'
 
 # ローカル時はON
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, "static"),
+# )
 
 # メッセージ設定
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
@@ -147,6 +152,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 # ログインせずに @login_required ページにアクセスしたら飛ばす
 LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+
 
 # django-bootstrap3
 BOOTSTRAP3 = {
@@ -165,6 +171,10 @@ AUTHENTICATION_BACKENDS = [
 SOCIAL_AUTH_TWITTER_KEY    = 'Pwyx6QZgunJsbrArLub7pNKwu'
 SOCIAL_AUTH_TWITTER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO'
 
+
+# django-compressor
+# DEBUG と反対の値になるため通常は指定する必要無し
+# COMPRESS_ENABLED = True
 
 # django-htmlmin
 # DEBUG と反対の値になるため通常は指定する必要無し

@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load bootstrap3 %}
+{% load compress %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -13,6 +14,7 @@
     <script src="{% static 'js/global.js' %}"></script>
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
     {% block extrahead %}{% endblock %}
+    {% compress js inline %}
     <!-- <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -22,14 +24,17 @@
         {% if user.is_authenticated %}ga('set', 'userId', '{{ user.username }}');{% endif %}
         ga('send', 'pageview');
     </script> -->
+    {% endcompress %}
     {% if user.is_authenticated and not user.premium %}
-    <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
+    <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
+    {% compress js inline %}
+    <!-- <script>
       (adsbygoogle = window.adsbygoogle || []).push({
         google_ad_client: "ca-pub-6195130822330787",
         enable_page_level_ads: true
       });
     </script> -->
+    {% endcompress %}
     {% endif %}
 </head>
 <body>
@@ -92,13 +97,11 @@
                 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                 <!-- サイドバー - スパランドットコム -->
                 <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-6195130822330787"
-                     data-ad-slot="1781717557"
-                     data-ad-format="auto"></ins>
-                <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
+                    style="display:block"
+                    data-ad-client="ca-pub-6195130822330787"
+                    data-ad-slot="1781717557"
+                    data-ad-format="auto"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div><!-- /.ad-area -->
             {% endif %}
             <p>{% bootstrap_icon "th-list" %} メニュー</p>
@@ -121,9 +124,7 @@
                          data-ad-client="ca-pub-6195130822330787"
                          data-ad-slot="1781717557"
                          data-ad-format="auto"></ins>
-                    <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
                 </div><!-- /.ad-area -->
                 {% endif %}
             {% endif %}
@@ -139,9 +140,7 @@
              data-ad-client="ca-pub-6195130822330787"
              data-ad-slot="2501571159"
              data-ad-format="auto"></ins>
-        <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div><!-- /.ad-area -->
     {% endif %}
 
