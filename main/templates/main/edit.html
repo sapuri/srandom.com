@@ -17,9 +17,31 @@
     <div class="form-group"><div class="checkbox"><label for="tweet"><input id="tweet" name="tweet" type="checkbox" />{% bootstrap_icon "link" %} 更新内容をツイートする</label></div></div>
     {% buttons %}
     <br>
-    <input class="btn btn-primary" type="submit" value="保存する">
-    <br>
-    <a href="/delete/{{ music.id }}/"><span class="btn btn-danger" style="margin-top:60px;">{% bootstrap_icon "trash" %} 記録を削除する</span></a>
+    <input class="btn btn-primary" type="submit" name="save" value="保存する">
     {% endbuttons %}
 </form>
+
+<button class="btn btn-danger" data-toggle="modal" data-target="#modal" style="margin-top:30px;">
+    {% bootstrap_icon "trash" %} 記録を削除する
+</button>
+
+<div id="modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">{% bootstrap_icon "alert" %} 記録を削除する</h4>
+            </div>
+            <div class="modal-body">
+                本当に「{{ music.title }} ({{ music.difficulty }})」の記録を削除しますか？
+            </div>
+            <div class="modal-footer">
+                <form action="./?next={{ request.META.HTTP_REFERER }}" method="post">{% csrf_token %}
+                    <button class="btn btn-default" type="button" data-dismiss="modal">キャンセル</button>
+                    <input class="btn btn-danger" type="submit" name="delete" value="削除する">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

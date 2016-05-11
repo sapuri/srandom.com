@@ -136,113 +136,139 @@ def edit(request, music_id):
 
     # POSTでアクセスされた場合
     if request.method == 'POST':
-        # 日本の日時を取得
-        now_datetime = datetime.now(pytz.timezone('Asia/Tokyo'))
+        if 'save' in request.POST:
+            # 記録を保存
+            # 日本の日時を取得
+            now_datetime = datetime.now(pytz.timezone('Asia/Tokyo'))
 
-        # クリアメダルを登録
-        try:
-            # メダルが存在すれば呼び出して更新
-            medal = Medal.objects.get(music=music_id, user=myself)
-            medal_form = MedalForm(request.POST, instance=medal)
-        except:
-            # メダルが存在しなければ新規追加
-            medal_form = MedalForm(request.POST)
+            # クリアメダルを登録
+            try:
+                # メダルが存在すれば呼び出して更新
+                medal = Medal.objects.get(music=music_id, user=myself)
+                medal_form = MedalForm(request.POST, instance=medal)
+            except:
+                # メダルが存在しなければ新規追加
+                medal_form = MedalForm(request.POST)
 
-        if medal_form.is_valid():
-            if medal_form.has_changed():
-                # 保存処理
-                medal = medal_form.save(commit = False)                 # 後でまとめて保存
-                medal.music = music                                     # 曲
-                medal.user = myself                                     # ユーザー
-                medal.updated_at = now_datetime                         # 現在日時
-                medal.save()                                            # 保存
+            if medal_form.is_valid():
+                if medal_form.has_changed():
+                    # 保存処理
+                    medal = medal_form.save(commit = False)                 # 後でまとめて保存
+                    medal.music = music                                     # 曲
+                    medal.user = myself                                     # ユーザー
+                    medal.updated_at = now_datetime                         # 現在日時
+                    medal.save()                                            # 保存
 
-        # BAD数を登録
-        try:
-            # BAD数が存在すれば呼び出して更新
-            bad_count = Bad_Count.objects.get(music=music_id, user=myself)
-            bad_count_form = Bad_CountForm(request.POST, instance=bad_count)
-        except:
-            # BAD数が存在しなければ新規追加
-            bad_count_form = Bad_CountForm(request.POST)
+            # BAD数を登録
+            try:
+                # BAD数が存在すれば呼び出して更新
+                bad_count = Bad_Count.objects.get(music=music_id, user=myself)
+                bad_count_form = Bad_CountForm(request.POST, instance=bad_count)
+            except:
+                # BAD数が存在しなければ新規追加
+                bad_count_form = Bad_CountForm(request.POST)
 
-        if medal_form.is_valid():
-            if bad_count_form.has_changed():
-                # 保存処理
-                bad_count = bad_count_form.save(commit = False)         # 後でまとめて保存
-                bad_count.music = music                                 # 曲
-                bad_count.user = myself                                 # ユーザー
-                bad_count.updated_at = now_datetime                     # 現在日時
-                bad_count.save()                                        # 保存
+            if medal_form.is_valid():
+                if bad_count_form.has_changed():
+                    # 保存処理
+                    bad_count = bad_count_form.save(commit = False)         # 後でまとめて保存
+                    bad_count.music = music                                 # 曲
+                    bad_count.user = myself                                 # ユーザー
+                    bad_count.updated_at = now_datetime                     # 現在日時
+                    bad_count.save()                                        # 保存
 
-        # エクストラオプションを記録
-        try:
-            # エクストラオプションが存在すれば呼び出して更新
-            extra_option = Extra_Option.objects.get(music=music_id, user=myself)
-            extra_option_form = Extra_OptionForm(request.POST, instance=extra_option)
+            # エクストラオプションを記録
+            try:
+                # エクストラオプションが存在すれば呼び出して更新
+                extra_option = Extra_Option.objects.get(music=music_id, user=myself)
+                extra_option_form = Extra_OptionForm(request.POST, instance=extra_option)
 
-            if extra_option_form.has_changed():
-                # BooleanFieldの場合、チェックを入れないとvalidにならないのでis_validでTrue/Falseを判定
+                if extra_option_form.has_changed():
+                    # BooleanFieldの場合、チェックを入れないとvalidにならないのでis_validでTrue/Falseを判定
+                    if extra_option_form.is_valid():
+                        # チェックされていればTrueを設定
+                        extra_option = extra_option_form.save(commit = False)   # 後でまとめて保存
+                    else:
+                        # チェックされていなければFalseを設定
+                        extra_option.hard = 0   # False
+
+                    # 保存処理
+                    extra_option.music = music                              # 曲
+                    extra_option.user = myself                              # ユーザー
+                    extra_option.updated_at = now_datetime                  # 現在日時
+                    extra_option.save()                                     # 保存
+            except:
+                # エクストラオプションが存在しなければ新規追加
+                extra_option_form = Extra_OptionForm(request.POST)
+
                 if extra_option_form.is_valid():
-                    # チェックされていればTrueを設定
+                    # 保存処理
                     extra_option = extra_option_form.save(commit = False)   # 後でまとめて保存
-                else:
-                    # チェックされていなければFalseを設定
-                    extra_option.hard = 0   # False
+                    extra_option.music = music                              # 曲
+                    extra_option.user = myself                              # ユーザー
+                    extra_option.updated_at = now_datetime                  # 現在日時
+                    extra_option.save()                                     # 保存
 
-                # 保存処理
-                extra_option.music = music                              # 曲
-                extra_option.user = myself                              # ユーザー
-                extra_option.updated_at = now_datetime                  # 現在日時
-                extra_option.save()                                     # 保存
-        except:
-            # エクストラオプションが存在しなければ新規追加
-            extra_option_form = Extra_OptionForm(request.POST)
-
-            if extra_option_form.is_valid():
-                # 保存処理
-                extra_option = extra_option_form.save(commit = False)   # 後でまとめて保存
-                extra_option.music = music                              # 曲
-                extra_option.user = myself                              # ユーザー
-                extra_option.updated_at = now_datetime                  # 現在日時
-                extra_option.save()                                     # 保存
-
-        # 更新をツイート
-        try:
-            if request.POST['tweet']:
-                # 自ユーザーのtwitter情報を取得
-                social = myself.social_auth.get(provider='twitter')
-                # パラメータを取得
-                oauth_token = social.extra_data['access_token']['oauth_token']
-                oauth_secret = social.extra_data['access_token']['oauth_token_secret']
-                CONSUMER_KEY = 'Pwyx6QZgunJsbrArLub7pNKwu'
-                CONSUMER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO'
-                # Twitterクラスを作成
-                twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
-                # ツイート
-                if request.POST['bad_count']:
-                    tweet = '『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』のBAD数を' + request.POST['bad_count'] + 'に更新！ #スパランドットコム http://srandom.com/ranking/detail/' + str(music.id) + '/'
-                    try:
-                        twitter.statuses.update(status = tweet)
+            # 更新をツイート
+            try:
+                if request.POST['tweet']:
+                    # 自ユーザーのtwitter情報を取得
+                    social = myself.social_auth.get(provider='twitter')
+                    # パラメータを取得
+                    oauth_token = social.extra_data['access_token']['oauth_token']
+                    oauth_secret = social.extra_data['access_token']['oauth_token_secret']
+                    CONSUMER_KEY = 'Pwyx6QZgunJsbrArLub7pNKwu'
+                    CONSUMER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO'
+                    # Twitterクラスを作成
+                    twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
+                    # ツイート
+                    if request.POST['bad_count']:
+                        tweet = '『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』のBAD数を' + request.POST['bad_count'] + 'に更新！ #スパランドットコム http://srandom.com/ranking/detail/' + str(music.id) + '/'
+                        try:
+                            twitter.statuses.update(status = tweet)
+                            # リダイレクト先にメッセージを表示
+                            msg = '更新内容をツイートしました！'
+                            messages.success(request, msg)
+                        except:
+                            # リダイレクト先にメッセージを表示
+                            msg = '更新内容をツイートできませんでした'
+                            messages.error(request, msg)
+                    else:
                         # リダイレクト先にメッセージを表示
-                        msg = '更新内容をツイートしました！'
-                        messages.success(request, msg)
-                    except:
-                        # リダイレクト先にメッセージを表示
-                        msg = '更新内容をツイートできませんでした'
+                        msg = '更新内容をツイートするにはBAD数の入力が必要です'
                         messages.error(request, msg)
-                else:
-                    # リダイレクト先にメッセージを表示
-                    msg = '更新内容をツイートするにはBAD数の入力が必要です'
-                    messages.error(request, msg)
 
-        # チェックされなかった場合はパス
-        except KeyError:
-            pass
+            # チェックされなかった場合はパス
+            except KeyError:
+                pass
 
-        # リダイレクト先にメッセージを表示
-        msg = music.title + ' (' + music.difficulty.difficulty_short() + ') を更新しました！'
-        messages.success(request, msg)
+            # リダイレクト先にメッセージを表示
+            msg = music.title + ' (' + music.difficulty.difficulty_short() + ') を更新しました！'
+            messages.success(request, msg)
+
+        if 'delete' in request.POST:
+            # 記録を削除
+            # クリアメダルを取得
+            medal = Medal.objects.filter(music=music_id, user=myself)
+            if medal:
+                # メダルが存在すれば削除
+                medal.delete()
+
+            # BAD数を取得
+            bad_count = Bad_Count.objects.filter(music=music_id, user=myself)
+            if bad_count:
+                # BAD数が存在すれば削除
+                bad_count.delete()
+
+            # エクストラオプションを取得
+            extra_option = Extra_Option.objects.filter(music=music_id, user=myself)
+            if extra_option:
+                # エクストラオプションが存在すれば削除
+                extra_option.delete()
+
+            # リダイレクト先にメッセージを表示
+            msg = music.title + ' (' + music.difficulty.difficulty_short() + ') の記録を削除しました'
+            messages.success(request, msg)
 
         if 'next' in request.GET:
             return redirect(request.GET['next'])
@@ -284,51 +310,51 @@ def edit(request, music_id):
     return render(request, 'main/edit.html', context)
 
 # 記録削除
-@login_required
-def delete(request, music_id):
-    '''
-    指定された曲の記録を削除
-    @param music_id: 曲ID
-    '''
-    # 曲を取得
-    music = get_object_or_404(Music, pk=music_id)
-
-    # ユーザーを取得
-    myself = request.user
-
-    # POSTでアクセスされた場合
-    if request.method == 'POST':
-        # クリアメダルを取得
-        medal = Medal.objects.filter(music=music_id, user=myself)
-        if medal:
-            # メダルが存在すれば削除
-            medal.delete()
-
-        # BAD数を取得
-        bad_count = Bad_Count.objects.filter(music=music_id, user=myself)
-        if bad_count:
-            # BAD数が存在すれば削除
-            bad_count.delete()
-
-        # エクストラオプションを取得
-        extra_option = Extra_Option.objects.filter(music=music_id, user=myself)
-        if extra_option:
-            # エクストラオプションが存在すれば削除
-            extra_option.delete()
-
-        # リダイレクト先にメッセージを表示
-        msg = music.title + ' (' + music.difficulty.difficulty_short() + ') の記録を削除しました'
-        messages.success(request, msg)
-
-        if 'next' in request.GET:
-            return redirect(request.GET['next'])
-
-    # 通常アクセスの場合
-    else:
-        context = {
-            'music': music
-        }
-        return render(request, 'main/delete.html', context)
+# @login_required
+# def delete(request, music_id):
+#     '''
+#     指定された曲の記録を削除
+#     @param music_id: 曲ID
+#     '''
+#     # 曲を取得
+#     music = get_object_or_404(Music, pk=music_id)
+# 
+#     # ユーザーを取得
+#     myself = request.user
+#
+#     # POSTでアクセスされた場合
+#     if request.method == 'POST':
+#         # クリアメダルを取得
+#         medal = Medal.objects.filter(music=music_id, user=myself)
+#         if medal:
+#             # メダルが存在すれば削除
+#             medal.delete()
+#
+#         # BAD数を取得
+#         bad_count = Bad_Count.objects.filter(music=music_id, user=myself)
+#         if bad_count:
+#             # BAD数が存在すれば削除
+#             bad_count.delete()
+#
+#         # エクストラオプションを取得
+#         extra_option = Extra_Option.objects.filter(music=music_id, user=myself)
+#         if extra_option:
+#             # エクストラオプションが存在すれば削除
+#             extra_option.delete()
+#
+#         # リダイレクト先にメッセージを表示
+#         msg = music.title + ' (' + music.difficulty.difficulty_short() + ') の記録を削除しました'
+#         messages.success(request, msg)
+#
+#         if 'next' in request.GET:
+#             return redirect(request.GET['next'])
+#
+#     # 通常アクセスの場合
+#     else:
+#         context = {
+#             'music': music
+#         }
+#         return render(request, 'main/delete.html', context)
 
 @login_required
 def ranking_level_select(request):
