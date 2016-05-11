@@ -38,7 +38,7 @@
             <div class="modal-footer">
                 <form action="./?next={{ request.META.HTTP_REFERER }}" method="post">{% csrf_token %}
                     <button class="btn btn-default" type="button" data-dismiss="modal">キャンセル</button>
-                    <input class="btn btn-danger" type="submit" name="delete" value="削除する">
+                    <input class="btn btn-primary" type="submit" name="delete" value="削除する">
                 </form>
             </div>
         </div>
