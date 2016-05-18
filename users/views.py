@@ -177,6 +177,8 @@ def download(request, file_type):
         else:
             raise PermissionDenied
         return response
+    else:
+        raise Http404
 
 # ---------- API ---------- #
 def get_percentage_of_clear(request, user_id):

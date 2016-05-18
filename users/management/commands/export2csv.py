@@ -48,7 +48,8 @@ class Command(BaseCommand):
                     csv_data.append(['', '', '', '', '', '', '', '', ''])
 
             # CSVファイルに書き込み
-            f = open('./csv/export/'+selected_user.username+'.csv', 'w')
+            file_path = './csv/export/'+request.user.username+'.csv'
+            f = open(file_path, 'w')
             writer = csv.writer(f)
             writer.writerows(csv_data)
             f.close()
