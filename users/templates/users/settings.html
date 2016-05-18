@@ -30,6 +30,20 @@
             {% endbuttons %}
         </form>
     </section>
+
+    <section class="settings-panel">
+        <h2 class="settings-header page-header">{% bootstrap_icon "export" %} CSV エクスポート <span class="premium">★</span></h2>
+        <p>クリアデータを CSV ファイルで保存できます。</p>
+        <p>CSV ファイルは毎日 AM 5:30 頃に最新のデータに更新されます。</p>
+        <p>※ 文字コードは "Shift_JIS (CP932)" で出力されます。</p>
+        <br>
+        {% if user.premium %}
+        <a href="{% url 'users:download' 'csv' %}"><button class="btn btn-success" type="button">{% bootstrap_icon "download" %} ダウンロードする</button></a>
+        {% else %}
+        <a href="{% url 'main:premium' %}" target="_blank"><button class="btn btn-success" type="button">{% bootstrap_icon "download" %} ダウンロードする</button></a>
+        {% endif %}
+    </section>
+
     <section class="settings-panel settings-panel-danger">
         <h2 class="settings-header page-header">{% bootstrap_icon "trash" %} アカウント削除</h2>
         <p class="danger">一度アカウントを削除すると、二度と元に戻せません。十分ご注意ください。</p>

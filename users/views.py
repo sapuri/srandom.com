@@ -1,11 +1,10 @@
-import zenhan
+import zenhan, json
 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse
-import json
+from django.http import HttpResponse, Http404
 
 from .models import CustomUser
 from main.models import Bad_Count, Medal, Extra_Option, Music
@@ -160,6 +159,24 @@ def deactivate(request):
         return redirect('/auth/logout/?next=/')
 
     return render(request, 'users/deactivate.html')
+
+@login_required
+def download(request, file_type):
+    '''
+    ファイルダウンロード
+    @param {string} file_type ダウンロードするファイルの種類
+    '''
+    if file_type == 'csv':
+        if request.user.premium:
+            file_path = './csv/export/'+request.user.username+'.csv'
+            try:
+                response = HttpResponse(open(file_path).read(), content_type='text/csv; charset=cp932')
+            except FileNotFoundError:
+                raise Http404
+            response['Content-Disposition'] = 'attachment; filename='+request.user.username+'.csv'
+        else:
+            raise PermissionDenied
+        return response
 
 # ---------- API ---------- #
 def get_percentage_of_clear(request, user_id):

@@ -80,27 +80,27 @@ class Medal(models.Model):
     # 文字列で返す
     def output_str(self):
         if self.medal == 1:
-            return 'Perfect'
+            return '金'
         elif self.medal == 2:
-            return 'Fullconbo_Star'
+            return '銀☆'
         elif self.medal == 3:
-            return 'Fullconbo_Diamond'
+            return '銀◇'
         elif self.medal == 4:
-            return 'Fullconbo_Circle'
+            return '銀○'
         elif self.medal == 5:
-            return 'Clear_Star'
+            return '銅☆'
         elif self.medal == 6:
-            return 'Clear_Diamond'
+            return '銅◇'
         elif self.medal == 7:
-            return 'Clear_Circle'
+            return '銅○'
         elif self.medal == 8:
-            return 'Failed_Star'
+            return '★'
         elif self.medal == 9:
-            return 'Failed_Diamond'
+            return '◆'
         elif self.medal == 10:
-            return 'Failed_Circle'
+            return '●'
         elif self.medal == 11:
-            return 'Easy'
+            return '易'
         else:
             return 0
 

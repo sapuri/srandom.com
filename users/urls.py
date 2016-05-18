@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^deactivate/$', views.deactivate, name='deactivate'),
     url(r'^(?P<username>\w+)/$', views.mypage, name='mypage'),
     url(r'^(?P<username>\w+)/cleardata/(?P<sran_level>\d+)/$', views.cleardata, name='cleardata'),
+    url(r'^download/(?P<file_type>\w+)/$', views.download, name='download'),
     url(r'^api/get_percentage_of_clear/(?P<user_id>\d+)/$', views.get_percentage_of_clear, name='get_percentage_of_clear'),
 ]
