@@ -168,7 +168,9 @@ def download(request, file_type):
     '''
     if file_type == 'csv':
         if request.user.premium:
-            file_path = './csv/export/'+request.user.username+'.csv'
+            BASE_DIR = '/Users/minami/workspace/django_1.9/srandom'   # ローカル
+            # BASE_DIR = '/var/www/srandom.com'                         # VPS
+            file_path = BASE_DIR+'/csv/export/'+request.user.username+'.csv'
             try:
                 response = HttpResponse(open(file_path).read(), content_type='text/csv; charset=cp932')
             except FileNotFoundError:

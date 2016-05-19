@@ -48,7 +48,9 @@ class Command(BaseCommand):
                     csv_data.append(['', '', '', '', '', '', '', '', ''])
 
             # CSVファイルに書き込み
-            file_path = './csv/export/'+request.user.username+'.csv'
+            BASE_DIR = '/Users/minami/workspace/django_1.9/srandom'   # ローカル
+            # BASE_DIR = '/var/www/srandom.com'                         # VPS
+            file_path = BASE_DIR+'/csv/export/'+selected_user.username+'.csv'
             f = open(file_path, 'w')
             writer = csv.writer(f)
             writer.writerows(csv_data)
