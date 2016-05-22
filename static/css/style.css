@@ -91,6 +91,11 @@ tr.clickable:hover {
     min-height: 400px;
 }
 
+/* 曲名の場合は小さめに */
+h1.music-title {
+    font-size: 25px;
+}
+
 /* メッセージボックス */
 #message-box{
     display: none;
@@ -180,11 +185,6 @@ tr.clickable:hover {
     height: 100%;
 }
 
-/* 登録ユーザー一覧 */
-.user-list {
-    color: #393939;
-}
-
 /* トップへ戻るボタン */
 .pagetop {
     display: none;
@@ -222,6 +222,11 @@ tr.clickable:hover {
         border-radius: 50%;
         opacity: 1;
     }
+
+/* 登録ユーザー一覧 */
+.user-list {
+    color: #393939;
+}
 
 /* グラフ描画 */
 .graph {
