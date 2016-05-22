@@ -6,14 +6,23 @@ from users.models import CustomUser
 from main.models import Bad_Count, Medal, Extra_Option, Music
 
 class Command(BaseCommand):
+    help = 'プレミアムユーザーのクリアデータを CSV にエクスポートします。'
+
     def handle(self, *args, **options):
-        ''' クリアデータを CSV にエクスポート '''
-        # プレミアムユーザーを取得
-        selected_users = CustomUser.objects.filter(is_active=True, premium=True)
-        selected_users_count = CustomUser.objects.filter(is_active=True, premium=True).count()
-        print ('active premium user: '+str(selected_users.count())+' users')
+        username = ''
+
+        if username:
+            print ('ユーザー名が指定されました\n')
+            selected_users = CustomUser.objects.filter(username=username)
+        else:
+            # プレミアムユーザーを取得
+            selected_users = CustomUser.objects.filter(is_active=True, premium=True)
+            selected_users_count = CustomUser.objects.filter(is_active=True, premium=True).count()
+            print ('active premium user: '+str(selected_users.count())+' users\n')
 
         for selected_user in selected_users:
+            print ('"{username}" のクリアデータを読み込んでいます...'.format(username=selected_user.username))
+
             # CSV書き込み用データ (2次元配列)
             csv_data = [['S乱Lv', 'Lv', '曲名', '難易度', 'BPM', 'メダル', 'ハード', 'BAD数', '更新日時']]
 
@@ -56,7 +65,7 @@ class Command(BaseCommand):
             writer.writerows(csv_data)
             f.close()
 
-            print ('updated: '+selected_user.username+'.csv')
+            print ('"{username}" のクリアデータを出力しました: {username}.csv\n'.format(username=selected_user.username))
 
         print ('Complete!')
 
