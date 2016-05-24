@@ -14,10 +14,15 @@ from users.models import CustomUser
 from .forms import Sran_LevelForm, MedalForm, Bad_CountForm, Extra_OptionForm
 
 def index(request):
-    '''
-    トップページ
-    '''
-    return render(request, 'main/index.html')
+    ''' トップページ '''
+    medal_num = Medal.objects.all().count()
+    recent_medal = Medal.objects.all().order_by('-updated_at')[:10]
+
+    context = {
+        'medal_num': medal_num,
+        'recent_medal': recent_medal
+    }
+    return render(request, 'main/index.html', context)
 
 @login_required
 def level_select(request):

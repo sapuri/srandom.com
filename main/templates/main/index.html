@@ -45,6 +45,35 @@
 <p>楽曲情報は毎日自動的に更新されるので、常に最新の難易度表を使ってクリア状況を記録できます。</p>
 <p>レスポンシブ設計なので、スマートフォンやタブレットでもご利用できます。</p>
 
+<div id="activity" class="row">
+    <div class="col-xs-12 col-md-5">
+        <h3 class="page-header">最近更新された曲</h2>
+        <p>現在 {{ medal_num }} 件の記録が登録されています</p>
+        <ul class="music-list">
+            {% for recent in recent_medal %}
+            <a href="{% url 'main:ranking_detail' recent.music.id %}">
+                <li class="music {% if recent.music.difficulty.difficulty_short == 'EX' %}extra{% elif recent.music.difficulty.difficulty_short == 'H' %}hyper{% elif recent.music.difficulty.difficulty_short == 'N' %}normal{% else %}easy{% endif %}">
+                    {{ recent.music.title }} ({{ recent.music.difficulty }})
+                </li>
+            </a>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-xs-12 col-md-7">
+        <h3 class="page-header">ツイート</h2>
+        <p>スパランドットコムに関するツイートのタイムラインです</p>
+        <div class="tweet-box">
+            {% if True %}
+            <a class="twitter-timeline" href="https://twitter.com/hashtag/%E3%82%B9%E3%83%91%E3%83%A9%E3%83%B3%E3%83%89%E3%83%83%E3%83%88%E3%82%B3%E3%83%A0" data-widget-id="735061004447424512" data-chrome="noheader nofooter noborders">#スパランドットコム のツイート</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            {% else %}
+            <a class="twitter-timeline" href="https://twitter.com/hashtag/%E3%82%B9%E3%83%91%E3%83%A9%E3%83%B3%E3%83%89%E3%83%83%E3%83%88%E3%82%B3%E3%83%A0" data-widget-id="735061948924985344" data-chrome="noheader nofooter noborders">#スパランドットコム のツイート</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
 <h2 class="page-header">更新情報</h2>
 <p>2016/05/19 CSVエクスポート機能を追加しました</p>
 <p>2016/05/09 プロフィールページなど、一部のページはログインしなくても閲覧できるようにしました</p>

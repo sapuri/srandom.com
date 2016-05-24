@@ -91,6 +91,33 @@ tr.clickable:hover {
     min-height: 400px;
 }
 
+/* トップページ */
+ul.music-list {
+    margin: 0;
+    padding: 0;
+}
+
+li.music {
+    text-align: center;
+    padding: 8px;
+    margin-bottom: .5em;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+    li.music.extra {
+        background: rgb(243, 192, 171);
+    }
+    li.music.hyper {
+        background: rgb(255, 242, 128);
+    }
+    li.music.normal {
+        background: rgb(153, 207, 229);
+    }
+    li.music.easy {
+        background: rgb(166, 227, 157);
+    }
+
 /* 曲名の場合は小さめに */
 h1.music-title {
     font-size: 25px;
@@ -119,6 +146,7 @@ h1.music-title {
 	padding: .5em .75em;
 	background-color: #f6f6f6;
 	border-left: 6px solid #ccc;
+    border-radius: 5px;
 }
 
     /* フォルダランプ */
