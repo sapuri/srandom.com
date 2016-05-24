@@ -15,18 +15,22 @@ class Sran_LevelAdmin(admin.ModelAdmin):
 
 class MusicAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'difficulty', 'level', 'sran_level', 'bpm')
+    list_filter = ('level', 'sran_level',)
     ordering = ('id',)
 
 class MedalAdmin(admin.ModelAdmin):
     list_display = ('id', 'medal', 'music', 'user', 'updated_at')
+    list_filter = ('user',)
     ordering = ('-id',)
 
 class Bad_CountAdmin(admin.ModelAdmin):
     list_display = ('id', 'bad_count', 'music', 'user', 'updated_at')
+    list_filter = ('user',)
     ordering = ('-id',)
 
 class Extra_OptionAdmin(admin.ModelAdmin):
     list_display = ('id', 'hard', 'music', 'user', 'updated_at')
+    list_filter = ('user',)
     ordering = ('-id',)
 
 admin.site.register(Difficulty, DifficultyAdmin)
