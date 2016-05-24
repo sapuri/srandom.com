@@ -9,7 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}スパランドットコム - ポップンミュージックのスパラン愛好家のためのクリア状況管理サイト{% endblock %}</title>
     {% bootstrap_css %}
-    <link rel="stylesheet" href="/static/css/style.css?v=20160521">
+    <link rel="stylesheet" href="/static/css/style.css?v=20160524">
+    {% if user.id == 2 %}<link rel="stylesheet" href="/static/css/premium_dark.css?v=20160524">{% endif %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <script src="{% static 'js/global.js' %}"></script>
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
@@ -87,7 +88,7 @@
 
     <div id="main" class="container">
         <div class="content col-xs-12 col-md-10">
-            {% block content %}{{ content }}{% endblock %}
+            {% block content %}{% endblock %}
         </div><!-- /#main -->
 
         <div class="sidebar col-xs-12 col-md-2">
@@ -149,7 +150,7 @@
             <div class="footer-left">
                 <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://srandom.com" data-text="スパランドットコム - ポップンミュージックのスパラン愛好家のためのクリア状況管理サイト" data-lang="ja">ツイート</a>
                 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-                <p>スパランドットコム - ポップンミュージックのスパラン愛好家のためのクリア状況管理サイト</p>
+                <p>スパランドットコムは、ポップンミュージックのスパラン愛好家のためのクリア状況管理サイトです。</p>
             </div>
             <div class="footer-right">
                 <p>開発・運営: <a href="https://twitter.com/darum1system" target="_blank">@darum1system</a></p>
