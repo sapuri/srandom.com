@@ -9,9 +9,9 @@ from django.http import HttpResponse, Http404
 from datetime import datetime
 import json
 
-from .models import Music, Medal, Bad_Count, Extra_Option
+from .models import *
 from users.models import CustomUser
-from .forms import Sran_LevelForm, MedalForm, Bad_CountForm, Extra_OptionForm
+from .forms import *
 
 def index(request):
     ''' トップページ '''

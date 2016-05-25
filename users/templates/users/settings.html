@@ -19,19 +19,31 @@
     </ul>
     {% endif %}
 
-    <section class="settings-panel">
+    <section id="account" class="settings-panel">
         <h2 class="settings-header page-header">{% bootstrap_icon "user" %} アカウント</h2>
         <form class="settings-form form" action="./" method="post">{% csrf_token %}
             {% bootstrap_form custom_user_form %}
-            <h2 class="settings-header page-header">{% bootstrap_icon "ok" %} 公開設定</h2>
-            {% bootstrap_form privacy_form %}
-            {% buttons %}
-            <input class="btn btn-primary" type="submit" value="保存する">
-            {% endbuttons %}
+            <input class="btn btn-primary" type="submit" name="account" value="保存する">
         </form>
     </section>
 
-    <section class="settings-panel">
+    <section id="privacy" class="settings-panel">
+        <h2 class="settings-header page-header">{% bootstrap_icon "ok" %} 公開設定</h2>
+        <form class="settings-form form" action="./" method="post">{% csrf_token %}
+            {% bootstrap_form privacy_form %}
+            <input class="btn btn-primary" type="submit" name="privacy" value="保存する">
+        </form>
+    </section>
+
+    <section id="theme" class="settings-panel">
+        <h2 class="settings-header page-header">{% bootstrap_icon "picture" %} テーマ</h2>
+        <form class="settings-form form" action="./" method="post">{% csrf_token %}
+            {% bootstrap_form theme_form %}
+            <input class="btn btn-primary" type="submit" name="themes" value="保存する">
+        </form>
+    </section>
+
+    <section id='export' class="settings-panel">
         <h2 class="settings-header page-header">{% bootstrap_icon "export" %} CSV エクスポート <span class="premium">★</span></h2>
         <p>クリアデータを CSV ファイルで保存できます。</p>
         <p>CSV ファイルは毎日 AM 5:30 頃に最新のデータに更新されます。</p>
@@ -44,13 +56,11 @@
         {% endif %}
     </section>
 
-    <section class="settings-panel settings-panel-danger">
+    <section id="deactivate" class="settings-panel settings-panel-danger">
         <h2 class="settings-header page-header">{% bootstrap_icon "trash" %} アカウント削除</h2>
         <p class="danger">一度アカウントを削除すると、二度と元に戻せません。十分ご注意ください。</p>
         <br>
-        {% buttons %}
         <a href="{% url 'users:deactivate' %}"><span class="btn btn-danger">{% bootstrap_icon "alert" %} アカウントを削除する</span></a>
-        {% endbuttons %}
     </section>
 </div><!-- settings -->
 {% endblock %}

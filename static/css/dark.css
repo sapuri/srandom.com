@@ -80,12 +80,6 @@ input {
         background-color: #e5e5e5;
     }
 
-    /* プレミアムユーザー用 */
-    #header .premium {
-        color: #fe6;
-        text-shadow: 0 0 3px #f60;
-    }
-
 .page-header {
     border-bottom: 1px solid #808080;
 }

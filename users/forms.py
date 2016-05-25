@@ -4,7 +4,7 @@ from django.forms.models import ModelChoiceField
 from django.forms.widgets import Select, RadioSelect, Textarea
 from django.core.validators import RegexValidator
 
-from .models import Location, CustomUser
+from .models import *
 
 class CustomUserForm(forms.ModelForm):
     player_name = CharField(
@@ -60,3 +60,15 @@ class PrivacyForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ('player_name_privacy', 'cleardata_privacy', 'updated_recently_privacy')
+
+class ThemeForm(forms.ModelForm):
+    theme = ModelChoiceField(
+        label='テーマ',
+        queryset=Theme.objects.all(),
+        widget=Select,
+        initial=1
+    )
+
+    class Meta:
+        model = CustomUser
+        fields = ('theme',)

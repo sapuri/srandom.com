@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Difficulty, Level, Sran_Level, Music, Medal, Bad_Count, Extra_Option
+from .models import *
 
 class DifficultyAdmin(admin.ModelAdmin):
     list_display = ('id', 'difficulty')
