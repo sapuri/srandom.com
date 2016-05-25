@@ -24,6 +24,24 @@ th {
     color: #c0c0c0;
 }
 
+input {
+    color: #e0e0e0 !important;
+}
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: #777777 !important;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #777777 !important;
+    opacity: 1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #777777 !important;
+    opacity: 1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #777777 !important;
+}
+
 /* 注意メッセージ */
 .danger {
     color: red;
@@ -232,46 +250,17 @@ h1.music-title {
     /*color: #c6c6c6;*/
 }
 
+/* モーダルダイアログ */
 .modal {
-    color: #222;
+    color: #c0c0c0;
 }
 
-/* トップへ戻るボタン */
-.pagetop {
-    display: none;
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-}
-
-    .pagetop a {
-        display: block;
-        background-color: #ccc;
-        text-align: center;
-        color: #222;
-        font-size: 20px;
-        text-decoration: none;
-        width: 50px;
-        height: 50px;
-        padding-top: 14px;
-        -webkit-border-radius: 50%;
-        -moz-border-radius: 50%;
-        border-radius: 50%;
-        opacity: 0.5;
+    .modal .modal-content {
+        background-color: #111;
     }
 
-    .pagetop a:hover {
-        display: block;
-        background-color: #222;
-        text-align: center;
-        color: #fff;
-        font-size: 20px;
-        text-decoration: none;
-        padding-top: 14px;
-        -webkit-border-radius: 50%;
-        -moz-border-radius: 50%;
-        border-radius: 50%;
-        opacity: 1;
+    .modal .modal-header button {
+        color: #c0c0c0;
     }
 
 /* 登録ユーザー一覧 */
@@ -299,48 +288,6 @@ h1.music-title {
     .graph .bar span { position: absolute; left: 1em; }
     .graph a {
         text-decoration: none;
-    }
-
-/* トップページ */
-.big {
-    font-size: 18px;
-}
-
-/* 設定 */
-.settings-panel-danger {
-    margin-top: 100px;
-}
-
-/* サイドバー */
-.sidebar {
-    padding-top: 15px;
-}
-
-    .sidebar ul {
-        padding-left: 10px;
-    }
-
-    .sidebar li a {
-        display: block;
-        padding: 5px 15px;
-    }
-
-    .sidebar li a:hover {
-        background-color: #555;
-        color: #fff;
-    }
-
-/* 広告エリア */
-.ad-area {
-    text-align: center;
-}
-
-    .ad-area-1 {
-        padding-bottom: 20px;
-    }
-
-    .ad-area-3 {
-        padding-top: 20px;
     }
 
 /* フッター */
