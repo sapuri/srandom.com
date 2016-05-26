@@ -153,6 +153,11 @@ select {
         border-top: 1px solid #808080;
     }
 
+.text-box {
+    background-color: #111;
+    border: 1px solid #808080;
+}
+
 /* フッター */
 #footer {
     border-top: 5px solid #fff100;

@@ -36,14 +36,10 @@
     </section>
 
     <section id="theme" class="settings-panel">
-        <h2 class="settings-header page-header">{% bootstrap_icon "picture" %} テーマ <span class="premium">★</span></h2>
+        <h2 class="settings-header page-header">{% bootstrap_icon "picture" %} テーマ</h2>
         <form class="settings-form form" action="./" method="post">{% csrf_token %}
             {% bootstrap_form theme_form %}
-            {% if user.premium %}
             <input class="btn btn-primary" type="submit" name="themes" value="保存する">
-            {% else %}
-            <a href="{% url 'main:premium' %}" target="_blank"><button class="btn btn-primary disabled" type="button">保存する</button></a>
-            {% endif %}
         </form>
     </section>
 
