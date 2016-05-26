@@ -16,7 +16,7 @@ th {
 }
 
 input {
-    color: #e0e0e0 !important;
+    color: #c0c0c0 !important;
 }
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     color: #777777 !important;
@@ -31,6 +31,11 @@ input {
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
     color: #777777 !important;
+}
+
+select {
+    color: #c0c0c0 !important;
+    -webkit-appearance: none; /* Safari 対策 */
 }
 
 /* ヘッダー */
