@@ -1,0 +1,154 @@
+body {
+    color: #c0c0c0;
+    background-color: #222;
+}
+
+a, a:hover {
+    color: #4183C4;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #c0c0c0;
+}
+
+th {
+    color: #c0c0c0;
+}
+
+input {
+    color: #e0e0e0 !important;
+}
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: #777777 !important;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #777777 !important;
+    opacity: 1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #777777 !important;
+    opacity: 1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #777777 !important;
+}
+
+/* ヘッダー */
+#header {
+    background: #181818;
+    border-top: solid 1px #fff100;
+}
+
+    #header a {
+        color: #c0c0c0;
+    }
+
+    #header a:hover {
+        background-color: inherit;
+        color: #4183C4;
+    }
+
+    #header .dropdown-menu {
+        background-color: #111
+    }
+
+    #header .dropdown-menu a {
+        color: #c0c0c0;
+    }
+
+    #header .dropdown-menu a:hover {
+        color: #4183C4;
+        background-color: inherit;
+    }
+
+.page-header {
+    border-bottom: 1px solid #fff100;
+}
+
+/* テーブル */
+.table>thead>tr>th {
+    border-bottom: 2px solid #fff100;
+}
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {
+    border-top: 1px solid #808080;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #808080;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #c0c0c0;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+    background-color: #4183C4;
+}
+
+/* 難易度フォルダ */
+.level-folder {
+	background-color: #222;
+    border: 1px solid #808080;
+	border-left: 6px solid #808080;
+}
+
+/* 曲リスト (テーブル) */
+.music-list .perfect {
+    color: #FFFFFF;
+}
+
+.music-list .fullcombo {
+    color: #222;
+}
+
+.music-list .hard-cleared {
+    color: #222;
+}
+
+.music-list .cleared {
+    color: #222;
+}
+
+.music-list .easy-cleared {
+    color: #222;
+}
+
+.music-list .failed {
+    color: #222;
+}
+
+.music-list .no-play {
+    color: #c0c0c0;
+}
+
+/* フォーム */
+.form-control {
+    background-color: #343434;
+    color: #c6c6c6;
+}
+
+/* モーダルダイアログ */
+.modal {
+    color: #c0c0c0;
+}
+
+    .modal .modal-content {
+        background-color: #111;
+    }
+
+    .modal .modal-header {
+        border-bottom: 1px solid #808080;
+    }
+
+    .modal .modal-header button {
+        color: #c0c0c0;
+    }
+
+    .modal .modal-footer {
+        border-top: 1px solid #808080;
+    }
+
+/* フッター */
+#footer {
+    border-top: 5px solid #fff100;
+}
