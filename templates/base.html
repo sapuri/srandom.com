@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}スパランドットコム - ポップンミュージックのスパラン愛好家のためのクリア状況管理サイト{% endblock %}</title>
     {% bootstrap_css %}
-    <link rel="stylesheet" href="/static/css/style.css?v=20160527">
+    <link rel="stylesheet" href="/static/css/style.css?v=20160528">
     {% if user.theme.id == 2 %}<link rel="stylesheet" href="/static/css/dark.css?v=20160527">{% endif %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <script src="{% static 'js/global.js' %}"></script>
@@ -93,18 +93,6 @@
 
         <div class="sidebar col-xs-12 col-md-2">
             {% if user.is_authenticated %}
-            {% if not user.premium %}
-            <div class="ad-area ad-area-1 hidden-md hidden-lg">
-                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <!-- サイドバー - スパランドットコム -->
-                <ins class="adsbygoogle"
-                    style="display:block"
-                    data-ad-client="ca-pub-6195130822330787"
-                    data-ad-slot="1781717557"
-                    data-ad-format="auto"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div><!-- /.ad-area -->
-            {% endif %}
             <p>{% bootstrap_icon "th-list" %} メニュー</p>
             <ul>
                 <li><a class="no-decoration" href="{% url 'main:index' %}">トップ</a></li>
@@ -112,12 +100,12 @@
                 <li><a class="no-decoration" href="{% url 'main:difflist_level_select' %}">{% bootstrap_icon "list-alt" %} S乱難易度表</a></li>
                 <li><a class="no-decoration" href="{% url 'main:ranking_level_select' %}">{% bootstrap_icon "king" %} ランキング</a></li>
                 <li><a class="no-decoration" href="{% url 'main:omikuji' %}">{% bootstrap_icon "gift" %} おみくじ</a></li>
-                <li><a class="no-decoration" href="{% url 'main:premium' %}">{% bootstrap_icon "star" %} プレミアムユーザー</a></li>
+                <li><a class="no-decoration" href="{% url 'main:premium' %}">{% bootstrap_icon "star" %} 開発者に寄付</a></li>
                 <li><a class="no-decoration" href="{% url 'users:mypage' user.username %}">{% bootstrap_icon "user" %} マイページ</a></li>
                 <li><a class="no-decoration" href="{% url 'users:settings' %}">{% bootstrap_icon "cog" %} 設定</a></li>
             </ul>
                 {% if not user.premium %}
-                <div class="ad-area ad-area-2">
+                <div class="ad-area ad-area-1 hidden-xs hidden-sm">
                     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                     <!-- サイドバー - スパランドットコム -->
                     <ins class="adsbygoogle"
@@ -133,7 +121,7 @@
     </div><!-- /#main -->
 
     {% if user.is_authenticated and not user.premium %}
-    <div class="ad-area ad-area-3 hidden-xs hidden-sm">
+    <div class="ad-area ad-area-2 hidden-xs hidden-sm">
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <!-- フッター - スパランドットコム -->
         <ins class="adsbygoogle"
