@@ -4,7 +4,7 @@ from twitter import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.http import HttpResponse, Http404
 from datetime import datetime
 import json
@@ -880,6 +880,108 @@ def get_medal_count(request, music_id):
         context = {
             'medal_count_list': medal_count_list,
             'medal_count_total': medal_count_total
+        }
+
+        json_str = json.dumps(context, ensure_ascii=False)
+        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
+    else:
+        return HttpResponse('invalid access')
+
+def get_folder_lamp(request, level):
+    '''
+    指定されたレベルのフォルダランプを返す
+    @param {int} level レベル
+    @param {bool} ?is_srandom S乱レベルかどうか
+    @param {int} ?user_id ユーザーID
+    @return {json} フォルダランプ
+    '''
+    if request.is_ajax():
+        # ユーザーを取得
+        try:
+            # クエリでユーザーIDが指定されればそのユーザーを取得
+            user_id = request.GET['user_id']
+            user = get_object_or_404(CustomUser, pk=user_id)
+
+            # 権限を確認
+            if user != request.user:
+                if user.is_active == False or user.cleardata_privacy == 2:
+                    raise PermissionDenied
+        except KeyError:
+            user = request.user
+
+        # 指定されたレベルの曲を取得
+        level = int(level)
+        if request.GET['is_srandom'] == 'true':
+            max_lv = 17
+            level = max_lv - level + 1
+            music_list = Music.objects.filter(sran_level=level)
+        else:
+            max_lv = 50
+            level = max_lv - level + 1
+            music_list = Music.objects.filter(level=level)
+
+        medal_max = 0
+        easy_flg = False
+        hard_flg = True
+        for music in music_list:
+            # メダルを取得
+            try:
+                medal = Medal.objects.get(music=music.id, user=user)
+            except ObjectDoesNotExist:
+                medal = None
+
+            # 1曲でも未プレイがあれば未プレイで決定
+            if not medal or medal.medal == 12:
+                medal_max = 0
+                easy_flg = False
+                hard_flg = False
+                break
+
+            # イージーメダルの場合
+            if medal.medal == 11:
+                easy_flg = True
+
+            # クリアメダルの場合はハード判定
+            elif medal.medal >= 5 and medal.medal <=7 and hard_flg:
+                # 1曲でも未ハードなら未ハードで確定
+                try:
+                    extra_option = Extra_Option.objects.get(music=medal.music, user=user)
+                    if not extra_option.hard:
+                        hard_flg = False
+                except ObjectDoesNotExist:
+                    hard_flg = False
+
+            # メダルの最大値を更新
+            if medal_max < medal.medal:
+                medal_max = medal.medal
+
+        # 1曲でもイージーメダルだった場合
+        if easy_flg:
+            if medal_max >= 8 and medal_max <= 10:
+                folder_lamp = 'failed'
+            else:
+                folder_lamp = 'easy-cleared'
+
+        # 全曲プレイ済みの場合
+        elif medal_max:
+            if medal_max == 1:
+                folder_lamp = 'perfect'
+            elif medal_max >= 2 and medal_max <= 4:
+                folder_lamp = 'fullcombo'
+            elif medal_max >= 5 and medal_max <= 7:
+                if hard_flg:
+                    folder_lamp = 'hard-cleared'
+                else:
+                    folder_lamp = 'cleared'
+            elif medal_max >= 8 and medal_max <= 10:
+                folder_lamp = 'failed'
+
+        # 未プレイの場合
+        else:
+            folder_lamp = 'no-play'
+
+        context = {
+            'folder_lamp': folder_lamp
         }
 
         json_str = json.dumps(context, ensure_ascii=False)

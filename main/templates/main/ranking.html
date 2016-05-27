@@ -5,7 +5,7 @@
 
 {% block extrahead %}
 <meta name="description" content="スパランドットコムのランキングページです。(Lv{{ sran_level }})">
-<script src="/static/js/music_list.js?v=20160507"></script>
+<script src="/static/js/music_list.js?v=20160527"></script>
 <script src="/static/js/ranking.js?v=20160507"></script>
 {% endblock %}
 
@@ -14,7 +14,7 @@
 
 <p><a href="{% url 'main:ranking_level_select' %}">{% bootstrap_icon "arrow-left" %} レベル選択へ戻る</a></p>
 
-<h3 id="lv{{ sran_level }}" class="level-folder special">Lv{{ sran_level }}</h3>
+<h3 id="lv{{ sran_level }}" class="level-folder">Lv{{ sran_level }}</h3>
 <div id="lv{{ sran_level }}-table">
 <table class="music-list table table-condensed">
     <thead>
@@ -49,4 +49,5 @@
     </tbody>
 </table>
 </div>
+<script>getFolderLamp({{ sran_level }}, true)</script>
 {% endblock %}

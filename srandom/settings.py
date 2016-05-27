@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap3',                       # django-bootstrap3
     'social.apps.django_app.default',   # python-social-auth
-    'debug_toolbar',                    # django-debug-toolbar
+    # 'debug_toolbar',                    # django-debug-toolbar
     'compressor',                       # django-compressor
     'main.apps.MainConfig',             # Main
     'users.apps.UsersConfig',           # Users

@@ -144,37 +144,37 @@ h1.music-title {
 .level-folder {
 	padding: .5em .75em;
 	background-color: #f6f6f6;
-	border-left: 6px solid #ccc;
+	border-left: 8px solid #e2e2e2;
     border-radius: 5px;
 }
 
     /* フォルダランプ */
     .level-folder.special {
-        border-left: 6px solid rgb(157, 115, 187);
+        border-left: 8px solid rgb(157, 115, 187);
     }
 
     .level-folder.perfect {
-        border-left: 6px solid #4a4a4a;
+        border-left: 8px solid #4a4a4a;
     }
 
-    .level-folder.fullconbo {
-        border-left: 6px solid rgb(153, 207, 229);
+    .level-folder.fullcombo {
+        border-left: 8px solid rgb(153, 207, 229);
     }
 
     .level-folder.hard-cleared {
-        border-left: 6px solid rgb(243, 192, 171);
+        border-left: 8px solid rgb(243, 192, 171);
     }
 
     .level-folder.cleared {
-        border-left: 6px solid rgb(255, 242, 128);
+        border-left: 8px solid rgb(255, 242, 128);
     }
 
     .level-folder.easy-cleared {
-        border-left: 6px solid rgb(166, 227, 157);
+        border-left: 8px solid rgb(166, 227, 157);
     }
 
     .level-folder.failed {
-        border-left: 6px solid #C6C6C6;
+        border-left: 8px solid #C6C6C6;
     }
 
 /* 曲リスト (テーブル) */

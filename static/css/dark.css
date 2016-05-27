@@ -94,7 +94,7 @@ select {
 .level-folder {
 	background-color: #222;
     border: 1px solid #808080;
-	border-left: 6px solid #808080;
+	border-left: 8px solid #808080;
 }
 
 /* 曲リスト (テーブル) */

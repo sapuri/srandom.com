@@ -5,6 +5,7 @@
 
 {% block extrahead %}
 <meta name="description" content="スパランドットコムのランキングページです。">
+<script src="/static/js/level_select.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -13,6 +14,7 @@
 <p>参照するS乱レベルを選択してください。</p>
 
 {% for s_lv in s_lv_range %}
-<a href="{% url 'main:ranking' s_lv %}" class="no-decoration"><h3 id="lv{{ s_lv }}" class="level-folder special">Lv{{ s_lv }}</h3></a>
+<a href="{% url 'main:ranking' s_lv %}" class="no-decoration"><h3 id="lv{{ s_lv }}" class="level-folder">Lv{{ s_lv }}</h3></a>
+<script>getFolderLamp({{ s_lv }}, true)</script>
 {% endfor %}
 {% endblock %}
