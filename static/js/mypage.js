@@ -2,6 +2,7 @@
 function getPercentageOfClear(user_id) {
     for (var i = 17; i >= 1; i--) {
         var selector = 'div#slv-'+i+' a span.bar';
+        showLoadingImage(selector);
     }
     $.ajax({
         url: SERVER_URL+'users/api/get_percentage_of_clear/'+user_id+'/',
@@ -16,6 +17,7 @@ function getPercentageOfClear(user_id) {
             }
         },
         function(err) {
+            hideLoadingImage(selector);
             console.log(err);
         }
     );
@@ -83,7 +85,7 @@ function getMedal(music_id, user_id) {
                 // 未プレイ以外ならメダルを描画
                 var medal = response.medal;
                 $(selector+' .loading').remove();
-                $(selector+' img').attr('src', '/static/img/medal/'+medal+'.gif');
+                $(selector+' img').attr('src', '/static/img/medal/'+medal+'.png');
                 $(selector+' img').attr('width', '16');
                 $(selector+' img').attr('height', '16');
                 $(selector+' script').remove();

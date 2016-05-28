@@ -52,7 +52,7 @@ function getMedal(music_id) {
                 var medal = response.medal;
                 $(selector+' .loading').remove();
                 $(selector+' img').attr({
-                    src: '/static/img/medal/'+medal+'.gif',
+                    src: '/static/img/medal/'+medal+'.png',
                     width: '16',
                     height: '16'
                 });
