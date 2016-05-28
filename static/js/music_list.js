@@ -19,14 +19,12 @@ function getClearStatus(music_id) {
 /* BAD数を取得 */
 function getBadCount(music_id) {
     var selector = 'tr#music-'+music_id+' .bad_count';
-    showLoadingImage(selector);
     $.ajax({
         url: SERVER_URL+'api/get_bad_count/'+music_id+'/',
         type: 'GET'
     })
     .then(
         function(response) {
-            hideLoadingImage(selector);
             var bad_count = '-';
             if (response.bad_count != null) {
                 bad_count = response.bad_count;
@@ -35,7 +33,6 @@ function getBadCount(music_id) {
             $(selector).text(bad_count);
         },
         function(err) {
-            hideLoadingImage(selector);
             console.log(err);
         }
     );
@@ -44,14 +41,12 @@ function getBadCount(music_id) {
 /* メダルを取得 */
 function getMedal(music_id) {
     var selector = 'tr#music-'+music_id+' .medal';
-    showLoadingImage(selector);
     $.ajax({
         url: SERVER_URL+'api/get_medal/'+music_id+'/',
         type: 'GET'
     })
     .then(
         function(response) {
-            hideLoadingImage(selector);
             if (response.medal && response.medal != 12) {
                 // 未プレイ以外ならメダルを描画
                 var medal = response.medal;
@@ -67,7 +62,6 @@ function getMedal(music_id) {
             }
         },
         function(err) {
-            hideLoadingImage(selector);
             console.log(err);
         }
     );
@@ -76,14 +70,12 @@ function getMedal(music_id) {
 /* 最新の更新日時を取得 */
 function getLatestUpdatedAt(music_id) {
     var selector = 'tr#music-'+music_id+' .updated_at';
-    showLoadingImage(selector);
     $.ajax({
         url: SERVER_URL+'api/get_latest_updated_at/'+music_id+'/',
         type: 'GET'
     })
     .then(
         function(response) {
-            hideLoadingImage(selector);
             var updated_at = '-';
             if (response.is_active) {
                 // ゼロパディング
@@ -95,7 +87,6 @@ function getLatestUpdatedAt(music_id) {
             $(selector).text(updated_at);
         },
         function(err) {
-            hideLoadingImage(selector);
             console.log(err);
         }
     );

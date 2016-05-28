@@ -23,13 +23,3 @@ $(document).ready(function() {
         return false;
     });
 });
-
-/* ローディング画像を表示 */
-function showLoadingImage(selector) {
-    $(selector+' .loading').append('<img src="/static/img/ajax-loader.gif">');
-}
-
-/* ローディング画像を消す */
-function hideLoadingImage(selector) {
-    $(selector+' .loading').hide();
-}

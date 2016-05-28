@@ -2,7 +2,6 @@
 function getPercentageOfClear(user_id) {
     for (var i = 17; i >= 1; i--) {
         var selector = 'div#slv-'+i+' a span.bar';
-        showLoadingImage(selector);
     }
     $.ajax({
         url: SERVER_URL+'users/api/get_percentage_of_clear/'+user_id+'/',
@@ -17,7 +16,6 @@ function getPercentageOfClear(user_id) {
             }
         },
         function(err) {
-            hideLoadingImage(selector);
             console.log(err);
         }
     );
@@ -47,7 +45,6 @@ function getClearStatus(music_id, user_id) {
 /* BAD数を取得 */
 function getBadCount(music_id, user_id) {
     var selector = 'tr#music-'+music_id+' .bad_count';
-    showLoadingImage(selector);
     $.ajax({
         url: SERVER_URL+'api/get_bad_count/'+music_id+'/',
         type: 'GET',
@@ -65,7 +62,6 @@ function getBadCount(music_id, user_id) {
             $(selector).text(bad_count);
         },
         function(err) {
-            hideLoadingImage(selector);
             console.log(err);
         }
     );
@@ -74,7 +70,6 @@ function getBadCount(music_id, user_id) {
 /* メダルを取得 */
 function getMedal(music_id, user_id) {
     var selector = 'tr#music-'+music_id+' .medal';
-    showLoadingImage(selector);
     $.ajax({
         url: SERVER_URL+'api/get_medal/'+music_id+'/',
         type: 'GET',
@@ -97,7 +92,6 @@ function getMedal(music_id, user_id) {
             }
         },
         function(err) {
-            hideLoadingImage(selector);
             console.log(err);
         }
     );
@@ -106,7 +100,6 @@ function getMedal(music_id, user_id) {
 /* 最新の更新日時を取得 */
 function getLatestUpdatedAt(music_id, user_id) {
     var selector = 'tr#music-'+music_id+' .updated_at';
-    showLoadingImage(selector);
     $.ajax({
         url: SERVER_URL+'api/get_latest_updated_at/'+music_id+'/',
         type: 'GET',
@@ -127,7 +120,6 @@ function getLatestUpdatedAt(music_id, user_id) {
             $(selector).text(updated_at);
         },
         function(err) {
-            hideLoadingImage(selector);
             console.log(err);
         }
     );
