@@ -1,15 +1,24 @@
 <?php
 /* ポップンS乱クリア難易度表からデータを収集してCSVとして出力 */
 
+// VPSのsrandomディレクトリ
+$srandom_dir = "/var/www/srandom.com";
+
 // ライブラリ読み込み
+// ローカル
 require_once('simple_html_dom.php');
+// 本番環境
+// require_once($srandom_dir . '/php/simple_html_dom.php');
 
 // URLを設定
 $url1 = 'http://hellwork.jp/popn/wiki/734.html';	// S乱クリア難易度表
-$url2 = 'http://hellwork.jp/popn/wiki/?%E3%81%9D%E3%81%AE%E4%BB%96%2FS%E4%B9%B1Lv0%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8';
+$url2 = 'http://hellwork.jp/popn/wiki/?%E3%81%9D%E3%81%AE%E4%BB%96%2FS%E4%B9%B1Lv0%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8';	// S乱Lv0難易度表
 
 // 出力するCSVのファイル名を設定
+// ローカル
 $fileName = '../csv/srandom.csv';
+// 本番環境
+// $fileName = $srandom_dir . '/csv/srandom.csv';
 
 // CSVのカラム名を設定
 $columnName = array('レベル', '曲名', 'BPM');
@@ -22,7 +31,7 @@ $columnName = array('レベル', '曲名', 'BPM');
  * @return array $csv_data	CSVに書き込むデータ
  */
 function scrapeHtml($url) {
-	/* Lv4〜Lv17を取得 */
+	/* Lv5〜Lv17を取得 */
 
 	// HTMLを取得
 	$html = file_get_html($url);
@@ -36,9 +45,9 @@ function scrapeHtml($url) {
 
 	$lv_num = 0;	// Lvごとに番地を指定
 
-    // #content_1_4 〜 #content_1_17 を指定
-    for ($i = 4; $i <= 17; $i++) {
-		// Lv15.5をスキップ
+    // #content_1_4 〜 #content_1_16 を指定
+    for ($i = 4; $i <= 16; $i++) {
+		// Lv15.5をスキップ (現在は無い)
 		// if ($i == 6) continue;
 
 		// Lv表記を探索
@@ -53,7 +62,7 @@ function scrapeHtml($url) {
 		}
 		// Lv表記を配列に格納
 		$lv[] = $h3[0];
-		echo $h3[0], '<br>';
+		// echo $h3[0], '<br>'; // debug
 
         // $content 直下の div.table-responsive 以下を指定
 		$tr_address = 0;	// <tr>の場所を指定
@@ -67,7 +76,7 @@ function scrapeHtml($url) {
 			$music_lv[$lv_num][$tr_address] = $tr->children(0)->plaintext;
 			// tr->td->span->a
 			$music_name[$lv_num][$tr_address] = $tr->children(1)->children(0)->children(0)->plaintext;
-			echo $music_name[$lv_num][$tr_address], '<br>';
+			// echo $music_name[$lv_num][$tr_address], '<br>'; // debug
 			// tr->td
 			$music_bpm[$lv_num][$tr_address] = $tr->children(2)->plaintext;
 			// 次の<tr>を指定
@@ -105,7 +114,7 @@ function scrapeHtml($url) {
  * @return array $csv_data	CSVに書き込むデータ
  */
 function scrapeHtml2($url) {
-	/* Lv1〜Lv3を取得 */
+	/* Lv1〜Lv4を取得 */
 
 	// HTMLを取得
 	$html = file_get_html($url);
@@ -119,12 +128,18 @@ function scrapeHtml2($url) {
 
 	$lv_num = 0;	// Lvごとに番地を指定
 
-    // #content_1_1 〜 #content_1_5 を指定
-    for ($i = 1; $i <= 5; $i++) {
-		if ($i == 2) $h3 = 'Lv2';		// Lv2強
-		elseif ($i == 3) $h3 = 'Lv2';	// Lv2弱
-		elseif ($i == 4) $h3 = 'Lv1';	// Lv1強
-		elseif ($i == 5) $h3 = 'Lv1';	// Lv1弱
+    // #content_1_1 〜 #content_1_6 を指定
+	$LV4 = 1;	// Lv4
+	$LV3 = 2;	// Lv3
+	$LV2_S = 3;	// Lv2強
+	$LV2_W = 4;	// Lv2弱
+	$LV1_S = 5;	// Lv1強
+	$LV1_W = 6;	// Lv1弱
+    for ($i = 1; $i <= 6; $i++) {
+		if ($i == $LV2_S) $h3 = 'Lv2';		// Lv2強
+		elseif ($i == $LV2_W) $h3 = 'Lv2';	// Lv2弱
+		elseif ($i == $LV1_S) $h3 = 'Lv1';	// Lv1強
+		elseif ($i == $LV1_W) $h3 = 'Lv1';	// Lv1弱
 		else {
 			// Lv表記を探索
 	        $content = $html->find("h3#content_1_$i", 0);
@@ -140,14 +155,14 @@ function scrapeHtml2($url) {
 			}
 		}
 		// Lv表記を配列に格納
-		if ($i != 3 && $i != 5) {
+		if ($i != $LV2_W && $i != $LV1_W) {
 			// '弱'の時はLv表記を格納しない
 			$lv[] = $h3;
-			echo $h3, '<br>';
+			// echo $h3, '<br>'; // debug
 		}
 
         // $content 直下の div.table-responsive 以下を指定
-		if ($i != 3 && $i != 5) {
+		if ($i != $LV2_W && $i != $LV1_W) {
 			// '弱'の時はスキップして追記
 			$arr_address = 0;	// 配列のアドレスを指定
 		}
@@ -163,7 +178,7 @@ function scrapeHtml2($url) {
 			$music_lv[$lv_num][$arr_address] = $tr->children(0)->plaintext;
 			// tr->td->span->a
 			$music_name[$lv_num][$arr_address] = $tr->children(1)->children(0)->children(0)->plaintext;
-			echo $music_name[$lv_num][$arr_address], '<br>';
+			// echo $music_name[$lv_num][$arr_address], '<br>'; // debug
 			// tr->td
 			$music_bpm[$lv_num][$arr_address] = $tr->children(2)->plaintext;
 			// 次の<tr>を指定
@@ -171,7 +186,7 @@ function scrapeHtml2($url) {
 			// 次の配列のアドレスを指定
 			$arr_address++;
 		}
-		if ($i != 2 && $i != 4) {
+		if ($i != $LV2_S && $i != $LV1_S) {
 			// '強'の時はレベルを変えない
 			$lv_num++;	// 次のLvを指定
 		}
@@ -250,4 +265,4 @@ try {
 	echo 'CSV追加出力に失敗: ', $e;
 }
 
-echo 'Done!';
+// echo 'Done!'; // debug
