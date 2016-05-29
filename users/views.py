@@ -58,7 +58,7 @@ def settings(request):
         if 'account' in request.POST:
             custom_user_form = CustomUserForm(request.POST, instance=user)
 
-            if custom_user_form.is_valid() and privacy_form.is_valid():
+            if custom_user_form.is_valid():
                 if custom_user_form.has_changed():
                     # 保存処理
                     if request.POST['player_name']:

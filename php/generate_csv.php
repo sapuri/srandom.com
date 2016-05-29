@@ -62,7 +62,7 @@ function scrapeHtml($url) {
 		}
 		// Lv表記を配列に格納
 		$lv[] = $h3[0];
-		// echo $h3[0], '<br>'; // debug
+		echo $h3[0], '<br>'; // debug
 
         // $content 直下の div.table-responsive 以下を指定
 		$tr_address = 0;	// <tr>の場所を指定
@@ -76,7 +76,7 @@ function scrapeHtml($url) {
 			$music_lv[$lv_num][$tr_address] = $tr->children(0)->plaintext;
 			// tr->td->span->a
 			$music_name[$lv_num][$tr_address] = $tr->children(1)->children(0)->children(0)->plaintext;
-			// echo $music_name[$lv_num][$tr_address], '<br>'; // debug
+			echo $music_name[$lv_num][$tr_address], '<br>'; // debug
 			// tr->td
 			$music_bpm[$lv_num][$tr_address] = $tr->children(2)->plaintext;
 			// 次の<tr>を指定
@@ -158,7 +158,7 @@ function scrapeHtml2($url) {
 		if ($i != $LV2_W && $i != $LV1_W) {
 			// '弱'の時はLv表記を格納しない
 			$lv[] = $h3;
-			// echo $h3, '<br>'; // debug
+			echo $h3, '<br>'; // debug
 		}
 
         // $content 直下の div.table-responsive 以下を指定
@@ -178,7 +178,7 @@ function scrapeHtml2($url) {
 			$music_lv[$lv_num][$arr_address] = $tr->children(0)->plaintext;
 			// tr->td->span->a
 			$music_name[$lv_num][$arr_address] = $tr->children(1)->children(0)->children(0)->plaintext;
-			// echo $music_name[$lv_num][$arr_address], '<br>'; // debug
+			echo $music_name[$lv_num][$arr_address], '<br>'; // debug
 			// tr->td
 			$music_bpm[$lv_num][$arr_address] = $tr->children(2)->plaintext;
 			// 次の<tr>を指定
@@ -265,4 +265,4 @@ try {
 	echo 'CSV追加出力に失敗: ', $e;
 }
 
-// echo 'Done!'; // debug
+echo 'Done!'; // debug
