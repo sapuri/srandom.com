@@ -90,6 +90,12 @@ select {
     background-color: #4183C4;
 }
 
+/* トップページ */
+#news .article {
+    background: #111;
+    color: #222;
+}
+
 /* 難易度フォルダ */
 .level-folder {
 	background-color: #222;

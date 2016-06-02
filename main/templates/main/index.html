@@ -15,13 +15,25 @@
     {% endif %}
     <p><a href="{% url 'main:difflist_level_select' %}">難易度表ページ</a>でクリア状況を記録できます！</p>
     <p><a href="{% url 'main:ranking_level_select' %}">ランキングページ</a>で各曲ごとのBAD数ランキングを閲覧できます！</p>
-    <p>その他にも要望があれば機能を随時追加していく予定です。</p>
+    <p><a href="{% url 'users:settings' %}">設定ページ</a>でテーマを変更できるようになりました！</p>
 {% else %}
     <p>スパランドットコムをご利用頂くにはログインが必要です。</p>
     <p>Twitter アカウントをお持ちであればすぐにログインできます。</p>
     <p><a href="{% url 'social:begin' 'twitter' %}"><img src="{% static 'img/sign-in-with-twitter-gray.png' %}" alt="Sign in with Twitter" width="158" height="28"></a></p>
     <p>※ スパランドットコムが許可無くツイートすることはありません。</p>
 {% endif %}
+
+<h2 class="page-header">News</h2>
+<div id="news">
+    <div class="article addition">
+        <p class="content"><a href="{% url 'main:ranking_detail' 514 %}">INHERITANCE of WILL(EX)</a> が追加されました！</p>
+        <p class="date">2016/06/03</p>
+    </div>
+    <div class="article update">
+        <p class="content"><a href="{% url 'main:ranking_detail' 29 %}">RINИE(EX)</a> のレベルが変更されました！</p>
+        <p class="date">2016/06/01</p>
+    </div>
+</div>
 
 <h2 class="page-header">このサイトについて</h2>
 <p>スパランドットコムは、ポップンミュージックのスパラン愛好家のためのクリア状況管理サイトです。</p>

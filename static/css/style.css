@@ -91,6 +91,30 @@ tr.clickable:hover {
 }
 
 /* トップページ */
+#news .article {
+    background: #e5e5e5;
+    padding: 8px;
+    margin-bottom: .5em;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+    #news .article.addition {
+        background: rgb(153, 207, 229);
+    }
+
+    #news .article.update {
+        background: rgb(166, 227, 157);
+    }
+
+    #news .article p.date {
+        font-size: .9em;
+        text-align: right;
+        opacity: 0.8;
+        margin: 0;
+    }
+
 ul.music-list {
     margin: 0;
     padding: 0;
