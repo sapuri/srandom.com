@@ -25,14 +25,29 @@
 
 <h2 class="page-header">News</h2>
 <div id="news">
+    {% for article in news %}
+    {% if article.kind == '新規' %}
     <div class="article addition">
-        <p class="content"><a href="{% url 'main:ranking_detail' 514 %}">INHERITANCE of WILL(EX)</a> が追加されました！</p>
-        <p class="date">2016/06/03</p>
+        <p class="content"><a href="{% url 'main:ranking_detail' article.music.id %}">{{ article.music.title }} ({{ article.music.difficulty }})</a> が追加されました</p>
+        <p class="date">{{ article.created_at|date:"Y/m/d" }}</p>
     </div>
+    {% elif article.kind == 'レベル更新' %}
     <div class="article update">
-        <p class="content"><a href="{% url 'main:ranking_detail' 29 %}">RINИE(EX)</a> のレベルが変更されました！</p>
-        <p class="date">2016/06/01</p>
+        <p class="content"><a href="{% url 'main:ranking_detail' article.music.id %}">{{ article.music.title }} ({{ article.music.difficulty }})</a> のレベルが変更されました</p>
+        <p class="date">{{ article.created_at|date:"Y/m/d" }}</p>
     </div>
+    {% elif article.kind == 'S乱レベル更新' %}
+    <div class="article update">
+        <p class="content"><a href="{% url 'main:ranking_detail' article.music.id %}">{{ article.music.title }} ({{ article.music.difficulty }})</a> のS乱レベルが変更されました</p>
+        <p class="date">{{ article.created_at|date:"Y/m/d" }}</p>
+    </div>
+    {% elif article.kind == '削除' %}
+    <div class="article delete">
+        <p class="content">{{ article.music.title }} ({{ article.music.difficulty }}) が削除されました</p>
+        <p class="date">{{ article.created_at|date:"Y/m/d" }}</p>
+    </div>
+    {% endif %}
+    {% endfor %}
 </div>
 
 <h2 class="page-header">このサイトについて</h2>
@@ -45,7 +60,7 @@
 <div id="activity" class="row">
     <div id="updated-recently" class="col-xs-12 col-md-5">
         <h3 class="page-header">最近更新された曲</h2>
-        <p>現在 {{ medal_num }} 件の記録が登録されています</p>
+        <p>現在 {{ medal_num }} 件の記録が登録されています！</p>
         <ul class="music-list">
             {% for recent in recent_medal %}
             <a href="{% url 'main:ranking_detail' recent.music.id %}">
@@ -58,7 +73,7 @@
     </div>
     <div id="twitter-timeline" class="col-xs-12 col-md-7">
         <h3 class="page-header">ツイート</h2>
-        <p>スパランドットコムに関するツイートのタイムラインです</p>
+        <p>スパランドットコムに関するツイートのタイムライン</p>
         {% if user.theme.id == 2 %}
         <a class="twitter-timeline" href="https://twitter.com/hashtag/%E3%82%B9%E3%83%91%E3%83%A9%E3%83%B3%E3%83%89%E3%83%83%E3%83%88%E3%82%B3%E3%83%A0" data-widget-id="735061948924985344" data-chrome="noheader nofooter noborders">#スパランドットコム のツイート</a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>

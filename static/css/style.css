@@ -108,11 +108,14 @@ tr.clickable:hover {
         background: rgb(166, 227, 157);
     }
 
+    #news .article p {
+        margin: 0;
+    }
+
     #news .article p.date {
         font-size: .9em;
         text-align: right;
         opacity: 0.8;
-        margin: 0;
     }
 
 ul.music-list {

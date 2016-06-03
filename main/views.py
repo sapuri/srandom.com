@@ -15,10 +15,12 @@ from .forms import *
 
 def index(request):
     ''' トップページ '''
+    news = News.objects.filter(status=True).order_by('-id')[:5]
     medal_num = Medal.objects.all().count()
     recent_medal = Medal.objects.all().order_by('-updated_at')[:10]
 
     context = {
+        'news': news,
         'medal_num': medal_num,
         'recent_medal': recent_medal
     }

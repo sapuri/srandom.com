@@ -33,6 +33,11 @@ class Extra_OptionAdmin(admin.ModelAdmin):
     list_filter = ('user',)
     ordering = ('-id',)
 
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'music', 'kind', 'created_at', 'status')
+    list_filter = ('kind', 'status')
+    ordering = ('-id',)
+
 admin.site.register(Difficulty, DifficultyAdmin)
 admin.site.register(Level, LevelAdmin)
 admin.site.register(Sran_Level, Sran_LevelAdmin)
@@ -40,3 +45,4 @@ admin.site.register(Music, MusicAdmin)
 admin.site.register(Medal, MedalAdmin)
 admin.site.register(Bad_Count, Bad_CountAdmin)
 admin.site.register(Extra_Option, Extra_OptionAdmin)
+admin.site.register(News, NewsAdmin)
