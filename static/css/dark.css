@@ -91,6 +91,10 @@ select {
 }
 
 /* トップページ */
+.suggest-msg {
+    background: #111;
+}
+
 #news .article {
     background: #111;
     color: #222;

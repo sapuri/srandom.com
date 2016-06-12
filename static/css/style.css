@@ -91,6 +91,16 @@ tr.clickable:hover {
 }
 
 /* トップページ */
+.suggest-msg {
+    font-size: 16px;
+    background: #e5e5e5;
+    padding: 10px;
+    margin-bottom: .5em;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
 #news .article {
     background: #e5e5e5;
     padding: 8px;

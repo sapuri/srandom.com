@@ -11,7 +11,7 @@
 {% if user.is_authenticated %}
     <p class="big">ようこそ {{ user.player_name|default:user.username }}さん！</p>
     {% if not user.player_name %}
-    <p class="big"><a href="{% url 'users:settings' %}">プロフィールを設定</a>してみましょう！</p>
+    <p class="suggest-msg"><a href="{% url 'users:settings' %}">プロフィールを設定</a>してみましょう！</p>
     {% endif %}
     <p><a href="{% url 'main:difflist_level_select' %}">難易度表ページ</a>でクリア状況を記録できます！</p>
     <p><a href="{% url 'main:ranking_level_select' %}">ランキングページ</a>で各曲ごとのBAD数ランキングを閲覧できます！</p>
