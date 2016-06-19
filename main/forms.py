@@ -60,3 +60,7 @@ class Extra_OptionForm(forms.ModelForm):
     class Meta:
         model = Extra_Option
         fields = ('hard',)
+
+class SearchForm(forms.Form):
+    ''' 検索フォーム '''
+    q = forms.CharField(max_length=100, widget=forms.TextInput(attrs={"placeholder":"曲名で検索"}), required=False)

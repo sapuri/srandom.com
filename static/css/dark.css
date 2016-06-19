@@ -95,6 +95,13 @@ select {
     background: #111;
 }
 
+/* 検索フォーム */
+.search-form input[type=text] {
+    background-color: #343434;
+    color: #c6c6c6;
+    border: solid 1px #dddddd;
+}
+
 #news .article {
     background: #111;
     color: #222;

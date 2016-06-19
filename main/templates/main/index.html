@@ -23,6 +23,13 @@
     <p>※ スパランドットコムが許可無くツイートすることはありません。</p>
 {% endif %}
 
+<div id="search">
+    <form class="search-form has-feedback" action="{% url 'main:search' %}" method="get">
+        {{ search_form.q }}
+        <i class="glyphicon glyphicon-search form-control-feedback"></i>
+    </form>
+</div>
+
 <h2 class="page-header">News</h2>
 <div id="news">
     {% for article in news %}
@@ -86,6 +93,7 @@
 </div>
 
 <h2 class="page-header">更新情報</h2>
+<p>2016/06/19 楽曲検索機能を追加しました</p>
 <p>2016/05/26 テーマ変更機能を追加しました</p>
 <p>2016/05/19 CSVエクスポート機能を追加しました</p>
 <p>2016/05/09 プロフィールページなど、一部のページはログインしなくても閲覧できるようにしました</p>

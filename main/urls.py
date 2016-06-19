@@ -5,6 +5,7 @@ from . import views
 app_name = 'main'
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^search/$', views.search, name='search'),
     url(r'^level/$', views.level_select, name='level_select'),
     url(r'^level/(?P<level>\d+)/$', views.level, name='level'),
     url(r'^difflist/$', views.difflist_level_select, name='difflist_level_select'),

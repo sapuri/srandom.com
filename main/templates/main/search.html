@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}
+{% if not is_blank %}
+{{ q }} の検索結果 - スパランドットコム
+{% else %}
+楽曲検索 - スパランドットコム
+{% endif %}
+{% endblock %}
+
+{% block extrahead %}
+<meta name="description" content="スパランドットコムの検索ページです。">
+<script src="/static/js/music_list.js?v=20160528a"></script>
+{% endblock %}
+
+{% block content %}
+<h1 class="page-header">{% bootstrap_icon "search" %} 楽曲検索</h1>
+
+{% if not is_blank %}
+{% if items %}
+<form class="search-form has-feedback" action="./" method="get" style="margin-bottom:20px;">
+    {{ search_form.q }}
+    <i class="glyphicon glyphicon-search form-control-feedback"></i>
+</form>
+<p>{{ items|length }} 件見つかりました。</p>
+<table class="music-list table table-condensed">
+    <thead>
+        <th>Lv</th>
+        <th>曲名</th>
+        <th>難易度</th>
+        <th>BPM</th>
+        <th>メダル</th>
+        <th>BAD数</th>
+        <th>更新日時</th>
+    </thead>
+    <tbody>
+        {% for music in items %}
+        <tr id="music-{{ music.id }}">
+            <script>getClearStatus({{ music.id }});</script>
+            <td class="level">{{ music.level }} ({{ music.sran_level }})</td>
+            <td class="title"><a href="{% url 'main:ranking_detail' music.id %}">{{ music.title }}</a></td>
+            <td class="difficulty">{{ music.difficulty }}</td>
+            <td class="bpm">{{ music.bpm|default:'-' }}</td>
+            <td class="medal">
+                <img>
+                <script>getMedal({{ music.id }});</script>
+            </td>
+            <td class="bad_count">
+                <script>getBadCount({{ music.id }});</script>
+            </td>
+            <td class="updated_at">
+                <script>getLatestUpdatedAt({{ music.id }});</script>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<form class="search-form has-feedback" action="./" method="get" style="margin-bottom:20px;">
+    {{ search_form.q }}
+    <i class="glyphicon glyphicon-search form-control-feedback"></i>
+</form>
+<p>「{{ q }}」を含む曲は見つかりませんでした。</p>
+{% endif %}
+
+{% else %}
+<form class="search-form has-feedback" action="./" method="get" style="margin-bottom:20px;">
+    {{ search_form.q }}
+    <i class="glyphicon glyphicon-search form-control-feedback"></i>
+</form>
+{% endif %}
+{% endblock %}

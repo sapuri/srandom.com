@@ -101,6 +101,24 @@ tr.clickable:hover {
     -webkit-border-radius: 3px;
 }
 
+#search {
+    margin-top: 20px;
+}
+
+/* 検索フォーム */
+.search-form input[type=text] {
+    width: 100%;
+    padding: 10px;
+    border: solid 1px #dddddd;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+.search-form input[type=text]:focus {
+    outline: none;
+    border: solid 1px #3079ed;
+}
+
 #news .article {
     background: #e5e5e5;
     padding: 8px;

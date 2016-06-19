@@ -18,15 +18,46 @@ def index(request):
     news = News.objects.filter(status=True).order_by('-id')[:5]
     medal_num = Medal.objects.all().count()
     recent_medal = Medal.objects.all().order_by('-updated_at')[:10]
+    search_form = SearchForm(request.GET)
 
     context = {
         'news': news,
         'medal_num': medal_num,
-        'recent_medal': recent_medal
+        'recent_medal': recent_medal,
+        'search_form': search_form
     }
     return render(request, 'main/index.html', context)
 
-@login_required
+def search(request):
+    ''' 検索結果 '''
+    def search_items(q=None):
+        filter_params = {}
+        if q:
+            # 大文字小文字区別無しの部分一致
+            filter_params['title__icontains'] = q
+        return Music.objects.filter(**filter_params).order_by('level', 'sran_level', 'title')
+
+    search_form = SearchForm(request.GET)
+    if search_form.is_valid():
+        q = search_form.cleaned_data['q']
+        if q:
+            is_blank = False
+            items = search_items(q=q)
+        else:
+            is_blank = True
+            items = []
+    else:
+        is_blank = True
+        items = []
+
+    context = {
+        'search_form': search_form,
+        'q': q,
+        'items': items,
+        'is_blank': is_blank
+    }
+    return render(request, 'main/search.html', context)
+
 def level_select(request):
     '''
     公式難易度表: レベル選択
@@ -40,7 +71,6 @@ def level_select(request):
 
     return render(request, 'main/level/level_select.html', context)
 
-@login_required
 def level(request, level):
     '''
     難易度表
@@ -69,7 +99,6 @@ def level(request, level):
 
     return render(request, 'main/level/level.html', context)
 
-@login_required
 def difflist_level_select(request):
     '''
     難易度表: S乱レベル選択
@@ -83,7 +112,6 @@ def difflist_level_select(request):
 
     return render(request, 'main/difflist_level_select.html', context)
 
-@login_required
 def difflist(request, sran_level):
     '''
     難易度表
@@ -111,22 +139,6 @@ def difflist(request, sran_level):
     }
 
     return render(request, 'main/difflist.html', context)
-
-# @login_required
-# def difflist_all(request):
-#     '''
-#     難易度表(全レベル)
-#     '''
-#
-#     # ユーザごとにデータを取得
-#     music_list = Music.objects.order_by('level', 'title')
-#     s_lv_range = range(17, 0, -1)
-#
-#     context = {
-#         'music_list': music_list,
-#         's_lv_range': s_lv_range
-#     }
-#     return render(request, 'main/difflist_all.html', context)
 
 # 記録編集
 @login_required
@@ -316,53 +328,6 @@ def edit(request, music_id):
     }
     return render(request, 'main/edit.html', context)
 
-# 記録削除
-# @login_required
-# def delete(request, music_id):
-#     '''
-#     指定された曲の記録を削除
-#     @param music_id: 曲ID
-#     '''
-#     # 曲を取得
-#     music = get_object_or_404(Music, pk=music_id)
-#
-#     # ユーザーを取得
-#     myself = request.user
-#
-#     # POSTでアクセスされた場合
-#     if request.method == 'POST':
-#         # クリアメダルを取得
-#         medal = Medal.objects.filter(music=music_id, user=myself)
-#         if medal:
-#             # メダルが存在すれば削除
-#             medal.delete()
-#
-#         # BAD数を取得
-#         bad_count = Bad_Count.objects.filter(music=music_id, user=myself)
-#         if bad_count:
-#             # BAD数が存在すれば削除
-#             bad_count.delete()
-#
-#         # エクストラオプションを取得
-#         extra_option = Extra_Option.objects.filter(music=music_id, user=myself)
-#         if extra_option:
-#             # エクストラオプションが存在すれば削除
-#             extra_option.delete()
-#
-#         # リダイレクト先にメッセージを表示
-#         msg = music.title + ' (' + music.difficulty.difficulty_short() + ') の記録を削除しました'
-#         messages.success(request, msg)
-#
-#         if 'next' in request.GET:
-#             return redirect(request.GET['next'])
-#
-#     # 通常アクセスの場合
-#     else:
-#         context = {
-#             'music': music
-#         }
-#         return render(request, 'main/delete.html', context)
-
 @login_required
 def ranking_level_select(request):
     '''
@@ -524,11 +489,8 @@ def omikuji(request):
         }
         return render(request, 'main/omikuji.html', context)
 
-@login_required
 def premium(request):
-    '''
-    プレミアムユーザー登録ページ
-    '''
+    ''' プレミアムユーザー '''
     return render(request, 'main/premium.html')
 
 # ---------- API ---------- #
@@ -898,88 +860,92 @@ def get_folder_lamp(request, level):
     @return {json} フォルダランプ
     '''
     if request.is_ajax():
-        # ユーザーを取得
-        try:
-            # クエリでユーザーIDが指定されればそのユーザーを取得
-            user_id = request.GET['user_id']
-            user = get_object_or_404(CustomUser, pk=user_id)
-
-            # 権限を確認
-            if user != request.user:
-                if user.is_active == False or user.cleardata_privacy == 2:
-                    raise PermissionDenied
-        except KeyError:
-            user = request.user
-
-        # 指定されたレベルの曲を取得
-        level = int(level)
-        if request.GET['is_srandom'] == 'true':
-            max_lv = 17
-            level = max_lv - level + 1
-            music_list = Music.objects.filter(sran_level=level)
-        else:
-            max_lv = 50
-            level = max_lv - level + 1
-            music_list = Music.objects.filter(level=level)
-
-        medal_max = 0
-        easy_flg = False
-        hard_flg = True
-        for music in music_list:
-            # メダルを取得
+        if request.user.is_authenticated():
+            # ユーザーを取得
             try:
-                medal = Medal.objects.get(music=music.id, user=user)
-            except ObjectDoesNotExist:
-                medal = None
+                # クエリでユーザーIDが指定されればそのユーザーを取得
+                user_id = request.GET['user_id']
+                user = get_object_or_404(CustomUser, pk=user_id)
 
-            # 1曲でも未プレイがあれば未プレイで決定
-            if not medal or medal.medal == 12:
-                medal_max = 0
-                easy_flg = False
-                hard_flg = False
-                break
+                # 権限を確認
+                if user != request.user:
+                    if user.is_active == False or user.cleardata_privacy == 2:
+                        raise PermissionDenied
+            except KeyError:
+                user = request.user
 
-            # イージーメダルの場合
-            if medal.medal == 11:
-                easy_flg = True
-
-            # クリアメダルの場合はハード判定
-            elif medal.medal >= 5 and medal.medal <=7 and hard_flg:
-                # 1曲でも未ハードなら未ハードで確定
-                try:
-                    extra_option = Extra_Option.objects.get(music=medal.music, user=user)
-                    if not extra_option.hard:
-                        hard_flg = False
-                except ObjectDoesNotExist:
-                    hard_flg = False
-
-            # メダルの最大値を更新
-            if medal_max < medal.medal:
-                medal_max = medal.medal
-
-        # 1曲でもイージーメダルだった場合
-        if easy_flg:
-            if medal_max >= 8 and medal_max <= 10:
-                folder_lamp = 'failed'
+            # 指定されたレベルの曲を取得
+            level = int(level)
+            if request.GET['is_srandom'] == 'true':
+                max_lv = 17
+                level = max_lv - level + 1
+                music_list = Music.objects.filter(sran_level=level)
             else:
-                folder_lamp = 'easy-cleared'
+                max_lv = 50
+                level = max_lv - level + 1
+                music_list = Music.objects.filter(level=level)
 
-        # 全曲プレイ済みの場合
-        elif medal_max:
-            if medal_max == 1:
-                folder_lamp = 'perfect'
-            elif medal_max >= 2 and medal_max <= 4:
-                folder_lamp = 'fullcombo'
-            elif medal_max >= 5 and medal_max <= 7:
-                if hard_flg:
-                    folder_lamp = 'hard-cleared'
+            medal_max = 0
+            easy_flg = False
+            hard_flg = True
+            for music in music_list:
+                # メダルを取得
+                try:
+                    medal = Medal.objects.get(music=music.id, user=user)
+                except ObjectDoesNotExist:
+                    medal = None
+
+                # 1曲でも未プレイがあれば未プレイで決定
+                if not medal or medal.medal == 12:
+                    medal_max = 0
+                    easy_flg = False
+                    hard_flg = False
+                    break
+
+                # イージーメダルの場合
+                if medal.medal == 11:
+                    easy_flg = True
+
+                # クリアメダルの場合はハード判定
+                elif medal.medal >= 5 and medal.medal <=7 and hard_flg:
+                    # 1曲でも未ハードなら未ハードで確定
+                    try:
+                        extra_option = Extra_Option.objects.get(music=medal.music, user=user)
+                        if not extra_option.hard:
+                            hard_flg = False
+                    except ObjectDoesNotExist:
+                        hard_flg = False
+
+                # メダルの最大値を更新
+                if medal_max < medal.medal:
+                    medal_max = medal.medal
+
+            # 1曲でもイージーメダルだった場合
+            if easy_flg:
+                if medal_max >= 8 and medal_max <= 10:
+                    folder_lamp = 'failed'
                 else:
-                    folder_lamp = 'cleared'
-            elif medal_max >= 8 and medal_max <= 10:
-                folder_lamp = 'failed'
+                    folder_lamp = 'easy-cleared'
 
-        # 未プレイの場合
+            # 全曲プレイ済みの場合
+            elif medal_max:
+                if medal_max == 1:
+                    folder_lamp = 'perfect'
+                elif medal_max >= 2 and medal_max <= 4:
+                    folder_lamp = 'fullcombo'
+                elif medal_max >= 5 and medal_max <= 7:
+                    if hard_flg:
+                        folder_lamp = 'hard-cleared'
+                    else:
+                        folder_lamp = 'cleared'
+                elif medal_max >= 8 and medal_max <= 10:
+                    folder_lamp = 'failed'
+
+            # 未プレイの場合
+            else:
+                folder_lamp = 'no-play'
         else:
+            # 未認証ユーザーの場合
             folder_lamp = 'no-play'
 
         context = {
