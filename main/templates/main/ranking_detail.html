@@ -37,6 +37,7 @@
         <th>曲名</th>
         <th>難易度</th>
         <th>BPM</th>
+        <th>平均BAD数</th>
     </thead>
     <tbody>
         <tr>
@@ -45,6 +46,7 @@
             <td class="title"><a href="{% url 'main:edit' music.id %}">{{ music.title }}</a></td>
             <td class="difficulty">{{ music.difficulty.difficulty_short }}</td>
             <td class="bpm">{{ music.bpm }}</td>
+            <td id="bad_count_avg"></td>
         </tr>
     </tbody>
 </table>
@@ -63,8 +65,7 @@
         <th><img src="/static/img/medal/9.png" width="16" height="16"/></th>
         <th><img src="/static/img/medal/10.png" width="16" height="16"/></th>
         <th><img src="/static/img/medal/11.png" width="16" height="16"/></th>
-        <th>合計</th>
-        <th>平均BAD数</th>
+        <th>計</th>
     </thead>
     <tbody>
         <tr>
@@ -80,7 +81,6 @@
             <td id="medal-10"></td>
             <td id="medal-11"></td>
             <td id="medal-total"></td>
-            <td id="bad_count_avg"></td>
         </tr>
     </tbody>
 </table>
