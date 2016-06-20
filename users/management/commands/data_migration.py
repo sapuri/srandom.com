@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.core.exceptions import ObjectDoesNotExist
 import sys
 
 from users.models import CustomUser
@@ -8,12 +9,22 @@ class Command(BaseCommand):
     help = 'クリアデータを移行します。'
 
     def handle(self, *args, **options):
-        user_from_id = 1    # 移行元
-        user_to_id = 2      # 移行先
+        # 移行元のユーザー名
+        username_from = 'admin'
+        # 移行先のユーザー名
+        username_to = 'darum1system'
 
         # ユーザーオブジェクトを取得
-        user_from = CustomUser.objects.get(pk=user_from_id)
-        user_to = CustomUser.objects.get(pk=user_to_id)
+        try:
+            user_from = CustomUser.objects.get(username=username_from)
+        except ObjectDoesNotExist:
+            print ('移行元のユーザー "{0}" は存在しません。'.format(username_from))
+            sys.exit()
+        try:
+            user_to = CustomUser.objects.get(username=username_to)
+        except ObjectDoesNotExist:
+            print ('移行先のユーザー "{0}" は存在しません。'.format(username_to))
+            sys.exit()
 
         # 確認
         print ('"{0}" のクリアデータを "{1}" に移行します。'.format(user_from.username, user_to.username))
