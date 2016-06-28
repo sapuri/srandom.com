@@ -71,7 +71,7 @@
             {% for recent in recent_medal %}
             <tr id="music-{{ recent.music.id }}">
                 <script>getClearStatus({{ recent.music.id }}, {{ selected_user.id }});</script>
-                <td class="level">{{ recent.music.level }}</td>
+                <td class="level">{{ recent.music.level }} ({{ recent.music.sran_level }})</td>
                 <td class="title"><a href="{% url 'main:ranking_detail' recent.music.id %}">{{ recent.music.title }}</a></td>
                 <td class="difficulty">{{ recent.music.difficulty }}</td>
                 <td class="bpm">{{ recent.music.bpm|default:'-' }}</td>
