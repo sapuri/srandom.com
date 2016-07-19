@@ -7,12 +7,17 @@ from main.models import Bad_Count, Medal, Extra_Option
 
 class Command(BaseCommand):
     help = 'クリアデータを移行します。'
+    args = '<source_username destination_username>'
 
     def handle(self, *args, **options):
+        if len(args) != 2:
+            print ('Usage: python manage.py data_migration <移行元のユーザー名> <移行先のユーザー名>')
+            sys.exit()
+
         # 移行元のユーザー名
-        username_from = 'admin'
+        username_from = args[0]
         # 移行先のユーザー名
-        username_to = 'darum1system'
+        username_to = args[1]
 
         # ユーザーオブジェクトを取得
         try:
