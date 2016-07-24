@@ -76,17 +76,14 @@
                 <td class="difficulty">{{ recent.music.difficulty }}</td>
                 <td class="bpm">{{ recent.music.bpm|default:'-' }}</td>
                 <td class="medal">
-                    <div class="loading"></div>
                     <img>
                     <script>getMedal({{ recent.music.id }}, {{ selected_user.id }});</script>
                 </td>
                 <td class="bad_count">
-                    <div class="loading"></div>
                     <script>getBadCount({{ recent.music.id }}, {{ selected_user.id }});</script>
                 </td>
                 <td class="updated_at">
-                    <div class="loading"></div>
-                    <script>getLatestUpdatedAt({{ recent.music.id }}, {{ selected_user.id }});</script>
+                    {{ recent.updated_at|date:"Y/n/d G:i"|default:'-'}}
                 </td>
             </tr>
             {% endfor %}
