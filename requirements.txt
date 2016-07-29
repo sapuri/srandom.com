@@ -13,7 +13,7 @@ oauth2==1.9.0.post1
 oauthlib==1.1.2
 pandas==0.18.1
 PyJWT==1.4.1
-PyMySQL==0.7.5
+PyMySQL==0.7.6
 python-dateutil==2.5.3
 python-openid==2.2.5
 python-social-auth==0.2.19
