@@ -11,7 +11,6 @@ from main.models import *
 from .forms import *
 
 
-# @login_required
 # def list(request):
 #     '''
 #     登録ユーザー一覧
@@ -106,8 +105,17 @@ def cleardata(request, username, sran_level):
     # ユーザーを取得
     selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
 
-    # S乱レベルIDを取得
+    # 最大S乱レベル
     max_s_lv = 17
+
+    # S乱レベルを数値に変換
+    sran_level = int(sran_level)
+
+    # S乱レベルが不正なら404エラー
+    if sran_level <= 0 or sran_level > max_s_lv:
+        raise Http404
+
+    # S乱レベルIDを取得
     sran_level_id = max_s_lv - int(sran_level) + 1
 
     # 対象レベルの曲を取得

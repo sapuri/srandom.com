@@ -76,7 +76,7 @@ def level(request, level):
     難易度表
     @param level: レベル
     '''
-    # S乱レベルIDを取得
+    # 最大レベル
     max_lv = 50
 
     # S乱レベルを数値に変換
@@ -117,7 +117,7 @@ def difflist(request, sran_level):
     難易度表
     @param sran_level: S乱レベル
     '''
-    # S乱レベルIDを取得
+    # 最大S乱レベル
     max_s_lv = 17
 
     # S乱レベルを数値に変換
