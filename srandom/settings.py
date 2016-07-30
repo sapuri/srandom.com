@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap3',                       # django-bootstrap3
     'social.apps.django_app.default',   # python-social-auth
-    # 'debug_toolbar',                    # django-debug-toolbar
     'compressor',                       # django-compressor
+    'maintenancemode',                  # django-maintenancemode
     'main.apps.MainConfig',             # Main
     'users.apps.UsersConfig',           # Users
 ]
@@ -57,6 +57,9 @@ MIDDLEWARE_CLASSES = [
     # django-htmlmin
     'htmlmin.middleware.HtmlMinifyMiddleware',
     'htmlmin.middleware.MarkRequestMiddleware',
+    # django-maintenancemode
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'maintenancemode.middleware.MaintenanceModeMiddleware',
 ]
 
 ROOT_URLCONF = 'srandom.urls'
@@ -138,7 +141,6 @@ STATICFILES_FINDERS = (
 
 # サーバー時はON
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-
 STATIC_URL = '/static/'
 
 # ローカル時はON
