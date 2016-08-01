@@ -433,32 +433,27 @@ def omikuji(request):
             music = Music.objects.all().order_by('?')[0]
 
         # おみくじ結果をツイート
-        try:
-            if request.POST['tweet']:
-                # 自ユーザーのtwitter情報を取得
-                social = myself.social_auth.get(provider='twitter')
-                # パラメータを取得
-                oauth_token = social.extra_data['access_token']['oauth_token']
-                oauth_secret = social.extra_data['access_token']['oauth_token_secret']
-                CONSUMER_KEY = 'Pwyx6QZgunJsbrArLub7pNKwu'
-                CONSUMER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO'
-                # Twitterクラスを作成
-                twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
-                # ツイート
-                tweet = '今日のスパランおすすめ曲は『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』です！ #スパランドットコム http://srandom.com/omikuji/'
-                try:
-                    twitter.statuses.update(status = tweet)
-                    # メッセージを表示
-                    msg = 'おみくじの結果をツイートしました！'
-                    messages.success(request, msg)
-                except:
-                    # メッセージを表示
-                    msg = 'おみくじの結果をツイートできませんでした'
-                    messages.error(request, msg)
-
-        # チェックされなかった場合はパス
-        except KeyError:
-            pass
+        if 'tweet' in request.POST:
+            # 自ユーザーのtwitter情報を取得
+            social = myself.social_auth.get(provider='twitter')
+            # パラメータを取得
+            oauth_token = social.extra_data['access_token']['oauth_token']
+            oauth_secret = social.extra_data['access_token']['oauth_token_secret']
+            CONSUMER_KEY = 'Pwyx6QZgunJsbrArLub7pNKwu'
+            CONSUMER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO'
+            # Twitterクラスを作成
+            twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
+            # ツイート
+            tweet = '今日のスパランおすすめ曲は『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』です！ #スパランドットコム http://srandom.com/omikuji/'
+            try:
+                twitter.statuses.update(status = tweet)
+                # メッセージを表示
+                msg = 'おみくじの結果をツイートしました！'
+                messages.success(request, msg)
+            except:
+                # メッセージを表示
+                msg = 'おみくじの結果をツイートできませんでした'
+                messages.error(request, msg)
 
     try:
         try:
