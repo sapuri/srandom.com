@@ -1,4 +1,4 @@
-import zenhan, json
+import os, zenhan, json
 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
@@ -182,9 +182,8 @@ def download(request, file_type):
     '''
     if file_type == 'csv':
         if request.user.premium:
-            BASE_DIR = '/Users/minami/workspace/django_1.9/srandom'   # ローカル
-            # BASE_DIR = '/var/www/srandom.com'                         # VPS
-            file_path = BASE_DIR+'/csv/export/'+request.user.username+'.csv'
+            ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))   # /srandom.com
+            file_path = ROOT_DIR+'/csv/export/'+request.user.username+'.csv'
             try:
                 response = HttpResponse(open(file_path).read(), content_type='text/csv; charset=cp932')
             except FileNotFoundError:
