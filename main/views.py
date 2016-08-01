@@ -649,71 +649,29 @@ def get_latest_updated_at(request, music_id):
             user = request.user
 
         try:
-            bad_count = Bad_Count.objects.get(music=music_id, user=user)
-        except:
-            bad_count = None
-        try:
             medal = Medal.objects.get(music=music_id, user=user)
         except:
             medal = None
-        try:
-            extra_option = Extra_Option.objects.get(music=music_id, user=user)
-        except:
-            extra_option = None
 
-        # 最新の更新日時を取得
-        if bad_count and medal and extra_option:
-            bad_count_updated_at = bad_count.updated_at
-            medal_updated_at = medal.updated_at
-            extra_option_updated_at = extra_option.updated_at
-            latest = max(bad_count_updated_at, medal_updated_at, extra_option_updated_at)
-        elif bad_count and medal:
-            bad_count_updated_at = bad_count.updated_at
-            medal_updated_at = medal.updated_at
-            extra_option_updated_at = None
-            latest = max(bad_count_updated_at, medal_updated_at)
-        elif medal and extra_option:
-            bad_count_updated_at = None
-            medal_updated_at = medal.updated_at
-            extra_option_updated_at = extra_option.updated_at
-            latest = max(medal_updated_at, extra_option_updated_at)
-        elif bad_count:
-            bad_count_updated_at = bad_count.updated_at
-            medal_updated_at = None
-            extra_option_updated_at = None
-            latest = bad_count_updated_at
-        elif medal:
-            bad_count_updated_at = None
-            medal_updated_at = medal.updated_at
-            extra_option_updated_at = None
-            latest = medal_updated_at
-        elif extra_option:
-            bad_count_updated_at = None
-            medal_updated_at = None
-            extra_option_updated_at = extra_option.updated_at
-            latest = extra_option_updated_at
-        else:
-            bad_count_updated_at = None
-            medal_updated_at = None
-            extra_option_updated_at = None
-            latest = None
+        if medal:
+            # 更新日時
+            updated_at = medal.updated_at
 
-        if latest:
             # 時間調整
-            latest_hour = latest.hour + 9   # UTC+9
-            latest_day = latest.day
-            if latest_hour >= 24:
-                latest_day += 1
-                latest_hour -= 24
+            updated_at_hour = updated_at.hour + 9   # UTC+9
+            updated_at_day = updated_at.day
+            if updated_at_hour >= 24:
+                updated_at_day += 1
+                updated_at_hour -= 24
 
             context = {
                 'is_active': True,
-                'year': latest.year,
-                'month': latest.month,
-                'day': latest_day,
-                'hour': latest_hour,
-                'minute': latest.minute,
-                'second': latest.second
+                'year': updated_at.year,
+                'month': updated_at.month,
+                'day': updated_at_day,
+                'hour': updated_at_hour,
+                'minute': updated_at.minute,
+                'second': updated_at.second
             }
         else:
             context = {
