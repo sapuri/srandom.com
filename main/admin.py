@@ -38,6 +38,11 @@ class NewsAdmin(admin.ModelAdmin):
     list_filter = ('kind', 'status')
     ordering = ('-id',)
 
+class ActivityAdmin(admin.ModelAdmin):
+    list_display = ('id', 'music', 'user', 'updated_at', 'status')
+    list_filter = ('user', 'status')
+    ordering = ('-id',)
+
 admin.site.register(Difficulty, DifficultyAdmin)
 admin.site.register(Level, LevelAdmin)
 admin.site.register(Sran_Level, Sran_LevelAdmin)
@@ -46,3 +51,4 @@ admin.site.register(Medal, MedalAdmin)
 admin.site.register(Bad_Count, Bad_CountAdmin)
 admin.site.register(Extra_Option, Extra_OptionAdmin)
 admin.site.register(News, NewsAdmin)
+admin.site.register(Activity, ActivityAdmin)

@@ -165,3 +165,17 @@ class News(models.Model):
     class Meta:
         verbose_name = 'News'
         verbose_name_plural = 'News'
+
+class Activity(models.Model):
+    ''' 更新履歴 '''
+    music = models.ForeignKey(Music, verbose_name='曲')
+    user = models.ForeignKey(CustomUser, verbose_name='ユーザー')
+    updated_at = models.DateTimeField('更新日時', default=datetime.now)
+    status = models.BooleanField('状態', default=True)
+
+    def __str__(self):
+        return '%s - %s' % (self.music, self.user)
+
+    class Meta:
+        verbose_name = 'アクティビティ'
+        verbose_name_plural = 'アクティビティ'
