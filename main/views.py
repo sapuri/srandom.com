@@ -229,37 +229,32 @@ def edit(request, music_id):
                     extra_option.save()                                     # 保存
 
             # 更新をツイート
-            try:
-                if request.POST['tweet']:
-                    # 自ユーザーのtwitter情報を取得
-                    social = myself.social_auth.get(provider='twitter')
-                    # パラメータを取得
-                    oauth_token = social.extra_data['access_token']['oauth_token']
-                    oauth_secret = social.extra_data['access_token']['oauth_token_secret']
-                    CONSUMER_KEY = 'Pwyx6QZgunJsbrArLub7pNKwu'
-                    CONSUMER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO'
-                    # Twitterクラスを作成
-                    twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
-                    # ツイート
-                    if request.POST['bad_count']:
-                        tweet = '『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』のBAD数を' + request.POST['bad_count'] + 'に更新！ #スパランドットコム http://srandom.com/ranking/detail/' + str(music.id) + '/'
-                        try:
-                            twitter.statuses.update(status = tweet)
-                            # リダイレクト先にメッセージを表示
-                            msg = '更新内容をツイートしました！'
-                            messages.success(request, msg)
-                        except:
-                            # リダイレクト先にメッセージを表示
-                            msg = '更新内容をツイートできませんでした'
-                            messages.error(request, msg)
-                    else:
+            if 'tweet' in request.POST:
+                # 自ユーザーのtwitter情報を取得
+                social = myself.social_auth.get(provider='twitter')
+                # パラメータを取得
+                oauth_token = social.extra_data['access_token']['oauth_token']
+                oauth_secret = social.extra_data['access_token']['oauth_token_secret']
+                CONSUMER_KEY = 'Pwyx6QZgunJsbrArLub7pNKwu'
+                CONSUMER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO'
+                # Twitterクラスを作成
+                twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
+                # ツイート
+                if request.POST['bad_count']:
+                    tweet = '『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』のBAD数を' + request.POST['bad_count'] + 'に更新！ #スパランドットコム http://srandom.com/ranking/detail/' + str(music.id) + '/'
+                    try:
+                        twitter.statuses.update(status = tweet)
                         # リダイレクト先にメッセージを表示
-                        msg = '更新内容をツイートするにはBAD数の入力が必要です'
+                        msg = '更新内容をツイートしました！'
+                        messages.success(request, msg)
+                    except:
+                        # リダイレクト先にメッセージを表示
+                        msg = '更新内容をツイートできませんでした'
                         messages.error(request, msg)
-
-            # チェックされなかった場合はパス
-            except KeyError:
-                pass
+                else:
+                    # リダイレクト先にメッセージを表示
+                    msg = '更新内容をツイートするにはBAD数の入力が必要です'
+                    messages.error(request, msg)
 
             # リダイレクト先にメッセージを表示
             msg = music.title + ' (' + music.difficulty.difficulty_short() + ') を更新しました！'
