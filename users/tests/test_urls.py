@@ -6,23 +6,41 @@ from users.views import *
 class UrlTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
-        theme = Theme.objects.create(theme='test')
-        self.user = CustomUser.objects.create_user(username='admin', email='test@example.com', password='top_secret', theme=theme, premium=True)
+        theme = Theme.objects.create(theme='something')
+        self.user = CustomUser.objects.create_user(username='test', email='test@example.com', password='secret', theme=theme, premium=True)
 
-    def test_settings(self):
-        request = self.factory.get('/users/settings/')
+    def test_mypage(self):
+        url = '/users/test/'
+        request = self.factory.get(url)
         request.user = self.user
         response = settings(request)
         self.assertEqual(response.status_code, 200)
 
+    def test_settings(self):
+        url = '/users/settings/'
+        request = self.factory.get(url)
+        request.user = self.user
+        response = settings(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_cleardata(self):
+        for i in range(1, 18):
+            url = '/users/cleardata/' + str(i) + '/'
+            request = self.factory.get(url)
+            request.user = self.user
+            response = cleardata(request, self.user, i)
+            self.assertEqual(response.status_code, 200)
+
     def test_deactivate(self):
-        request = self.factory.get('/users/deactivate/')
+        url = '/users/deactivate/'
+        request = self.factory.get(url)
         request.user = self.user
         response = deactivate(request)
         self.assertEqual(response.status_code, 200)
 
     def test_download(self):
-        request = self.factory.get('/users/download/csv/')
+        url = '/users/download/csv/'
+        request = self.factory.get(url)
         request.user = self.user
         response = download(request, 'csv')
         self.assertEqual(response.status_code, 200)
