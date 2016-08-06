@@ -55,7 +55,7 @@ class Bad_CountForm(forms.ModelForm):
         fields = ('bad_count',)
 
 class Extra_OptionForm(forms.ModelForm):
-    hard = BooleanField(label='ハード')
+    hard = BooleanField(label='ハード', required=False)
 
     class Meta:
         model = Extra_Option
