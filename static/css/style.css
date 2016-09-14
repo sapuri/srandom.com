@@ -119,6 +119,14 @@ tr.clickable:hover {
     border: solid 1px #3079ed;
 }
 
+#news .news {
+    margin-bottom: 30px;
+}
+
+    #news .news .date {
+        font-weight: bold;
+    }
+
 #news .article {
     background: #e5e5e5;
     padding: 8px;

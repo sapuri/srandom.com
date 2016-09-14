@@ -4,15 +4,6 @@
 
 {% block extrahead %}
 <meta name="description" content="スパランドットコムの登録ユーザー一覧ページです。">
-
-<style>
-    .user-list th {
-        text-align: center;
-    }
-    .user-list tr#myself td.index {
-        font-weight: bold;
-    }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -20,22 +11,24 @@
 <p>スパランドットコムに登録しているユーザーの一覧です。</p>
 <p>プレイヤー名が「公開する」に設定されているユーザーのみを表示しています。</p>
 <br>
-<table class="user-list table table-striped table-bordered table-condensed">
-    <thead>
-        <th></th>
-        <th>ユーザー名</th>
-        <th>プレイヤー名</th>
-        <th>地域</th>
-    </thead>
-    <tbody>
-        {% for selected_user in users %}
-        <tr{% ifequal selected_user.username user.username %} id="myself"{% endifequal %}>
-            <td class="index">{{ forloop.counter }}</td>
-            <td class="username"><a href="{% url 'users:mypage' selected_user.username %}">@{{ selected_user.username }}</a>{% if selected_user.premium %} <span class="premium">★</span>{% endif %}</td>
-            <td class="player_name">{{ selected_user.player_name|default:'-' }}</td>
-            <td class="location">{{ selected_user.location|default:'-' }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table class="user-list table table-striped table-bordered">
+        <thead>
+            <th class="col-sm-2">ユーザー名</th>
+            <th class="col-sm-2">プレイヤー名</th>
+            <th class="col-sm-1">地域</th>
+            <th class="col-sm-7">コメント</th>
+        </thead>
+        <tbody>
+            {% for selected_user in users %}
+            <tr{% ifequal selected_user.username user.username %} id="myself"{% endifequal %}>
+                <td class="username"><a href="{% url 'users:mypage' selected_user.username %}">{{ selected_user.username }}</a>{% if selected_user.premium %} <span class="premium">★</span>{% endif %}</td>
+                <td class="player_name">{{ selected_user.player_name|default:'-' }}</td>
+                <td class="location">{{ selected_user.location|default:'-' }}</td>
+                <td class="comment">{{ selected_user.profile|default:'-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

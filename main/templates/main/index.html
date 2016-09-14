@@ -32,30 +32,16 @@
 
 <h2 class="page-header">News</h2>
 <div id="news">
-    {% for article in news %}
-    {% if article.kind == '新規' %}
-    <div class="article addition">
-        <p class="content"><a href="{% url 'main:ranking_detail' article.music.id %}">{{ article.music.title }} ({{ article.music.difficulty }})</a> が追加されました</p>
-        <p class="date">{{ article.created_at|date:"Y/m/d" }}</p>
+    <div class="news">
+        <p class="date">2016/09/13</p>
+        <div class="article addition"><p class="content"><a href="/ranking/detail/523/">時の妖花(EX)</a> が追加されました</p></div>
+        <div class="article update"><p class="content"><a href="/ranking/detail/516/">造花の貌(EX)</a> の情報が更新されました</p></div>
+        <div class="article update"><p class="content"><a href="/ranking/detail/517/">Fate No.23(EX)</a> の情報が更新されました</p></div>
+        <div class="article update"><p class="content"><a href="/ranking/detail/178/">ビビッド(EX)</a> の情報が更新されました</p></div>
+        <div class="article update"><p class="content"><a href="/ranking/detail/179/">大宇宙の法典(EX)</a> の情報が更新されました</p></div>
     </div>
-    {% elif article.kind == 'レベル更新' %}
-    <div class="article update">
-        <p class="content"><a href="{% url 'main:ranking_detail' article.music.id %}">{{ article.music.title }} ({{ article.music.difficulty }})</a> のレベルが変更されました</p>
-        <p class="date">{{ article.created_at|date:"Y/m/d" }}</p>
-    </div>
-    {% elif article.kind == 'S乱レベル更新' %}
-    <div class="article update">
-        <p class="content"><a href="{% url 'main:ranking_detail' article.music.id %}">{{ article.music.title }} ({{ article.music.difficulty }})</a> のS乱レベルが変更されました</p>
-        <p class="date">{{ article.created_at|date:"Y/m/d" }}</p>
-    </div>
-    {% elif article.kind == '削除' %}
-    <div class="article delete">
-        <p class="content">{{ article.music.title }} ({{ article.music.difficulty }}) が削除されました</p>
-        <p class="date">{{ article.created_at|date:"Y/m/d" }}</p>
-    </div>
-    {% endif %}
-    {% endfor %}
 </div>
+<p>... <a href="{% url 'main:news' %}">全てのニュースを見る</a></p>
 
 <h2 class="page-header">このサイトについて</h2>
 <p>スパランドットコムは、ポップンミュージックのスパラン愛好家のためのクリア状況管理サイトです。</p>
@@ -93,6 +79,7 @@
 </div>
 
 <h2 class="page-header">更新情報</h2>
+<p>2016/09/14 ニュース一覧ページを追加しました</p>
 <p>2016/06/19 楽曲検索機能を追加しました</p>
 <p>2016/05/26 テーマ変更機能を追加しました</p>
 <p>2016/05/19 CSVエクスポート機能を追加しました</p>

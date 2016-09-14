@@ -15,7 +15,6 @@ from .forms import *
 
 def index(request):
     ''' トップページ '''
-    news = News.objects.filter(status=True).order_by('-id')[:5]
     medal_num = Medal.objects.all().count()
     recent_medal = Medal.objects.all().order_by('-updated_at')[:10]
     search_form = SearchForm(request.GET)
@@ -27,6 +26,15 @@ def index(request):
         'search_form': search_form
     }
     return render(request, 'main/index.html', context)
+
+def news(request):
+    ''' NEWS '''
+    news = News.objects.filter(status=True).order_by('-id')
+
+    context = {
+        'news': news,
+    }
+    return render(request, 'main/news.html', context)
 
 def search(request):
     ''' 検索結果 '''
@@ -257,7 +265,7 @@ def edit(request, music_id):
                     messages.error(request, msg)
 
             # アクティビティに更新履歴を保存
-            activity = Activity.objects.create(music=music, updated_at=now_datetime, user=myself)
+            # activity = Activity.objects.create(music=music, updated_at=now_datetime, user=myself)
 
             # リダイレクト先にメッセージを表示
             msg = music.title + ' (' + music.difficulty.difficulty_short() + ') を更新しました！'
