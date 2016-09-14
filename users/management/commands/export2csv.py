@@ -9,6 +9,8 @@ class Command(BaseCommand):
     help = 'プレミアムユーザーのクリアデータを CSV にエクスポートします。'
 
     def handle(self, *args, **options):
+        # FIXME: メダルが存在しない記録を読み込むとエラーになる
+
         username = ''
 
         if username:
@@ -57,8 +59,8 @@ class Command(BaseCommand):
                     csv_data.append(['', '', '', '', '', '', '', '', ''])
 
             # CSVファイルに書き込み
-            BASE_DIR = '/Users/minami/workspace/django_1.9/srandom'   # ローカル
-            # BASE_DIR = '/var/www/srandom.com'                         # VPS
+            BASE_DIR = '/Users/minami/workspace/srandom.com'   # ローカル
+            # BASE_DIR = '/var/www/srandom.com'                  # VPS
             file_path = BASE_DIR+'/csv/export/'+selected_user.username+'.csv'
             f = open(file_path, 'w')
             writer = csv.writer(f)
