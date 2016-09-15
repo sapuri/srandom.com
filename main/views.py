@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.http import HttpResponse, Http404
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 
 from .models import *
@@ -662,22 +662,15 @@ def get_latest_updated_at(request, music_id):
             medal = None
 
         if medal:
-            # 更新日時
-            updated_at = medal.updated_at
-
-            # 時間調整
-            updated_at_hour = updated_at.hour + 9   # UTC+9
-            updated_at_day = updated_at.day
-            if updated_at_hour >= 24:
-                updated_at_day += 1
-                updated_at_hour -= 24
+            # 更新日時 (日本時間 UTC+9 に変換)
+            updated_at = medal.updated_at + timedelta(hours=9)
 
             context = {
                 'is_active': True,
                 'year': updated_at.year,
                 'month': updated_at.month,
-                'day': updated_at_day,
-                'hour': updated_at_hour,
+                'day': updated_at.day,
+                'hour': updated_at.hour,
                 'minute': updated_at.minute,
                 'second': updated_at.second
             }
