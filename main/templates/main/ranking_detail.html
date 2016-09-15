@@ -45,7 +45,7 @@
             <td class="sran_level">{{ music.sran_level }}</td>
             <td class="title"><a href="{% url 'main:edit' music.id %}">{{ music.title }}</a></td>
             <td class="difficulty">{{ music.difficulty.difficulty_short }}</td>
-            <td class="bpm">{{ music.bpm }}</td>
+            <td class="bpm">{{ music.bpm|default:'-' }}</td>
             <td id="bad_count_avg"></td>
         </tr>
     </tbody>
