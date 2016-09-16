@@ -27,6 +27,7 @@ function getMyRank(music_id) {
     .then(
         function(response) {
             if (response.myrank == 0) response.myrank = '-';
+            if (response.bad_count_num == 0) response.bad_count_num = '-';
             // 順位を描画
             $(selector).text(response.myrank+' / '+response.bad_count_num);
         },
