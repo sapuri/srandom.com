@@ -2,7 +2,7 @@ beautifulsoup4==4.5.1
 defusedxml==0.4.1
 Django==1.10.1
 django-appconf==1.0.2
-django-bootstrap3==7.0.1
+django-bootstrap3==7.1.0
 django-compressor==2.1
 django-htmlmin==0.9.1
 django-maintenancemode==0.11.2
@@ -22,7 +22,7 @@ python3-openid==3.0.10
 pytz==2016.6.1
 rcssmin==1.0.6
 requests==2.11.1
-requests-oauthlib==0.6.2
+requests-oauthlib==0.7.0
 rjsmin==1.0.12
 six==1.10.0
 sqlparse==0.2.1
