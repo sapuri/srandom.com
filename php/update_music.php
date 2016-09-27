@@ -13,7 +13,8 @@ $table_name = 'main_music';
 
 // 追加例外曲リスト
 $exceptionMusicList = array(
-    '&quot;Schall&quot; we step?'   // "Schall" we step?
+    '&quot;Schall&quot; we step?',   // "Schall" we step?
+    '混乱少女?そふらんちゃん!!',         // 混乱少女♥そふらんちゃん!!
 );
 /* ---------- /パラメータ設定 ---------- */
 
