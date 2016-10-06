@@ -27,30 +27,27 @@
     <tbody>
         {% for music in music_list %}
         <tr id="music-{{ music.id }}">
-            <script>getClearStatus({{ music.id }}, {{ selected_user.id }});</script>
+            <script>$(function() { getClearStatus({{ music.id }}, {{ selected_user.id }}); });</script>
             <td class="level">{{ music.level }}</td>
             <td class="title"><a href="{% url 'main:ranking_detail' music.id %}">{{ music.title }}</a></td>
             <td class="difficulty">{{ music.difficulty }}</td>
             <td class="bpm">{{ music.bpm|default:'-' }}</td>
             <td class="medal">
-                <div class="loading"></div>
                 <img>
-                <script>getMedal({{ music.id }}, {{ selected_user.id }});</script>
+                <script>$(function() { getMedal({{ music.id }}, {{ selected_user.id }}); });</script>
             </td>
             <td class="bad_count">
-                <div class="loading"></div>
-                <script>getBadCount({{ music.id }}, {{ selected_user.id }});</script>
+                <script>$(function() { getBadCount({{ music.id }}, {{ selected_user.id }}); });</script>
             </td>
             <td class="updated_at">
-                <div class="loading"></div>
-                <script>getLatestUpdatedAt({{ music.id }}, {{ selected_user.id }});</script>
+                <script>$(function() { getLatestUpdatedAt({{ music.id }}, {{ selected_user.id }}); });</script>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 </div>
-<script>getFolderLamp({{ sran_level }}, true, {{ selected_user.id }})</script>
+<script>$(function() { getFolderLamp({{ sran_level }}, true, {{ selected_user.id }}); });</script>
 {% else %}
 <p>クリアデータは非公開に設定されています。</p>
 {% endif %}

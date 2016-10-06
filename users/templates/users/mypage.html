@@ -44,7 +44,7 @@
         <a href="{% url 'users:cleardata' selected_user.username s_lv %}"><span class="bar" style="background-color:#FFFFFF;"><div class="loading"></div></span></a>
     </div>
     {% endfor %}
-    <script>getPercentageOfClear({{ selected_user.id }});</script>
+    <script>$(function() { getPercentageOfClear({{ selected_user.id }}); });</script>
 {% else %}
     <p>クリアデータは非公開に設定されています。</p>
 {% endif %}
@@ -70,17 +70,17 @@
         <tbody>
             {% for recent in recent_medal %}
             <tr id="music-{{ recent.music.id }}">
-                <script>getClearStatus({{ recent.music.id }}, {{ selected_user.id }});</script>
+                <script>$(function() { getClearStatus({{ recent.music.id }}, {{ selected_user.id }}); });</script>
                 <td class="level">{{ recent.music.level }} ({{ recent.music.sran_level }})</td>
                 <td class="title"><a href="{% url 'main:ranking_detail' recent.music.id %}">{{ recent.music.title }}</a></td>
                 <td class="difficulty">{{ recent.music.difficulty }}</td>
                 <td class="bpm">{{ recent.music.bpm|default:'-' }}</td>
                 <td class="medal">
                     <img>
-                    <script>getMedal({{ recent.music.id }}, {{ selected_user.id }});</script>
+                    <script>$(function() { getMedal({{ recent.music.id }}, {{ selected_user.id }}); });</script>
                 </td>
                 <td class="bad_count">
-                    <script>getBadCount({{ recent.music.id }}, {{ selected_user.id }});</script>
+                    <script>$(function() { getBadCount({{ recent.music.id }}, {{ selected_user.id }}); });</script>
                 </td>
                 <td class="updated_at">
                     {{ recent.updated_at|date:"Y/n/d G:i"|default:'-'}}

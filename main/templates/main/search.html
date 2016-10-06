@@ -37,20 +37,20 @@
     <tbody>
         {% for music in items %}
         <tr id="music-{{ music.id }}">
-            <script>getClearStatus({{ music.id }});</script>
+            <script>$(function() { getClearStatus({{ music.id }}); });</script>
             <td class="level">{{ music.level }} ({{ music.sran_level }})</td>
             <td class="title"><a href="{% url 'main:ranking_detail' music.id %}">{{ music.title }}</a></td>
             <td class="difficulty">{{ music.difficulty }}</td>
             <td class="bpm">{{ music.bpm|default:'-' }}</td>
             <td class="medal">
                 <img>
-                <script>getMedal({{ music.id }});</script>
+                <script>$(function() { getMedal({{ music.id }}); });</script>
             </td>
             <td class="bad_count">
-                <script>getBadCount({{ music.id }});</script>
+                <script>$(function() { getBadCount({{ music.id }}); });</script>
             </td>
             <td class="updated_at">
-                <script>getLatestUpdatedAt({{ music.id }});</script>
+                <script>$(function() { getLatestUpdatedAt({{ music.id }}); });</script>
             </td>
         </tr>
         {% endfor %}

@@ -152,6 +152,6 @@
 </table>
 
 <script src="/static/js/ranking_detail.js?v=20160507"></script>
-<script>getMedalCount({{ music.id }});</script>
-<script>getBadCountAvg({{ music.id }});</script>
+<script>$(function() { getMedalCount({{ music.id }}); });</script>
+<script>$(function() { getBadCountAvg({{ music.id }}); });</script>
 {% endblock %}
