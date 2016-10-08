@@ -10,7 +10,7 @@
     {% if user.theme.id == 2 %}<meta name="theme-color" content="#181818">{% endif %}
     <title>{% block title %}スパランドットコム - ポップンミュージックのスパラン愛好家のためのクリア状況管理サイト{% endblock %}</title>
     {% bootstrap_css %}
-    <link rel="stylesheet" href="/static/css/style.css?v=20160914">
+    <link rel="stylesheet" href="/static/css/style.css?v=20161009">
     {% if user.theme.id == 2 %}<link rel="stylesheet" href="/static/css/dark.css?v=20160625">{% endif %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="/static/js/global.js?v=20160528a"></script>
@@ -105,34 +105,9 @@
                 <li><a class="no-decoration" href="{% url 'users:mypage' user.username %}">{% bootstrap_icon "user" %} マイページ</a></li>
                 <li><a class="no-decoration" href="{% url 'users:settings' %}">{% bootstrap_icon "cog" %} 設定</a></li>
             </ul>
-                {% if not user.premium %}
-                <div class="ad-area ad-area-1 hidden-xs hidden-sm">
-                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                    <!-- サイドバー - スパランドットコム -->
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-6195130822330787"
-                         data-ad-slot="1781717557"
-                         data-ad-format="auto"></ins>
-                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                </div><!-- /.ad-area -->
-                {% endif %}
             {% endif %}
         </div><!-- /.sidebar -->
     </div><!-- /#main -->
-
-    {% if user.is_authenticated and not user.premium %}
-    <div class="ad-area ad-area-2 hidden-xs hidden-sm">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <!-- フッター - スパランドットコム -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-6195130822330787"
-             data-ad-slot="2501571159"
-             data-ad-format="auto"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div><!-- /.ad-area -->
-    {% endif %}
 
     <div id="footer">
         <div class="container">

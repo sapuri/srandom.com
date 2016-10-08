@@ -376,15 +376,6 @@ h1.music-title {
         color: #fff;
     }
 
-/* 広告エリア */
-.ad-area {
-    text-align: center;
-}
-
-    .ad-area-2 {
-        padding-top: 20px;
-    }
-
 /* フッター */
 #footer {
     margin-top: 50px;
