@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.http import HttpResponse, Http404
+from django.db.models import Avg
 from datetime import datetime, timedelta
 import json
 
@@ -695,15 +696,8 @@ def get_bad_count_avg(request, music_id):
         if not bad_count_list:
             bad_count_avg = -1
         else:
-            bad_count_sum = 0   # BAD数の合計
-            bad_count_num = 0   # BAD数の個数
-
-            for bad_count in bad_count_list:
-                bad_count_sum += bad_count.int()
-                bad_count_num += 1
-
             # BAD数の平均を計算 (小数点以下四捨五入)
-            bad_count_avg = round(bad_count_sum / bad_count_num)
+            bad_count_avg = round(bad_count_list.aggregate(Avg('bad_count'))['bad_count__avg'])
 
         context = {
             'bad_count_avg': bad_count_avg
