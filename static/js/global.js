@@ -1,5 +1,4 @@
-var SERVER_URL = 'http://127.0.0.1:8000/';
-// var SERVER_URL = 'http://srandom.com/';
+var SERVER_URL = location.protocol + '//' + location.host + '/';
 
 /* メッセージボックス */
 $(function () {

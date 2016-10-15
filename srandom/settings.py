@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'social.apps.django_app.default',   # python-social-auth
     'compressor',                       # django-compressor
     'maintenancemode',                  # django-maintenancemode
+    'djangosecure',                     # django-secure
+    'sslserver',                        # django-sslserver
     'main.apps.MainConfig',             # Main
     'users.apps.UsersConfig',           # Users
 ]
@@ -60,6 +62,8 @@ MIDDLEWARE_CLASSES = [
     # django-maintenancemode
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'maintenancemode.middleware.MaintenanceModeMiddleware',
+    # django-secure
+    'djangosecure.middleware.SecurityMiddleware',
 ]
 
 ROOT_URLCONF = 'srandom.urls'
@@ -181,3 +185,14 @@ SOCIAL_AUTH_TWITTER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO
 # django-htmlmin
 # DEBUG と反対の値になるため通常は指定する必要無し
 # HTML_MINIFY = True
+
+
+# SSL settings
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# django-secure
+SECURE_SSL_REDIRECT = True
