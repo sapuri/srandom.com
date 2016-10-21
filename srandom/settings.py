@@ -43,8 +43,10 @@ INSTALLED_APPS = [
     'maintenancemode',                  # django-maintenancemode
     'djangosecure',                     # django-secure
     'sslserver',                        # django-sslserver
+    'rest_framework',                   # djangorestframework
     'main.apps.MainConfig',             # Main
     'users.apps.UsersConfig',           # Users
+    'api.apps.ApiConfig',               # Api
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -143,14 +145,13 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-# サーバー時はON
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATIC_URL = '/static/'
 
 # ローカル時はON
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, "static"),
-# )
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
 
 # メッセージ設定
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
@@ -178,6 +179,16 @@ SOCIAL_AUTH_TWITTER_KEY    = 'Pwyx6QZgunJsbrArLub7pNKwu'
 SOCIAL_AUTH_TWITTER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO'
 
 
+# djangorestframework
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAdminUser',
+    ),
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'PAGE_SIZE': 100
+}
+
+
 # django-compressor
 # DEBUG と反対の値になるため通常は指定する必要無し
 # COMPRESS_ENABLED = True
@@ -188,11 +199,11 @@ SOCIAL_AUTH_TWITTER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO
 
 
 # SSL settings
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_HSTS_SECONDS = 31536000
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 # django-secure
-SECURE_SSL_REDIRECT = True
+# SECURE_SSL_REDIRECT = True
