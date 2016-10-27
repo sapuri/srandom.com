@@ -389,7 +389,7 @@ def ranking_detail(request, music_id):
     users = CustomUser.objects.filter(is_active=True)
 
     medal_list = Medal.objects.filter(music=music)
-    bad_count_list = Bad_Count.objects.filter(music=music).order_by('bad_count')
+    bad_count_list = Bad_Count.objects.filter(music=music).order_by('bad_count', 'updated_at')
     extra_option_list = Extra_Option.objects.filter(music=music)
 
     context = {
