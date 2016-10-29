@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from users.models import CustomUser
 
@@ -105,6 +105,10 @@ class Medal(models.Model):
         else:
             return 0
 
+    # 更新日時をJSTで返す
+    def updated_at_jst(self):
+        return self.updated_at + timedelta(hours=9)
+
     def __str__(self):
         return self.output_str()
 
@@ -125,6 +129,10 @@ class Bad_Count(models.Model):
     def __str__(self):
         return str(self.bad_count)
 
+    # 更新日時をJSTで返す
+    def updated_at_jst(self):
+        return self.updated_at + timedelta(hours=9)
+
     class Meta:
         verbose_name = 'BAD数'
         verbose_name_plural = 'BAD数'
@@ -141,6 +149,10 @@ class Extra_Option(models.Model):
             return True
         else:
             False
+
+    # 更新日時をJSTで返す
+    def updated_at_jst(self):
+        return self.updated_at + timedelta(hours=9)
 
     class Meta:
         verbose_name = 'Extra Option'

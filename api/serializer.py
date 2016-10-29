@@ -3,21 +3,20 @@ from rest_framework import serializers
 from main.models import *
 from users.models import *
 
-''' Main '''
 class DifficultySerializer(serializers.ModelSerializer):
     class Meta:
         model = Difficulty
-        fields = '__all__'
+        fields = ('difficulty', 'difficulty_short')
 
 class LevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Level
-        fields = '__all__'
+        fields = ('level',)
 
 class Sran_LevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sran_Level
-        fields = '__all__'
+        fields = ('level',)
 
 class MusicSerializer(serializers.ModelSerializer):
     difficulty = DifficultySerializer()
@@ -28,7 +27,6 @@ class MusicSerializer(serializers.ModelSerializer):
         model = Music
         fields = '__all__'
 
-''' Users '''
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
@@ -60,17 +58,30 @@ class CustomUserSerializer(serializers.ModelSerializer):
         )
 
 class MedalSerializer(serializers.ModelSerializer):
-    music = MusicSerializer()
-    user = CustomUserSerializer()
+    updated_at_jst = serializers.DateTimeField(format='%Y/%-m/%d %-H:%M')
 
     class Meta:
         model = Medal
-        fields = '__all__'
+        fields = ('medal', 'updated_at_jst')
 
 class Bad_CountSerializer(serializers.ModelSerializer):
+    updated_at_jst = serializers.DateTimeField(format='%Y/%m/%d %H:%M')
+
+    class Meta:
+        model = Bad_Count
+        fields = ('bad_count', 'updated_at_jst')
+
+class Extra_OptionSerializer(serializers.ModelSerializer):
+    updated_at_jst = serializers.DateTimeField(format='%Y/%m/%d %H:%M')
+
+    class Meta:
+        model = Extra_Option
+        fields = ('hard', 'updated_at_jst')
+
+class ActivitySerializer(serializers.ModelSerializer):
     music = MusicSerializer()
     user = CustomUserSerializer()
 
     class Meta:
-        model = Bad_Count
+        model = Activity
         fields = '__all__'

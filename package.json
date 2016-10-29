@@ -1,0 +1,33 @@
+{
+  "name": "srandom.com",
+  "version": "1.7.1",
+  "description": "スパランドットコム - ポップンミュージックのスパラン愛好家のためのクリア状況管理サイト",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch --progress",
+    "build": "webpack --config webpack-production.config.js --progress"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m1nam1/srandom.com.git"
+  },
+  "author": "sys-co",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/m1nam1/srandom.com/issues"
+  },
+  "homepage": "https://github.com/m1nam1/srandom.com#readme",
+  "dependencies": {
+    "react": "^15.3.2",
+    "react-bootstrap": "^0.30.6",
+    "react-dom": "^15.3.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.18.0",
+    "babel-loader": "^6.2.7",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "webpack": "^1.13.3"
+  }
+}
