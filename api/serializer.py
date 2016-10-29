@@ -65,14 +65,14 @@ class MedalSerializer(serializers.ModelSerializer):
         fields = ('medal', 'updated_at_jst')
 
 class Bad_CountSerializer(serializers.ModelSerializer):
-    updated_at_jst = serializers.DateTimeField(format='%Y/%m/%d %H:%M')
+    updated_at_jst = serializers.DateTimeField(format='%Y/%-m/%d %-H:%M')
 
     class Meta:
         model = Bad_Count
         fields = ('bad_count', 'updated_at_jst')
 
 class Extra_OptionSerializer(serializers.ModelSerializer):
-    updated_at_jst = serializers.DateTimeField(format='%Y/%m/%d %H:%M')
+    updated_at_jst = serializers.DateTimeField(format='%Y/%-m/%d %-H:%M')
 
     class Meta:
         model = Extra_Option
