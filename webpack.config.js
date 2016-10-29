@@ -1,4 +1,6 @@
-const path = require('path');
+var path = require('path');
+var webpack = require('webpack');
+var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
 
 module.exports = {
     /* ビルドの起点となるファイルの設定 */
@@ -25,5 +27,6 @@ module.exports = {
     },
     resolve: {
         extensions: ['', '.js', '.jsx']
-    }
+    },
+    plugins: [commonsPlugin]
 };
