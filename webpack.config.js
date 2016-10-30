@@ -11,8 +11,8 @@ module.exports = {
     },
     /* 出力されるファイルの設定 */
     output: {
-        path: path.join(__dirname, 'static/react/dist'), // 出力先の絶対パス
-        filename: '[name].js'                            // 出力先のファイル名
+        path: path.join(__dirname, 'static/react/assets'), // 出力先の絶対パス
+        filename: '[name].js'                              // 出力先のファイル名
     },
     devtool: 'inline-source-map', // ソースマップをファイル内に出力
     module: {

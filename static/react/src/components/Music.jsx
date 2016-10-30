@@ -1,16 +1,23 @@
 import React from 'react';
+import ModalDialog from './ModalDialog';
 
 export default class Music extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             record: {
-                medal: '-',
-                bad_count: '-',
-                updated_at: '-'
+                medal: null,
+                bad_count: null,
+                updated_at: null
             },
-            clear_status: 'no-play'
+            clear_status: 'no-play',
+            dialog: false
         };
+        this.handleOpenDialog = this.handleOpenDialog.bind(this);
+    }
+
+    handleOpenDialog(event) {
+        this.setState({ dialog: true });
     }
 
     loadRecord() {
@@ -19,14 +26,11 @@ export default class Music extends React.Component {
             dataType: 'json',
             cache: false,
             success: data => {
-                const medal = data.medal.medal !== null ? data.medal.medal : '-';
-                const bad_count = data.bad_count.bad_count !== null ? data.bad_count.bad_count : '-';
-                const updated_at = data.medal.updated_at_jst !== null ? data.medal.updated_at_jst : '-';
                 this.setState({
                     record: {
-                        medal: medal,
-                        bad_count: bad_count,
-                        updated_at: updated_at
+                        medal: data.medal.medal,
+                        bad_count: data.bad_count.bad_count,
+                        updated_at: data.medal.updated_at_jst
                     }
                 });
             },
@@ -50,16 +54,16 @@ export default class Music extends React.Component {
     }
 
     render() {
-        const medal_img = () => (this.state.record.medal !== '-' && this.state.record.medal !== 12) ? <img src={`/static/img/medal/${this.state.record.medal}.png`} width="16" height="16" /> : '-'
         return (
-            <tr id={`music-${this.props.id}`} className={this.state.clear_status}>
+            <tr id={`music-${this.props.id}`} className={this.state.clear_status} ref="music_table">
                 <td className="level">{this.props.level}</td>
-                <td className="title"><a href={`/edit/${this.props.id}/`}>{this.props.title}</a></td>
+                <td className="title"><a onClick={this.handleOpenDialog}>{this.props.title}</a></td>
                 <td className="difficulty">{this.props.difficulty}</td>
                 <td className="bpm">{this.props.bpm}</td>
-                <td className="medal">{medal_img()}</td>
-                <td className="bad_count">{this.state.record.bad_count}</td>
-                <td className="updated_at">{this.state.record.updated_at}</td>
+                <td className="medal">{(this.state.record.medal !== null && this.state.record.medal !== 12) ? <img src={`/static/img/medal/${this.state.record.medal}.png`} width="16" height="16" /> : '-'}</td>
+                <td className="bad_count">{this.state.record.bad_count !== null ? this.state.record.bad_count : '-'}</td>
+                <td className="updated_at">{this.state.record.updated_at !== null ? this.state.record.updated_at : '-'}</td>
+                {this.state.dialog ? <ModalDialog is_active={this.state.dialog} id={this.props.id} title={this.props.title} difficulty={this.props.difficulty} record={this.state.record} /> : null}
             </tr>
         );
     }
