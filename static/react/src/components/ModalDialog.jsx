@@ -110,10 +110,11 @@ export default class ModalDialog extends React.Component {
             <Dialog
                 title={`${this.props.title} (${this.props.difficulty})`}
                 actions={actions}
-                modal={true}
+                modal={false}
                 open={this.state.is_active}
                 onRequestClose={this.handleCloseDialog}
             >
+                <p><a href={`/ranking/detail/${this.props.id}/`}>ランキングを見る</a></p>
                 <SelectField floatingLabelText="クリアメダル" value={this.state.new_record.medal ? this.state.new_record.medal : 12} onChange={this.handleChangeMedal}>
                     <MenuItem value={1} primaryText="パーフェクト" />
                     <MenuItem value={2} primaryText="フルコンボ ☆" />
