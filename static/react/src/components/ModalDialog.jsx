@@ -1,4 +1,5 @@
 import React from 'react';
+import autobind from 'autobind-decorator'
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import SelectField from 'material-ui/SelectField';
@@ -18,18 +19,15 @@ export default class ModalDialog extends React.Component {
                 updated_at: this.props.record.updated_at
             }
         };
-        this.handleCloseDialog = this.handleCloseDialog.bind(this);
-        this.handleChangeMedal = this.handleChangeMedal.bind(this);
-        this.handleChangeBadCount = this.handleChangeBadCount.bind(this);
-        this.saveRecord = this.saveRecord.bind(this);
-        this.deleteRecord = this.deleteRecord.bind(this);
     }
 
-    handleCloseDialog(event) {
+    @autobind
+    _handleCloseDialog() {
         this.setState({ is_active: false });
     }
 
-    handleChangeMedal(event) {
+    @autobind
+    _handleChangeMedal(event) {
         this.setState({
             new_record: {
                 medal: event.target.value,
@@ -40,7 +38,8 @@ export default class ModalDialog extends React.Component {
         console.log(event.target.value);
     }
 
-    handleChangeBadCount(event) {
+    @autobind
+    _handleChangeBadCount(event) {
         let validated_bad_count;
         if (event.target.value < 0) validated_bad_count = 0;
         else if (event.target.value > 200) validated_bad_count = 200;
@@ -55,7 +54,8 @@ export default class ModalDialog extends React.Component {
         });
     }
 
-    saveRecord(e) {
+    @autobind
+    _saveRecord() {
         // TODO: Ajaxで記録を更新
 
         this.setState({
@@ -68,7 +68,8 @@ export default class ModalDialog extends React.Component {
         });
     }
 
-    deleteRecord(e) {
+    @autobind
+    _deleteRecord() {
         // TODO: Ajax で記録を削除
 
         this.setState({
@@ -81,9 +82,8 @@ export default class ModalDialog extends React.Component {
         });
     }
 
-    /* Propが更新される度に実行 */
-    componentWillReceiveProps(nextProps) {
-        // Stateを初期化
+    /* Stateを初期化 */
+    _initializeState() {
         this.setState({
             is_active: this.props.is_active,
             new_record: {
@@ -95,11 +95,16 @@ export default class ModalDialog extends React.Component {
         });
     }
 
+    /* Propが更新される度に実行 */
+    componentWillReceiveProps(nextProps) {
+        this._initializeState();
+    }
+
     render() {
         const actions = [
-            <FlatButton label="キャンセル" onTouchTap={this.handleCloseDialog} />,
-            <FlatButton label="削除" secondary={true} onTouchTap={this.deleteRecord} />,
-            <FlatButton label="更新" primary={true} onTouchTap={this.saveRecord} />,
+            <FlatButton label="キャンセル" onTouchTap={this._handleCloseDialog} />,
+            <FlatButton label="削除" secondary={true} onTouchTap={this._deleteRecord} />,
+            <FlatButton label="更新" primary={true} onTouchTap={this._saveRecord} />,
         ];
 
         if (this.state.is_active === false) return null;
@@ -112,10 +117,10 @@ export default class ModalDialog extends React.Component {
                 actions={actions}
                 modal={false}
                 open={this.state.is_active}
-                onRequestClose={this.handleCloseDialog}
+                onRequestClose={this._handleCloseDialog}
             >
                 <p><a href={`/ranking/detail/${this.props.id}/`}>ランキングを見る</a></p>
-                <SelectField floatingLabelText="クリアメダル" value={this.state.new_record.medal ? this.state.new_record.medal : 12} onChange={this.handleChangeMedal}>
+                <SelectField floatingLabelText="クリアメダル" value={this.state.new_record.medal ? this.state.new_record.medal : 12} onChange={this._handleChangeMedal}>
                     <MenuItem value={1} primaryText="パーフェクト" />
                     <MenuItem value={2} primaryText="フルコンボ ☆" />
                     <MenuItem value={3} primaryText="フルコンボ ◇" />
@@ -130,7 +135,7 @@ export default class ModalDialog extends React.Component {
                     <MenuItem value={12} primaryText="未プレイ" />
                 </SelectField>
                 <br />
-                <TextField floatingLabelText="BAD数" type="number" value={this.state.new_record.bad_count} onChange={this.handleChangeBadCount} />
+                <TextField floatingLabelText="BAD数" type="number" value={this.state.new_record.bad_count} onChange={this._handleChangeBadCount} />
                 <br />
                 <Checkbox label="ハード" checked={false} />
                 <br />
