@@ -9,15 +9,15 @@ class Command(BaseCommand):
     help = 'クリアデータを移行します。'
     args = '<source_username destination_username>'
 
-    def handle(self, *args, **options):
-        if len(args) != 2:
-            print ('Usage: python manage.py data_migration <移行元のユーザー名> <移行先のユーザー名>')
-            sys.exit()
-
+    def add_arguments(self, parser):
         # 移行元のユーザー名
-        username_from = args[0]
+        parser.add_argument('username_from', type=str)
         # 移行先のユーザー名
-        username_to = args[1]
+        parser.add_argument('username_to', type=str)
+
+    def handle(self, *args, **options):
+        username_from = options['username_from']
+        username_to = options['username_to']
 
         # ユーザーオブジェクトを取得
         try:
@@ -33,8 +33,8 @@ class Command(BaseCommand):
 
         # 確認
         print ('"{0}" のクリアデータを "{1}" に移行します。'.format(user_from.username, user_to.username))
-        print ('本当によろしいですか？ (Y/n)')
-        if input('> ') != 'Y':
+        print ('本当によろしいですか？ (y/N)')
+        if input('> ') != 'y':
             print ('終了します。')
             sys.exit()
 
