@@ -31,81 +31,81 @@ $columnName = array('レベル', '曲名', 'BPM');
  * @return array $csv_data	CSVに書き込むデータ
  */
 function scrapeHtml($url) {
-	/* Lv5〜Lv17を取得 */
+    /* Lv5〜Lv17を取得 */
 
-	// HTMLを取得
-	$html = file_get_html($url);
+    // HTMLを取得
+    $html = file_get_html($url);
 
-	// データ格納用配列を定義
-	$lv = array();
-	$music_lv = array();
-	$music_name = array();
-	$music_bpm = array();
-	$csv_data = array();
+    // データ格納用配列を定義
+    $lv = array();
+    $music_lv = array();
+    $music_name = array();
+    $music_bpm = array();
+    $csv_data = array();
 
-	$lv_num = 0;	// Lvごとに番地を指定
+    $lv_num = 0;	// Lvごとに番地を指定
 
     // #content_1_4 〜 #content_1_16 を指定
     for ($i = 4; $i <= 16; $i++) {
-		// Lv15.5をスキップ (現在は無い)
-		// if ($i == 6) continue;
+        // Lv15.5をスキップ (現在は無い)
+        // if ($i == 6) continue;
 
-		// Lv表記を探索
+        // Lv表記を探索
         $content = $html->find("h3#content_1_$i", 0);
-		$h3 = $content->plaintext;
-		// Lv表記部分のみを取り出す
-		preg_match('/Lv[0-9]+(.[1-9])?/', $h3, $h3);
-		// Lv表記が見つからなければ強制終了
-		if (empty($h3)) {
-			echo 'Lv表記が見つかりませんでした。';
-			exit(1);
-		}
-		// Lv表記を配列に格納
-		$lv[] = $h3[0];
-		echo $h3[0], '<br>'; // debug
+        $h3 = $content->plaintext;
+        // Lv表記部分のみを取り出す
+        preg_match('/Lv[0-9]+(.[1-9])?/', $h3, $h3);
+        // Lv表記が見つからなければ強制終了
+        if (empty($h3)) {
+            echo 'Lv表記が見つかりませんでした。';
+            exit(1);
+        }
+        // Lv表記を配列に格納
+        $lv[] = $h3[0];
+        echo $h3[0], '<br>'; // debug
 
         // $content 直下の div.table-responsive 以下を指定
-		$tr_address = 0;	// <tr>の場所を指定
-		// 全ての<tr>を走査
-		while (1) {
-			// div.table-responsive(2~17)->table->tbody->tr
-			$tr = $html->find('div.table-responsive', $i-3)->children(0)->children(0)->children($tr_address);
-			// <tr>が存在しなければループを抜ける
-			if (!isset($tr)) break;
-			// tr->td
-			$music_lv[$lv_num][$tr_address] = $tr->children(0)->plaintext;
-			// tr->td->span->a
-			$music_name[$lv_num][$tr_address] = $tr->children(1)->children(0)->children(0)->plaintext;
-			echo $music_name[$lv_num][$tr_address], '<br>'; // debug
-			// tr->td
-			$music_bpm[$lv_num][$tr_address] = $tr->children(2)->plaintext;
-			// 次の<tr>を指定
-			$tr_address++;
-		}
-		$lv_num++;	// 次のLvを指定
+        $tr_address = 0;	// <tr>の場所を指定
+        // 全ての<tr>を走査
+        while (1) {
+            // div.table-responsive(2~17)->table->tbody->tr
+            $tr = $html->find('div.table-responsive', $i-3)->children(0)->children(0)->children($tr_address);
+            // <tr>が存在しなければループを抜ける
+            if (!isset($tr)) break;
+            // tr->td
+            $music_lv[$lv_num][$tr_address] = $tr->children(0)->plaintext;
+            // tr->td->span->a
+            $music_name[$lv_num][$tr_address] = $tr->children(1)->children(0)->children(0)->plaintext;
+            echo $music_name[$lv_num][$tr_address], '<br>'; // debug
+            // tr->td
+            $music_bpm[$lv_num][$tr_address] = $tr->children(2)->plaintext;
+            // 次の<tr>を指定
+            $tr_address++;
+        }
+        $lv_num++;	// 次のLvを指定
     }
-	$html->clear();	// メモリ解放
+    $html->clear();	// メモリ解放
 
-	// 収集したデータを配列に格納 (先頭、末尾の空白を除去)
-	try {
-		$lv_num = 0;
-		foreach ($lv as $row) {
-			$line = 0;	// CSVの行を指定
-			$csv_data[$lv_num][$line][0] = $row;	// Lvを格納
-			$line++;
-			for ($music_num = 0; $music_num < count($music_lv[$lv_num]); $music_num++) {
-				$csv_data[$lv_num][$line][0] = trim($music_lv[$lv_num][$music_num]);
-				$csv_data[$lv_num][$line][1] = trim($music_name[$lv_num][$music_num]);
-				$csv_data[$lv_num][$line][2] = trim($music_bpm[$lv_num][$music_num]);
-				$line++;
-			}
-			$lv_num++;
-		}
-	} catch (Exception $e) {
-		echo '収集したデータを配列に格納できませんでした: ', $e;
-		exit(1);
-	}
-	return $csv_data;
+    // 収集したデータを配列に格納 (先頭、末尾の空白を除去)
+    try {
+        $lv_num = 0;
+        foreach ($lv as $row) {
+            $line = 0;	// CSVの行を指定
+            $csv_data[$lv_num][$line][0] = $row;	// Lvを格納
+            $line++;
+            for ($music_num = 0; $music_num < count($music_lv[$lv_num]); $music_num++) {
+                $csv_data[$lv_num][$line][0] = trim($music_lv[$lv_num][$music_num]);
+                $csv_data[$lv_num][$line][1] = trim($music_name[$lv_num][$music_num]);
+                $csv_data[$lv_num][$line][2] = trim($music_bpm[$lv_num][$music_num]);
+                $line++;
+            }
+            $lv_num++;
+        }
+    } catch (Exception $e) {
+        echo '収集したデータを配列に格納できませんでした: ', $e;
+        exit(1);
+    }
+    return $csv_data;
 }
 
 /**
@@ -114,100 +114,100 @@ function scrapeHtml($url) {
  * @return array $csv_data	CSVに書き込むデータ
  */
 function scrapeHtml2($url) {
-	/* Lv1〜Lv4を取得 */
+    /* Lv1〜Lv4を取得 */
 
-	// HTMLを取得
-	$html = file_get_html($url);
+    // HTMLを取得
+    $html = file_get_html($url);
 
-	// データ格納用配列を定義
-	$lv = array();
-	$music_lv = array();
-	$music_name = array();
-	$music_bpm = array();
-	$csv_data = array();
+    // データ格納用配列を定義
+    $lv = array();
+    $music_lv = array();
+    $music_name = array();
+    $music_bpm = array();
+    $csv_data = array();
 
-	$lv_num = 0;	// Lvごとに番地を指定
+    $lv_num = 0;	// Lvごとに番地を指定
 
     // #content_1_1 〜 #content_1_6 を指定
-	$LV4 = 1;	// Lv4
-	$LV3 = 2;	// Lv3
-	$LV2_S = 3;	// Lv2強
-	$LV2_W = 4;	// Lv2弱
-	$LV1_S = 5;	// Lv1強
-	$LV1_W = 6;	// Lv1弱
+    $LV4 = 1;	// Lv4
+    $LV3 = 2;	// Lv3
+    $LV2_S = 3;	// Lv2強
+    $LV2_W = 4;	// Lv2弱
+    $LV1_S = 5;	// Lv1強
+    $LV1_W = 6;	// Lv1弱
     for ($i = 1; $i <= 6; $i++) {
-		if ($i == $LV2_S) $h3 = 'Lv2';		// Lv2強
-		elseif ($i == $LV2_W) $h3 = 'Lv2';	// Lv2弱
-		elseif ($i == $LV1_S) $h3 = 'Lv1';	// Lv1強
-		elseif ($i == $LV1_W) $h3 = 'Lv1';	// Lv1弱
-		else {
-			// Lv表記を探索
-	        $content = $html->find("h3#content_1_$i", 0);
-			$h3 = $content->plaintext;
-			// Lv表記部分のみを取り出す
-			// preg_match('/Lv[0-9]+(.[1-9])?/', $h3, $h3_ed);
-			preg_match('/Lv[0-9]+(.[1-9])?/', $h3, $h3);
-			$h3 = $h3[0];
-			// Lv表記が見つからなければ強制終了
-			if (empty($h3)) {
-				echo 'Lv表記が見つかりませんでした。';
-				exit(1);
-			}
-		}
-		// Lv表記を配列に格納
-		if ($i != $LV2_W && $i != $LV1_W) {
-			// '弱'の時はLv表記を格納しない
-			$lv[] = $h3;
-			echo $h3, '<br>'; // debug
-		}
+        if ($i == $LV2_S) $h3 = 'Lv2';		// Lv2強
+        elseif ($i == $LV2_W) $h3 = 'Lv2';	// Lv2弱
+        elseif ($i == $LV1_S) $h3 = 'Lv1';	// Lv1強
+        elseif ($i == $LV1_W) $h3 = 'Lv1';	// Lv1弱
+        else {
+            // Lv表記を探索
+            $content = $html->find("h3#content_1_$i", 0);
+            $h3 = $content->plaintext;
+            // Lv表記部分のみを取り出す
+            // preg_match('/Lv[0-9]+(.[1-9])?/', $h3, $h3_ed);
+            preg_match('/Lv[0-9]+(.[1-9])?/', $h3, $h3);
+            $h3 = $h3[0];
+            // Lv表記が見つからなければ強制終了
+            if (empty($h3)) {
+                echo 'Lv表記が見つかりませんでした。';
+                exit(1);
+            }
+        }
+        // Lv表記を配列に格納
+        if ($i != $LV2_W && $i != $LV1_W) {
+            // '弱'の時はLv表記を格納しない
+            $lv[] = $h3;
+            echo $h3, '<br>'; // debug
+        }
 
         // $content 直下の div.table-responsive 以下を指定
-		if ($i != $LV2_W && $i != $LV1_W) {
-			// '弱'の時はスキップして追記
-			$arr_address = 0;	// 配列のアドレスを指定
-		}
+        if ($i != $LV2_W && $i != $LV1_W) {
+            // '弱'の時はスキップして追記
+            $arr_address = 0;	// 配列のアドレスを指定
+        }
 
-		$tr_address = 0;	// <tr>の場所を指定
-		// 全ての<tr>を走査
-		while (1) {
-			// div.table-responsive(1~5)->table->tbody->tr
-			$tr = $html->find('div.table-responsive', $i-1)->children(0)->children(0)->children($tr_address);
-			// <tr>が存在しなければループを抜ける
-			if (!isset($tr)) break;
-			// tr->td
-			$music_lv[$lv_num][$arr_address] = $tr->children(0)->plaintext;
-			// tr->td->span->a
-			$music_name[$lv_num][$arr_address] = $tr->children(1)->children(0)->children(0)->plaintext;
-			echo $music_name[$lv_num][$arr_address], '<br>'; // debug
-			// tr->td
-			$music_bpm[$lv_num][$arr_address] = $tr->children(2)->plaintext;
-			// 次の<tr>を指定
-			$tr_address++;
-			// 次の配列のアドレスを指定
-			$arr_address++;
-		}
-		if ($i != $LV2_S && $i != $LV1_S) {
-			// '強'の時はレベルを変えない
-			$lv_num++;	// 次のLvを指定
-		}
+        $tr_address = 0;	// <tr>の場所を指定
+        // 全ての<tr>を走査
+        while (1) {
+            // div.table-responsive(1~5)->table->tbody->tr
+            $tr = $html->find('div.table-responsive', $i-1)->children(0)->children(0)->children($tr_address);
+            // <tr>が存在しなければループを抜ける
+            if (!isset($tr)) break;
+            // tr->td
+            $music_lv[$lv_num][$arr_address] = $tr->children(0)->plaintext;
+            // tr->td->span->a
+            $music_name[$lv_num][$arr_address] = $tr->children(1)->children(0)->children(0)->plaintext;
+            echo $music_name[$lv_num][$arr_address], '<br>'; // debug
+            // tr->td
+            $music_bpm[$lv_num][$arr_address] = $tr->children(2)->plaintext;
+            // 次の<tr>を指定
+            $tr_address++;
+            // 次の配列のアドレスを指定
+            $arr_address++;
+        }
+        if ($i != $LV2_S && $i != $LV1_S) {
+            // '強'の時はレベルを変えない
+            $lv_num++;	// 次のLvを指定
+        }
     }
-	$html->clear();	// メモリ解放
+    $html->clear();	// メモリ解放
 
-	// 収集したデータを配列に格納 (先頭、末尾の空白を除去)
-	$lv_num = 0;
-	foreach ($lv as $row) {
-		$line = 0;	// CSVの行を指定
-		$csv_data[$lv_num][$line][0] = $row;	// Lvを格納
-		$line++;
-		for ($music_num = 0; $music_num < count($music_lv[$lv_num]); $music_num++) {
-			$csv_data[$lv_num][$line][0] = trim($music_lv[$lv_num][$music_num]);
-			$csv_data[$lv_num][$line][1] = trim($music_name[$lv_num][$music_num]);
-			$csv_data[$lv_num][$line][2] = trim($music_bpm[$lv_num][$music_num]);
-			$line++;
-		}
-		$lv_num++;
-	}
-	return $csv_data;
+    // 収集したデータを配列に格納 (先頭、末尾の空白を除去)
+    $lv_num = 0;
+    foreach ($lv as $row) {
+        $line = 0;	// CSVの行を指定
+        $csv_data[$lv_num][$line][0] = $row;	// Lvを格納
+        $line++;
+        for ($music_num = 0; $music_num < count($music_lv[$lv_num]); $music_num++) {
+            $csv_data[$lv_num][$line][0] = trim($music_lv[$lv_num][$music_num]);
+            $csv_data[$lv_num][$line][1] = trim($music_name[$lv_num][$music_num]);
+            $csv_data[$lv_num][$line][2] = trim($music_bpm[$lv_num][$music_num]);
+            $line++;
+        }
+        $lv_num++;
+    }
+    return $csv_data;
 }
 
 /**
@@ -218,30 +218,30 @@ function scrapeHtml2($url) {
  * @param boolean $append		True: appendモード / False: writeモード
  */
 function arr2csv($csv_data, $fileName, $columnName, $append = False) {
-	if ($append === False) {
-		/* writeモード */
-		// CSV読み込み
-		$fp = fopen($fileName, "w");
+    if ($append === False) {
+        /* writeモード */
+        // CSV読み込み
+        $fp = fopen($fileName, "w");
 
-		// カラム名を出力
-		mb_convert_variables('SJIS-win', 'UTF-8', $columnName);
-		fputcsv($fp, $columnName);
-	} else {
-		/* appendモード */
-		// CSV読み込み
-		$fp = fopen($fileName, "a");
-	}
+        // カラム名を出力
+        mb_convert_variables('SJIS-win', 'UTF-8', $columnName);
+        fputcsv($fp, $columnName);
+    } else {
+        /* appendモード */
+        // CSV読み込み
+        $fp = fopen($fileName, "a");
+    }
 
-	// 取得したデータを出力
-	foreach ($csv_data as $lines) {
-		foreach ($lines as $line) {
-			mb_convert_variables('SJIS-win', 'UTF-8', $line);
-			fputcsv($fp, $line);
-		}
-	}
+    // 取得したデータを出力
+    foreach ($csv_data as $lines) {
+        foreach ($lines as $line) {
+            mb_convert_variables('SJIS-win', 'UTF-8', $line);
+            fputcsv($fp, $line);
+        }
+    }
 
-	// ファイルクローズ
-	fclose($fp);
+    // ファイルクローズ
+    fclose($fp);
 }
 /* ---------- 関数定義終了 ---------- */
 
@@ -253,16 +253,16 @@ $csv_data2 = scrapeHtml2($url2);
 
 // CSVに出力
 try {
-	arr2csv($csv_data, $fileName, $columnName);
+    arr2csv($csv_data, $fileName, $columnName);
 } catch (Exception $e) {
-	echo 'CSV出力に失敗: ', $e;
+    echo 'CSV出力に失敗: ', $e;
 }
 
 // CSVに追加出力
 try {
-	arr2csv($csv_data2, $fileName, $columnName, $append = True);
+    arr2csv($csv_data2, $fileName, $columnName, $append = True);
 } catch (Exception $e) {
-	echo 'CSV追加出力に失敗: ', $e;
+    echo 'CSV追加出力に失敗: ', $e;
 }
 
 echo 'Done!'; // debug
