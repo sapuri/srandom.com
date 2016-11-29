@@ -5,6 +5,7 @@
 
 {% block extrahead %}
 <meta name="description" content="スパランドットコムの公式難易度表ページです。">
+<script src="/static/js/level_select.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -18,6 +19,8 @@
 </ul>
 {% endif %}
 
-<div id="content"></div>
-<script src="/static/react/assets/level_select.js"></script>
+{% for lv in lv_range %}
+<a href="{% url 'main:level' lv %}" class="no-decoration"><h3 id="lv{{ lv }}" class="level-folder">Lv{{ lv }}</h3></a>
+<script>$(function() { getFolderLamp({{ lv }}, false); });</script>
+{% endfor %}
 {% endblock %}

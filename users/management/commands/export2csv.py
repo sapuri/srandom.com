@@ -31,7 +31,7 @@ class Command(BaseCommand):
             max_s_lv = 17
             s_lv_range = range(max_s_lv, 0, -1)
             for s_lv in s_lv_range:
-                sran_level_id = max_s_lv - s_lv + 1
+                sran_level_id = s_lv
                 music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
                 for music in music_list:
                     try:

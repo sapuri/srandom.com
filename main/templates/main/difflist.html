@@ -5,6 +5,7 @@
 
 {% block extrahead %}
 <meta name="description" content="スパランドットコムのS乱難易度表ページです。(Lv{{ sran_level }})">
+<script src="/static/js/music_list.js?v=20160528a"></script>
 {% endblock %}
 
 {% block content %}
@@ -26,8 +27,42 @@
 
 <p><a href="{% url 'main:difflist_level_select' %}">{% bootstrap_icon "arrow-left" %} レベル選択へ戻る</a></p>
 
-<div id="content"></div>
+<h3 id="lv{{ sran_level }}" class="level-folder">Lv{{ sran_level }}</h3>
+<div id="lv{{ sran_level }}-table">
+<table class="music-list table table-condensed">
+    <thead>
+        <th>Lv</th>
+        <th>曲名</th>
+        <th>難易度</th>
+        <th>BPM</th>
+        <th>メダル</th>
+        <th>BAD数</th>
+        <th>更新日時</th>
+    </thead>
+    <tbody>
+        {% for music in music_list %}
+        <tr id="music-{{ music.id }}">
+            <script>$(function() { getClearStatus({{ music.id }}); });</script>
+            <td class="level">{{ music.level }}</td>
+            <td class="title"><a href="{% url 'main:edit' music.id %}">{{ music.title }}</a></td>
+            <td class="difficulty">{{ music.difficulty }}</td>
+            <td class="bpm">{{ music.bpm|default:'-' }}</td>
+            <td class="medal">
+                <img>
+                <script>$(function() { getMedal({{ music.id }}); });</script>
+            </td>
+            <td class="bad_count">
+                <script>$(function() { getBadCount({{ music.id }}); });</script>
+            </td>
+            <td class="updated_at">
+                <script>$(function() { getLatestUpdatedAt({{ music.id }}); });</script>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<script>$(function() { getFolderLamp({{ sran_level }}, true); });</script>
 
 <p class="pagetop"><a href="#top">{% bootstrap_icon "menu-up" %}</a></p>
-<script src="/static/react/assets/difflist.js"></script>
 {% endblock %}

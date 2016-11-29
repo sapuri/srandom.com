@@ -115,8 +115,8 @@ def cleardata(request, username, sran_level):
     if sran_level <= 0 or sran_level > max_s_lv:
         raise Http404
 
-    # S乱レベルIDを取得
-    sran_level_id = max_s_lv - int(sran_level) + 1
+    # S乱レベルID
+    sran_level_id = sran_level
 
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level')
@@ -219,7 +219,7 @@ def get_percentage_of_clear(request, user_id):
         percentage_of_clear = [0] * max_s_lv
 
         for sran_level in s_lv_range:
-            sran_level_id = max_s_lv - sran_level + 1
+            sran_level_id = sran_level
             music_list = Music.objects.filter(sran_level=sran_level_id)
             music_num[sran_level - 1] = len(music_list)
             for music in music_list:

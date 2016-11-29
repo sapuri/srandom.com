@@ -44,7 +44,7 @@ def search(request):
         if q:
             # 大文字小文字区別無しの部分一致
             filter_params['title__icontains'] = q
-        return Music.objects.filter(**filter_params).order_by('level', 'sran_level', 'title')
+        return Music.objects.filter(**filter_params).order_by('level', '-sran_level', 'title')
 
     search_form = SearchForm(request.GET)
     if search_form.is_valid():
@@ -88,18 +88,18 @@ def level(request, level):
     # 最大レベル
     max_lv = 50
 
-    # S乱レベルを数値に変換
+    # レベルを数値に変換
     level = int(level)
 
-    # S乱レベルが不正なら404エラー
+    # レベルが不正なら404エラー
     if level <= 0 or level > max_lv:
         raise Http404
 
-    # S乱レベルIDを求める
+    # レベルIDを求める
     level_id = max_lv - level + 1
 
     # 対象レベルの曲を取得
-    music_list = Music.objects.filter(level=level_id).order_by('sran_level', 'title')
+    music_list = Music.objects.filter(level=level_id).order_by('-sran_level', 'title')
 
     context = {
         'level': level,
@@ -137,7 +137,8 @@ def difflist(request, sran_level):
         raise Http404
 
     # S乱レベルIDを求める
-    sran_level_id = max_s_lv - sran_level + 1
+    # sran_level_id = max_s_lv - sran_level + 1
+    sran_level_id = sran_level
 
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
@@ -365,7 +366,7 @@ def ranking(request, sran_level):
     if sran_level <= 0 or sran_level > max_s_lv:
         raise Http404
 
-    sran_level_id = max_s_lv - sran_level + 1
+    sran_level_id = sran_level
 
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
@@ -411,7 +412,6 @@ def omikuji(request):
     myself = request.user
 
     sran_level_form = Sran_LevelForm()
-    max_s_lv = 17   # 最大S乱レベル
 
     # POSTでアクセスされた場合
     if request.method == 'POST':
@@ -420,8 +420,8 @@ def omikuji(request):
             # 両方指定された場合
             if request.POST['sran_level_from'] and request.POST['sran_level_to']:
                 # S乱レベルIDからS乱レベルに変換
-                sran_level_from = max_s_lv - int(request.POST['sran_level_from']) + 1
-                sran_level_to = max_s_lv - int(request.POST['sran_level_to']) + 1
+                sran_level_from = request.POST['sran_level_from']
+                sran_level_to = request.POST['sran_level_to']
                 if sran_level_from <= sran_level_to:
                     # from から to までの範囲でランダムで1曲取得
                     music = Music.objects.filter(sran_level__level__range=(sran_level_from, sran_level_to)).order_by('?')[0]
@@ -824,7 +824,7 @@ def get_folder_lamp(request, level):
             level = int(level)
             if request.GET['is_srandom'] == 'true':
                 max_lv = 17
-                level = max_lv - level + 1
+                # level = max_lv - level + 1
                 music_list = Music.objects.filter(sran_level=level)
             else:
                 max_lv = 50

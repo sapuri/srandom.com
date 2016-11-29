@@ -5,6 +5,7 @@
 
 {% block extrahead %}
 <meta name="description" content="スパランドットコムのS乱難易度表ページです。">
+<script src="/static/js/level_select.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -24,6 +25,8 @@
 </ul>
 {% endif %}
 
-<div id="content"></div>
-<script src="/static/react/assets/level_select.js"></script>
+{% for s_lv in s_lv_range %}
+<a href="{% url 'main:difflist' s_lv %}" class="no-decoration"><h3 id="lv{{ s_lv }}" class="level-folder">Lv{{ s_lv }}</h3></a>
+<script>$(function() { getFolderLamp({{ s_lv }}, true); });</script>
+{% endfor %}
 {% endblock %}
