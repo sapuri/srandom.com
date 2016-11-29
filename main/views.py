@@ -267,7 +267,7 @@ def edit(request, music_id):
                     messages.error(request, msg)
 
             # アクティビティに更新履歴を保存
-            # activity = Activity.objects.create(music=music, updated_at=now_datetime, user=myself)
+            activity = Activity.objects.create(music=music, updated_at=now_datetime, user=myself)
 
             # リダイレクト先にメッセージを表示
             msg = music.title + ' (' + music.difficulty.difficulty_short() + ') を更新しました！'
