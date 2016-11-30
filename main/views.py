@@ -417,11 +417,12 @@ def omikuji(request):
     指定されたS乱レベルの範囲の曲からランダムで選曲
     '''
     myself = request.user
-
     sran_level_form = Sran_LevelForm()
 
     # POSTでアクセスされた場合
     if request.method == 'POST':
+        sran_level_form = Sran_LevelForm(request.POST)
+
         # どちらかが指定された場合
         if request.POST['sran_level_from'] or request.POST['sran_level_to']:
             # 両方指定された場合
