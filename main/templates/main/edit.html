@@ -10,19 +10,21 @@
 {% block content %}
 <h1 class="page-header music-title">{% bootstrap_icon "pencil" %} {{ music.title }} ({{ music.difficulty }})</h1>
 
+<p style="margin-bottom:2em;"><a href="{% url 'main:ranking_detail' music.id %}">{% bootstrap_icon "king" %} 詳細を見る</a></p>
+
 <form class="edit-form form" action="./?next={{ request.META.HTTP_REFERER }}" method="post">{% csrf_token %}
     {% bootstrap_form medal_form %}
     {% bootstrap_form bad_count_form %}
+    <div style="margin-top:2em"></div>
     {% bootstrap_form extra_option_form %}
     <div class="form-group" style="margin:2em 0;"><div class="checkbox"><label for="tweet"><input id="tweet" name="tweet" type="checkbox" />{% bootstrap_icon "link" %} 更新内容をツイートする</label></div></div>
-    {% buttons %}
-    <input class="btn btn-primary" type="submit" name="save" value="保存する">
-    {% endbuttons %}
+    <div style="margin:3em; text-align:center;">
+        <input class="btn btn-primary" type="submit" name="save" value="保存する">
+        <span class="btn btn-danger" data-toggle="modal" data-target="#modal" style="margin-left:3em;">
+            {% bootstrap_icon "trash" %} 削除する
+        </span>
+    </div>
 </form>
-
-<button class="btn btn-danger" data-toggle="modal" data-target="#modal" style="margin-top:30px;">
-    {% bootstrap_icon "trash" %} 記録を削除する
-</button>
 
 {% if activity_list %}
 <div id="activity">
