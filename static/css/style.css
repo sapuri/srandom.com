@@ -131,7 +131,7 @@ tr.clickable:hover {
     border-radius: 2px;
     display: inline-block;
     margin-bottom: 10px;
-    padding: 10px;
+    padding: 8px;
     position: relative;
     width: 100%;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -165,7 +165,7 @@ li.music {
     border-radius: 2px;
     display: inline-block;
     margin-bottom: 10px;
-    padding: 10px;
+    padding: 8px;
     position: relative;
     width: 100%;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -293,7 +293,7 @@ h1.music-title {
     border-radius: 2px;
     display: inline-block;
     margin-bottom: 10px;
-    padding: 10px;
+    padding: 8px;
     position: relative;
     width: 100%;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
