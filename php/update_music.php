@@ -254,7 +254,7 @@ function convert2ForeignKey($max_lv, $sran_level, $music) {
     $converted = array();
 
     // S乱レベルのID
-    $sran_level_id = $max_lv - $sran_level + 1;
+    $sran_level_id = $sran_level;
 
     foreach ($music as $key => $element) {
         // レベルのID
