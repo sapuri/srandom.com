@@ -24,6 +24,17 @@
     {% bootstrap_icon "trash" %} 記録を削除する
 </button>
 
+{% if activity_list %}
+<div id="activity">
+    <h2 class="page-header">履歴</h2>
+    {% for activity in activity_list %}
+    <div class="card">
+        <p>{% bootstrap_icon "pencil" %} {{ activity.updated_at|date:"Y/n/d (D) G:i" }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <div id="modal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">

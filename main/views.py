@@ -163,6 +163,9 @@ def edit(request, music_id):
     # ユーザーを取得
     myself = request.user
 
+    # 編集履歴を取得
+    activity_list = Activity.objects.filter(music=music, user=myself).order_by('-id')
+
     # POSTでアクセスされた場合
     if request.method == 'POST':
         if 'save' in request.POST:
@@ -293,6 +296,9 @@ def edit(request, music_id):
                 # エクストラオプションが存在すれば削除
                 extra_option.delete()
 
+            # 編集履歴を削除
+            activity_list.delete()
+
             # リダイレクト先にメッセージを表示
             msg = music.title + ' (' + music.difficulty.difficulty_short() + ') の記録を削除しました'
             messages.success(request, msg)
@@ -332,7 +338,8 @@ def edit(request, music_id):
         'music': music,
         'medal_form': medal_form,
         'bad_count_form': bad_count_form,
-        'extra_option_form': extra_option_form
+        'extra_option_form': extra_option_form,
+        'activity_list': activity_list
     }
     return render(request, 'main/edit.html', context)
 
