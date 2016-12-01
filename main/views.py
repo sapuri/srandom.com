@@ -254,7 +254,7 @@ def edit(request, music_id):
                 twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
                 # ツイート
                 if request.POST['bad_count']:
-                    tweet = '『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』のBAD数を' + request.POST['bad_count'] + 'に更新！ #スパランドットコム http://srandom.com/ranking/detail/' + str(music.id) + '/'
+                    tweet = '『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』のBAD数を' + request.POST['bad_count'] + 'に更新！ #スパランドットコム https://srandom.com/ranking/detail/' + str(music.id) + '/'
                     try:
                         twitter.statuses.update(status = tweet)
                         # リダイレクト先にメッセージを表示
@@ -461,7 +461,7 @@ def omikuji(request):
             # Twitterクラスを作成
             twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
             # ツイート
-            tweet = '今日のスパランおすすめ曲は『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』です！ #スパランドットコム http://srandom.com/omikuji/'
+            tweet = '今日のスパランおすすめ曲は『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』です！ #スパランドットコム https://srandom.com/omikuji/'
             try:
                 twitter.statuses.update(status = tweet)
                 # メッセージを表示
