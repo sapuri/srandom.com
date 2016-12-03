@@ -15,36 +15,67 @@
 <p><a href="{% url 'main:ranking_level_select' %}">{% bootstrap_icon "arrow-left" %} レベル選択へ戻る</a></p>
 
 <h3 id="lv{{ sran_level }}" class="level-folder">Lv{{ sran_level }}</h3>
+<p style="text-align:right"><span style="font-weight:bold">{{ music_list_count }}</span> 件中 <span style="font-weight:bold">{{ music_list.start_index }} - {{ music_list.end_index }}</span> 件目</p>
+
 <div id="lv{{ sran_level }}-table">
-<table class="music-list table table-condensed">
-    <thead>
-        <th>Lv</th>
-        <th>曲名</th>
-        <th>難易度</th>
-        <th>BAD数</th>
-        <th>平均BAD数</th>
-        <th>順位</th>
-    </thead>
-    <tbody>
-        {% for music in music_list %}
-        <tr id="music-{{ music.id }}">
-            <script>$(function() { getClearStatus({{ music.id }}); });</script>
-            <td class="level">{{ music.level }}</td>
-            <td class="title"><a href="{% url 'main:ranking_detail' music.id %}">{{ music.title }}</a></td>
-            <td class="difficulty">{{ music.difficulty }}</td>
-            <td class="bad_count">
-                <script>$(function() { getBadCount({{ music.id }}); });</script>
-            </td>
-            <td class="bad_count_avg">
-                <script>$(function() { getBadCountAvg({{ music.id }}); });</script>
-            </td>
-            <td class="rank">
-                <script>$(function() { getMyRank({{ music.id }}); });</script>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <table class="music-list table table-condensed">
+        <thead>
+            <th>Lv</th>
+            <th>曲名</th>
+            <th>難易度</th>
+            <th>BAD数</th>
+            <th>平均BAD数</th>
+            <th>順位</th>
+        </thead>
+        <tbody>
+            {% for music in music_list %}
+            <tr id="music-{{ music.id }}">
+                <script>$(function() { getClearStatus({{ music.id }}); });</script>
+                <td class="level">{{ music.level }}</td>
+                <td class="title"><a href="{% url 'main:ranking_detail' music.id %}">{{ music.title }}</a></td>
+                <td class="difficulty">{{ music.difficulty }}</td>
+                <td class="bad_count">
+                    <script>$(function() { getBadCount({{ music.id }}); });</script>
+                </td>
+                <td class="bad_count_avg">
+                    <script>$(function() { getBadCountAvg({{ music.id }}); });</script>
+                </td>
+                <td class="rank">
+                    <script>$(function() { getMyRank({{ music.id }}); });</script>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
+
+<div style="text-align:center">
+    <ul class="pagination">
+        {% if music_list.has_previous %}
+        <li>
+            <a href="?page={{ music_list.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">前へ</span>
+            </a>
+        </li>
+        {% endif %}
+
+        {% for page in music_list.paginator.page_range %}
+            {% if page == music_list.number %}
+            <li class="active"><span>{{ page }}</span></li>
+            {% else %}
+            <li><a href="?page={{ page }}">{{ page }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if music_list.has_next %}
+        <li>
+            <a href="?page={{ music_list.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">次へ</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+
 <script>getFolderLamp({{ sran_level }}, true)</script>
 {% endblock %}

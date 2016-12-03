@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, Http404
 from django.db.models import Avg
 from datetime import datetime, timedelta
@@ -101,9 +102,26 @@ def level(request, level):
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(level=level_id).order_by('-sran_level', 'title')
 
+    # 取得曲数を取得
+    music_list_count = len(music_list)
+
+    # ページング
+    paginator = Paginator(music_list, 25)
+    page = request.GET.get('page')
+
+    try:
+        music_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        music_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        music_list = paginator.page(paginator.num_pages)
+
     context = {
         'level': level,
-        'music_list': music_list
+        'music_list': music_list,
+        'music_list_count': music_list_count
     }
 
     return render(request, 'main/level/level.html', context)
@@ -143,9 +161,26 @@ def difflist(request, sran_level):
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
 
+    # 取得曲数を取得
+    music_list_count = len(music_list)
+
+    # ページング
+    paginator = Paginator(music_list, 25)
+    page = request.GET.get('page')
+
+    try:
+        music_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        music_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        music_list = paginator.page(paginator.num_pages)
+
     context = {
         'sran_level': sran_level,
-        'music_list': music_list
+        'music_list': music_list,
+        'music_list_count': music_list_count
     }
 
     return render(request, 'main/difflist.html', context)
@@ -378,9 +413,26 @@ def ranking(request, sran_level):
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
 
+    # 取得曲数を取得
+    music_list_count = len(music_list)
+
+    # ページング
+    paginator = Paginator(music_list, 25)
+    page = request.GET.get('page')
+
+    try:
+        music_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        music_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        music_list = paginator.page(paginator.num_pages)
+
     context = {
         'sran_level': sran_level,
-        'music_list': music_list
+        'music_list': music_list,
+        'music_list_count': music_list_count
     }
 
     return render(request, 'main/ranking.html', context)
