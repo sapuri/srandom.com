@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, Http404
 
 from .models import CustomUser
@@ -16,7 +17,7 @@ from .forms import *
 #     登録ユーザー一覧
 #     '''
 #     # プレイヤー名を公開しているユーザーを取得
-#     users = CustomUser.objects.filter(is_active=True, player_name_privacy=1)
+#     users = CustomUser.objects.filter(is_active=True).exclude(pk=1)
 #     context = {
 #         'users': users
 #     }
@@ -121,6 +122,22 @@ def cleardata(request, username, sran_level):
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level')
 
+    # 取得曲数を取得
+    music_list_count = len(music_list)
+
+    # ページング
+    paginator = Paginator(music_list, 25)
+    page = request.GET.get('page')
+
+    try:
+        music_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        music_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        music_list = paginator.page(paginator.num_pages)
+
     # ユーザーごとにデータを取得
     medal_list = Medal.objects.filter(user=selected_user)
     bad_count_list = Bad_Count.objects.filter(user=selected_user)
@@ -130,6 +147,7 @@ def cleardata(request, username, sran_level):
         'selected_user': selected_user,
         'sran_level': sran_level,
         'music_list': music_list,
+        'music_list_count': music_list_count,
         'medal_list': medal_list,
         'bad_count_list': bad_count_list,
         'extra_option_list': extra_option_list
