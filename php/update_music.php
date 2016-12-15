@@ -3,7 +3,7 @@
 
 /* ---------- パラメータ設定 ---------- */
 // CSVファイルのパス
-$filePath = "../csv/srandom.csv";
+$filePath = "../../csv/srandom.csv";
 
 // 難易度表の最大レベル
 $max_lv = 17;
@@ -15,6 +15,7 @@ $table_name = 'main_music';
 $exceptionMusicList = array(
     '&quot;Schall&quot; we step?',   // "Schall" we step?
     '混乱少女?そふらんちゃん!!',         // 混乱少女♥そふらんちゃん!!
+    'good night mommy',              // good night, mommy
 );
 /* ---------- /パラメータ設定 ---------- */
 
@@ -270,7 +271,8 @@ function convert2ForeignKey($max_lv, $sran_level, $music) {
         } elseif ($element[2] === 'EASY') {
             $element[2] = 4;
         } else {
-            echo '不正な難易度です: ', $element[2];
+            echo '不正な難易度です: ', $element[2], "\n";
+            echo '曲名: ', $element[1];
             exit(1);
         }
 

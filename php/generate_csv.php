@@ -16,7 +16,7 @@ $url2 = 'http://hellwork.jp/popn/wiki/?%E3%81%9D%E3%81%AE%E4%BB%96%2FS%E4%B9%B1L
 
 // 出力するCSVのファイル名を設定
 // ローカル
-$fileName = '../csv/srandom.csv';
+$fileName = '../../csv/srandom.csv';
 // 本番環境
 // $fileName = $srandom_dir . '/csv/srandom.csv';
 
