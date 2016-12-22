@@ -2,11 +2,17 @@
 /* S乱クリア難易度表CSVとMySQLを同期 */
 
 /* ---------- パラメータ設定 ---------- */
-// CSVファイルのパス
+// VPSのsrandomディレクトリ
+$srandom_dir = "/var/www/srandom.com";
+
+// CSVファイルのパス (ローカル環境)
 $filePath = "../../csv/srandom.csv";
 
+// CSVファイルのパス (本番環境)
+// $filePath = $srandom_dir . "/csv/srandom.csv";
+
 // 難易度表の最大レベル
-$max_lv = 17;
+$max_lv = 18;
 
 // データベースのテーブル名
 $table_name = 'main_music';
@@ -20,9 +26,13 @@ $exceptionMusicList = array(
 /* ---------- /パラメータ設定 ---------- */
 
 
-// 設定ファイルの読み込み
+// 設定ファイルの読み込み (ローカル環境)
 require_once('./config.php');
 require_once('./functions.php');
+
+// 設定ファイルの読み込み (本番環境)
+// require_once($srandom_dir . '/php/config.php');
+// require_once($srandom_dir . '/php/functions.php');
 
 // データベースに接続
 $dbh = connectDb();
@@ -218,7 +228,7 @@ function insertValues($dbh, $table_name, $max_lv, $lv, $ins_values, $exceptionMu
                 }
                 $sran_level = $max_lv - $element[0] + 1;
                 $level = 50 - $element[1] + 1;
-                echo "$music_id: ", $element[2], "(", $difficulty, ") を ", "S乱レベル: $sran_level ", "レベル: $level ", "BPM: $element[4] に更新しました。\n";
+                echo "$music_id: ", $element[2], "(", $difficulty, ") を ", "S乱レベルID: $sran_level ", "レベル: $level ", "BPM: $element[4] に更新しました。\n";
             }
             continue;
         }

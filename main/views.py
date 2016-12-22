@@ -72,8 +72,14 @@ def level_select(request):
     '''
     公式難易度表: レベル選択
     '''
+    # 最大レベル
+    max_lv = 50
+
+    # 最小レベル
+    min_lv = 38
+
     # レベル 50〜38
-    lv_range = range(50, 37, -1)
+    lv_range = range(max_lv, min_lv-1, -1)
 
     context = {
         'lv_range': lv_range
@@ -130,8 +136,10 @@ def difflist_level_select(request):
     '''
     難易度表: S乱レベル選択
     '''
-    # S乱レベル 17〜1
-    s_lv_range = range(17, 0, -1)
+    # 最大S乱レベル
+    max_s_lv = 18
+
+    s_lv_range = range(max_s_lv, 0, -1)
 
     context = {
         's_lv_range': s_lv_range
@@ -145,7 +153,7 @@ def difflist(request, sran_level):
     @param sran_level: S乱レベル
     '''
     # 最大S乱レベル
-    max_s_lv = 17
+    max_s_lv = 18
 
     # S乱レベルを数値に変換
     sran_level = int(sran_level)
@@ -383,8 +391,10 @@ def ranking_level_select(request):
     '''
     ランキング: S乱レベル選択
     '''
-    # S乱レベル 17〜1
-    s_lv_range = range(17, 0, -1)
+    # 最大S乱レベル
+    max_s_lv = 18
+
+    s_lv_range = range(max_s_lv, 0, -1)
 
     context = {
         's_lv_range': s_lv_range
@@ -399,7 +409,7 @@ def ranking(request, sran_level):
     @param sran_level: S乱レベル
     '''
     # 最高S乱レベル
-    max_s_lv = 17
+    max_s_lv = 18
 
     # S乱レベルを数値に変換
     sran_level = int(sran_level)
@@ -883,7 +893,7 @@ def get_folder_lamp(request, level):
             # 指定されたレベルの曲を取得
             level = int(level)
             if request.GET['is_srandom'] == 'true':
-                max_lv = 17
+                max_lv = 18
                 # level = max_lv - level + 1
                 music_list = Music.objects.filter(sran_level=level)
             else:

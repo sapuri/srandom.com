@@ -145,6 +145,10 @@ tr.clickable:hover {
         background: rgb(166, 227, 157);
     }
 
+    #news .article.text {
+        background: rgb(243, 192, 171);
+    }
+
     #news .article p {
         margin: 0;
     }
@@ -419,3 +423,46 @@ h1.music-title {
     #footer .footer-right {
         float: right;
     }
+
+/*input[type=checkbox] {
+  position: relative;
+  top: -0.75rem;
+  margin: .25rem 2rem 0 0;
+  cursor: pointer;
+}
+
+input[type=checkbox]:before {
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  content: "";
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #f2f2f2;
+}
+
+input[type=checkbox]:checked:before {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  height: 1rem;
+  border-color: #a91b0c;
+  border-top-style: none;
+  border-right-style: none;
+}
+
+input[type=checkbox]:after {
+  content: "";
+  position: absolute;
+  top: -0.25rem;
+  left: 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  background: #fff;
+  cursor: pointer;
+}*/

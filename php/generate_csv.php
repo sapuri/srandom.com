@@ -31,7 +31,7 @@ $columnName = array('レベル', '曲名', 'BPM');
  * @return array $csv_data	CSVに書き込むデータ
  */
 function scrapeHtml($url) {
-    /* Lv5〜Lv17を取得 */
+    /* Lv5〜Lv18を取得 */
 
     // HTMLを取得
     $html = file_get_html($url);
@@ -45,11 +45,8 @@ function scrapeHtml($url) {
 
     $lv_num = 0;	// Lvごとに番地を指定
 
-    // #content_1_4 〜 #content_1_16 を指定
-    for ($i = 4; $i <= 16; $i++) {
-        // Lv15.5をスキップ (現在は無い)
-        // if ($i == 6) continue;
-
+    // #content_1_4 〜 #content_1_17 を指定
+    for ($i = 4; $i <= 17; $i++) {
         // Lv表記を探索
         $content = $html->find("h3#content_1_$i", 0);
         $h3 = $content->plaintext;

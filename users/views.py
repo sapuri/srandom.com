@@ -31,7 +31,7 @@ def mypage(request, username):
     # ユーザーを取得
     selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
 
-    max_s_lv = 17
+    max_s_lv = 18
     s_lv_range = range(max_s_lv, 0, -1)
 
     recent_medal = Medal.objects.filter(user=selected_user).order_by('-updated_at')[:20]
@@ -107,7 +107,7 @@ def cleardata(request, username, sran_level):
     selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
 
     # 最大S乱レベル
-    max_s_lv = 17
+    max_s_lv = 18
 
     # S乱レベルを数値に変換
     sran_level = int(sran_level)
@@ -229,7 +229,7 @@ def get_percentage_of_clear(request, user_id):
             if user.is_active == False or user.cleardata_privacy == 2:
                 raise PermissionDenied
 
-        max_s_lv = 17
+        max_s_lv = 18
         s_lv_range = range(max_s_lv, 0, -1)
 
         music_num = [0] * max_s_lv

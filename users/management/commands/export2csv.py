@@ -28,7 +28,7 @@ class Command(BaseCommand):
             # CSV書き込み用データ (2次元配列)
             csv_data = [['S乱Lv', 'Lv', '曲名', '難易度', 'BPM', 'メダル', 'ハード', 'BAD数', '更新日時']]
 
-            max_s_lv = 17
+            max_s_lv = 18
             s_lv_range = range(max_s_lv, 0, -1)
             for s_lv in s_lv_range:
                 sran_level_id = s_lv
