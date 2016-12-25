@@ -16,7 +16,6 @@ IPy==0.83
 numpy==1.11.3
 oauth2==1.9.0.post1
 oauthlib==2.0.1
-pandas==0.19.1
 PyJWT==1.4.2
 PyMySQL==0.7.9
 python-dateutil==2.6.0
