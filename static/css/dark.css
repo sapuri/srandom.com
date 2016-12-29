@@ -175,6 +175,34 @@ select {
     border: 1px solid #808080;
 }
 
+/* Pager */
+.pagination>li>a, .pagination>li>span {
+    position: relative;
+    float: left;
+    padding: 8px 12px;
+    line-height: 1.42857143;
+    text-decoration: none;
+    color: #FFFFFF;
+    background-color: #424242;
+    border: 1px solid #212121;
+    margin-left: -1px;
+}
+
+.pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus {
+    z-index: 3;
+    color: #FFFFFF;
+    background-color: #3F51B5;
+    border-color: #3F51B5;
+    cursor: default;
+}
+
+.pagination>li>a:hover, .pagination>li>span:hover, .pagination>li>a:focus, .pagination>li>span:focus {
+    z-index: 2;
+    color: #FFFFFF;
+    background-color: #3F51B5;
+    border-color: #3F51B5;
+}
+
 /* フッター */
 #footer {
     border-top: 5px solid #fff100;
