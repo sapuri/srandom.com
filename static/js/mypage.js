@@ -86,8 +86,8 @@ function getMedal(music_id, user_id) {
                 var medal = response.medal;
                 $(selector+' .loading').remove();
                 $(selector+' img').attr('src', '/static/img/medal/'+medal+'.png');
-                $(selector+' img').attr('width', '16');
-                $(selector+' img').attr('height', '16');
+                $(selector+' img').attr('width', '18');
+                $(selector+' img').attr('height', '18');
                 $(selector+' script').remove();
             } else {
                 $(selector).text('-');

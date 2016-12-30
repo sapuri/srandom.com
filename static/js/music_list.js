@@ -53,8 +53,8 @@ function getMedal(music_id) {
                 $(selector+' .loading').remove();
                 $(selector+' img').attr({
                     src: '/static/img/medal/'+medal+'.png',
-                    width: '16',
-                    height: '16'
+                    width: '18',
+                    height: '18'
                 });
                 $(selector+' script').remove();
             } else {
