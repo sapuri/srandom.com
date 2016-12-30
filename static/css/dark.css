@@ -175,6 +175,11 @@ select {
     border: 1px solid #808080;
 }
 
+/* アクティビティ */
+#activity > .card > p {
+    color: #000000;
+}
+
 /* Pager */
 .pagination>li>a, .pagination>li>span {
     position: relative;
