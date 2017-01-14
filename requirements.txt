@@ -1,8 +1,8 @@
-beautifulsoup4==4.5.1
+beautifulsoup4==4.5.3
 defusedxml==0.4.1
-Django==1.10.4
+Django==1.10.5
 django-appconf==1.0.2
-django-bootstrap3==7.1.0
+django-bootstrap3==8.1.0
 django-compressor==2.1
 django-filter==0.15.3
 django-htmlmin==0.10.0
