@@ -1,13 +1,14 @@
 {% extends "base.html" %}
+{% load bootstrap3 %}
 
-{% block title %}登録ユーザー一覧 - スパランドットコム{% endblock %}
+{% block title %}ユーザーリスト - スパランドットコム{% endblock %}
 
 {% block extrahead %}
-<meta name="description" content="スパランドットコムの登録ユーザー一覧ページです。">
+<meta name="description" content="スパランドットコムのユーザーリストページです。">
 {% endblock %}
 
 {% block content %}
-<h1 class="page-header">登録ユーザー 一覧</h1>
+<h1 class="page-header">{% bootstrap_icon "user" %} ユーザーリスト</h1>
 <p>スパランドットコムに登録しているユーザーの一覧です。</p>
 <br>
 <div class="table-responsive">

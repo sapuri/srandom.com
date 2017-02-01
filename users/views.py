@@ -12,16 +12,12 @@ from main.models import *
 from .forms import *
 
 
-# def list(request):
-#     '''
-#     登録ユーザー一覧
-#     '''
-#     # プレイヤー名を公開しているユーザーを取得
-#     users = CustomUser.objects.filter(is_active=True).exclude(pk=1)
-#     context = {
-#         'users': users
-#     }
-#     return render(request, 'users/list.html', context)
+def list(request):
+    ''' ユーザーリスト '''
+    # 有効なアカウントを取得
+    users = CustomUser.objects.filter(is_active=True).exclude(pk=1)
+    context = { 'users': users }
+    return render(request, 'users/list.html', context)
 
 def mypage(request, username):
     '''
