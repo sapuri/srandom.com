@@ -61,6 +61,7 @@ def search(request):
         items = []
 
     context = {
+        'title': '{q} の検索結果'.format(q=q) if not is_blank else '楽曲検索',
         'search_form': search_form,
         'q': q,
         'items': items,
