@@ -1,15 +1,11 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block title %}
-{% if not is_blank %}
-{{ q }} の検索結果 - スパランドットコム
-{% else %}
-楽曲検索 - スパランドットコム
-{% endif %}
-{% endblock %}
+{% block title %}{{ title }} - スパランドットコム{% endblock %}
 
 {% block extrahead %}
+<meta property="og:title" content="{{ title }} - スパランドットコム" />
+<meta property="og:type" content="article" />
 <meta name="description" content="スパランドットコムの検索ページです。">
 <script src="/static/js/music_list.js?v=20161230"></script>
 {% endblock %}

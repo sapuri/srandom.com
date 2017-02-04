@@ -6,6 +6,8 @@
 {% block title %}{{ music.title }}({{ music.difficulty }}) - スパランドットコム{% endblock %}
 
 {% block extrahead %}
+<meta property="og:title" content="{{ music.title }}({{ music.difficulty }}) - スパランドットコム" />
+<meta property="og:type" content="article" />
 <meta name="description" content="スパランドットコムのランキング詳細ページです。">
 {% endblock %}
 
