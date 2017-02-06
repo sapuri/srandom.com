@@ -4,6 +4,8 @@
 {% block title %}おみくじ - スパランドットコム{% endblock %}
 
 {% block extrahead %}
+<meta property="og:title" content="おみくじ - スパランドットコム" />
+<meta property="og:type" content="article" />
 <meta name="description" content="スパランドットコムのおみくじページです。今日のスパランおすすめ曲をランダムに選びます！">
 <script src="/static/js/music_list.js?v=20161230"></script>
 {% endblock %}
@@ -29,7 +31,7 @@
 <br>
 <form class="edit-form form" action="./" method="post">{% csrf_token %}
     {% bootstrap_form sran_level_form %}
-    <div class="form-group"><div class="checkbox"><label for="tweet"><input id="tweet" name="tweet" type="checkbox" />{% bootstrap_icon "link" %} おみくじの結果をツイートする</label></div></div>
+    <div class="form-group"><div class="checkbox"><label for="tweet"><input id="tweet" name="tweet" type="checkbox" /><i class="fa fa-twitter" aria-hidden="true"></i> おみくじの結果をツイートする</label></div></div>
     {% buttons %}
     <br>
     <input class="btn btn-primary" type="submit" value="おみくじを引く">

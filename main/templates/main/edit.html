@@ -4,6 +4,8 @@
 {% block title %}{{ music.title }}({{ music.difficulty }})を編集 - スパランドットコム{% endblock %}
 
 {% block extrahead %}
+<meta property="og:title" content="{{ music.title }}({{ music.difficulty }})を編集 - スパランドットコム" />
+<meta property="og:type" content="article" />
 <meta name="description" content="スパランドットコムの記録編集ページです。">
 {% endblock %}
 
@@ -17,7 +19,7 @@
     {% bootstrap_form bad_count_form %}
     <div style="margin-top:2em"></div>
     {% bootstrap_form extra_option_form %}
-    <div class="form-group" style="margin:2em 0;"><div class="checkbox"><label for="tweet"><input id="tweet" name="tweet" type="checkbox" />{% bootstrap_icon "link" %} 更新内容をツイートする</label></div></div>
+    <div class="form-group" style="margin:2em 0;"><div class="checkbox"><label for="tweet"><input id="tweet" name="tweet" type="checkbox" /><i class="fa fa-twitter" aria-hidden="true"></i> 更新内容をツイートする</label></div></div>
     <div style="margin:3em; text-align:center;">
         <input class="btn btn-primary" type="submit" name="save" value="保存する">
         <span class="btn btn-danger" data-toggle="modal" data-target="#modal" style="margin-left:3em;">

@@ -4,6 +4,8 @@
 {% block title %}{{ selected_user.player_name|default:selected_user.username }}のクリア状況(Lv{{ sran_level }}) - スパランドットコム{% endblock %}
 
 {% block extrahead %}
+<meta property="og:title" content="{{ selected_user.player_name|default:selected_user.username }}のクリア状況(Lv{{ sran_level }}) - スパランドットコム" />
+<meta property="og:type" content="article" />
 <meta name="description" content="スパランドットコムのクリア状況確認ページです。(Lv{{ sran_level }})">
 <script src="/static/js/user_music_list.js?v=20161230"></script>
 {% endblock %}

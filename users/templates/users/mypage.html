@@ -4,6 +4,8 @@
 {% block title %}{{ selected_user.player_name|default:selected_user.username }} - スパランドットコム{% endblock %}
 
 {% block extrahead %}
+<meta property="og:title" content="{{ selected_user.player_name|default:selected_user.username }} - スパランドットコム" />
+<meta property="og:type" content="article" />
 <meta name="description" content="スパランドットコムのプロフィールページです。">
 <script src="/static/js/mypage.js?v=20161230"></script>
 {% endblock %}
@@ -16,7 +18,7 @@
     {% endif %}
     {{ selected_user.player_name|default:selected_user.username }}
 </h2>
-<p class="username"><a href="https://twitter.com/{{ selected_user.username }}" target="_blank">@{{ selected_user.username }}</a></p>
+<p class="username"><i class="fa fa-twitter" aria-hidden="true"></i> <a href="https://twitter.com/{{ selected_user.username }}" target="_blank">@{{ selected_user.username }}</a></p>
 <p>ポプともID: {{ selected_user.split_poputomo_id|default:'------' }}</p>
 <p>都道府県: {{ selected_user.location|default:'------' }}</p>
 <p>プロフィール:<br>{{ selected_user.profile|default:'------' }}</p>
@@ -28,6 +30,8 @@
 {% ifequal selected_user user %}
 <a href="{% url 'users:settings' %}" class="btn btn-default">{% bootstrap_icon "pencil" %} 編集する</a>
 {% endifequal %}
+
+<a href="https://twitter.com/intent/tweet?text={{ selected_user.player_name|default:selected_user.username }}さんのプロフィールページです。&url={{ request.build_absolute_uri }}&hashtags=スパランドットコム" class="btn btn-info"><i class="fa fa-twitter" aria-hidden="true"></i> ツイートする</a>
 
 <h2 class="clear-data page-header">
     {% if selected_user.cleardata_privacy == 2 and selected_user == user %}
