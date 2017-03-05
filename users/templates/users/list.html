@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load bootstrap3 %}
 
 {% block title %}登録ユーザーリスト - スパランドットコム{% endblock %}
 
@@ -9,11 +10,11 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="page-header">登録ユーザーリスト</h1>
+<h1 class="page-header">{% bootstrap_icon "user" %} 登録ユーザーリスト</h1>
 <p>スパランドットコムに登録しているユーザーの一覧です。</p>
 <br>
 <div class="table-responsive">
-    <table class="user-list table table-striped table-bordered">
+    <table class="user-list table table-bordered">
         <thead>
             <th class="col-sm-1">#</th>
             <th class="col-sm-2">ユーザー名</th>
@@ -24,7 +25,7 @@
         <tbody>
             {% for selected_user in users %}
             <tr{% ifequal selected_user.username user.username %} id="myself"{% endifequal %}>
-                <td class="no">{{ forloop.counter }}</td>
+                <td class="no">{{ forloop.counter0 | add:users.start_index }}</td>
                 <td class="username"><a href="{% url 'users:mypage' selected_user.username %}">{{ selected_user.username }}</a>{% if selected_user.premium %} <span class="premium">★</span>{% endif %}</td>
                 <td class="player_name">{{ selected_user.player_name|default:'-' }}</td>
                 <td class="location">{{ selected_user.location|default:'-' }}</td>
@@ -33,5 +34,33 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
+
+<div style="text-align:center">
+    <ul class="pagination">
+        {% if users.has_previous %}
+        <li>
+            <a href="?page={{ users.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">前へ</span>
+            </a>
+        </li>
+        {% endif %}
+
+        {% for page in users.paginator.page_range %}
+            {% if page == users.number %}
+            <li class="active"><span>{{ page }}</span></li>
+            {% else %}
+            <li><a href="?page={{ page }}">{{ page }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if users.has_next %}
+        <li>
+            <a href="?page={{ users.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">次へ</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
 </div>
 {% endblock %}
