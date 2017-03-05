@@ -12,16 +12,26 @@ from main.models import *
 from .forms import *
 
 
-# def list(request):
-#     '''
-#     登録ユーザー一覧
-#     '''
-#     # プレイヤー名を公開しているユーザーを取得
-#     users = CustomUser.objects.filter(is_active=True).exclude(pk=1)
-#     context = {
-#         'users': users
-#     }
-#     return render(request, 'users/list.html', context)
+def list(request):
+    ''' ユーザーリスト '''
+    # 有効なアカウントを取得
+    users = CustomUser.objects.filter(is_active=True).exclude(pk=1)
+
+    # ページング
+    paginator = Paginator(users, 50)
+    page = request.GET.get('page')
+
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        users = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        users = paginator.page(paginator.num_pages)
+
+    context = { 'users': users }
+    return render(request, 'users/list.html', context)
 
 def mypage(request, username):
     '''

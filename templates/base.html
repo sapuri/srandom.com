@@ -18,9 +18,8 @@
     {% bootstrap_css %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/style.css?v=20161223">
-    {% if user.theme.id == 2 %}<link rel="stylesheet" href="/static/css/dark.css?v=20161230">{% endif %}
+    {% if user.theme.id == 2 %}<link rel="stylesheet" href="/static/css/dark.css?v=20170306">{% endif %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="/static/react/assets/common.js"></script>
     <script src="/static/js/global.js?v=20161013"></script>
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
     {% block extrahead %}{% endblock %}
@@ -78,7 +77,7 @@
                         {% endif %}
                     </li>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'users:mypage' user.username %}">{% bootstrap_icon "user" %} マイページ</a></li>
+                        <li><a href="{% url 'users:mypage' user.username %}">{% bootstrap_icon "book" %} マイページ</a></li>
                         <li><a href="{% url 'users:settings' %}">{% bootstrap_icon "cog" %} 設定</a></li>
                         <li class="divider"></li>
                         <li><a href="{% url 'auth:logout' %}?next={% url 'main:index' %}">{% bootstrap_icon "log-out" %} ログアウト</a></li>
@@ -110,7 +109,8 @@
                 <li><a class="no-decoration" href="{% url 'main:ranking_level_select' %}">{% bootstrap_icon "king" %} ランキング</a></li>
                 <li><a class="no-decoration" href="{% url 'main:omikuji' %}">{% bootstrap_icon "gift" %} おみくじ</a></li>
                 <li><a class="no-decoration" href="{% url 'main:premium' %}">{% bootstrap_icon "star" %} 開発者に寄付</a></li>
-                <li><a class="no-decoration" href="{% url 'users:mypage' user.username %}">{% bootstrap_icon "user" %} マイページ</a></li>
+                <li><a class="no-decoration" href="{% url 'users:list' %}">{% bootstrap_icon "user" %} 登録ユーザー</a></li>
+                <li><a class="no-decoration" href="{% url 'users:mypage' user.username %}">{% bootstrap_icon "book" %} マイページ</a></li>
                 <li><a class="no-decoration" href="{% url 'users:settings' %}">{% bootstrap_icon "cog" %} 設定</a></li>
             </ul>
             {% endif %}

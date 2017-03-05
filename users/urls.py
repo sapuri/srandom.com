@@ -4,7 +4,7 @@ from . import views
 
 app_name = 'users'
 urlpatterns = [
-    # url(r'^list/$', views.list, name='list'),
+    url(r'^list/$', views.list, name='list'),
     url(r'^settings/$', views.settings, name='settings'),
     url(r'^deactivate/$', views.deactivate, name='deactivate'),
     url(r'^(?P<username>\w+)/$', views.mypage, name='mypage'),
