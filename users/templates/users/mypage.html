@@ -21,7 +21,7 @@
 <p class="username"><i class="fa fa-twitter" aria-hidden="true"></i> <a href="https://twitter.com/{{ selected_user.username }}" target="_blank">@{{ selected_user.username }}</a></p>
 <p>ポプともID: {{ selected_user.split_poputomo_id|default:'------' }}</p>
 <p>都道府県: {{ selected_user.location|default:'------' }}</p>
-<p>プロフィール:<br>{{ selected_user.profile|default:'------' }}</p>
+<p>コメント:<br>{{ selected_user.profile|default:'------' }}</p>
 <p>登録日時: {{ selected_user.date_joined|date:"Y/n/d G:i" }}</p>
 {% ifequal selected_user user %}
 <p>最終ログイン日時: {{ selected_user.last_login|date:"Y/n/d G:i" }}</p>

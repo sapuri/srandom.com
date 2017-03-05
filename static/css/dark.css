@@ -180,6 +180,11 @@ select {
     color: #000000;
 }
 
+/* 登録ユーザー一覧 */
+.user-list {
+    color: #c0c0c0;
+}
+
 /* Pager */
 .pagination>li>a, .pagination>li>span {
     color: #FFFFFF;
