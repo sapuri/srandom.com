@@ -10,13 +10,13 @@ django-htmlmin==0.10.0
 django-maintenancemode==0.11.2
 django-secure==1.0.1
 django-sslserver==0.19
-djangorestframework==3.5.4
+djangorestframework==3.6.2
 html5lib==0.999999999
 httplib2==0.10.3
 IPy==0.83
-numpy==1.12.0
+numpy==1.12.1
 oauth2==1.9.0.post1
-oauthlib==2.0.1
+oauthlib==2.0.2
 packaging==16.8
 PyJWT==1.4.2
 PyMySQL==0.7.10
