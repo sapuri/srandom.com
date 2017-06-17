@@ -1,9 +1,9 @@
 appdirs==1.4.3
-beautifulsoup4==4.5.3
+beautifulsoup4==4.6.0
 defusedxml==0.5.0
 Django==1.10.6
 django-appconf==1.0.2
-django-bootstrap3==8.2.2
+django-bootstrap3==8.2.3
 django-compressor==2.1.1
 django-filter==0.15.3
 django-htmlmin==0.10.0
@@ -14,11 +14,11 @@ djangorestframework==3.6.2
 html5lib==0.999999999
 httplib2==0.10.3
 IPy==0.83
-numpy==1.12.1
+numpy==1.13.0
 oauth2==1.9.0.post1
 oauthlib==2.0.2
 packaging==16.8
-PyJWT==1.4.2
+PyJWT==1.5.0
 PyMySQL==0.7.11
 pyparsing==2.2.0
 python-dateutil==2.6.0
