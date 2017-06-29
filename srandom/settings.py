@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',                       # django-bootstrap3
-    'social.apps.django_app.default',   # python-social-auth
+    'social_django',                    # python-social-auth
     'compressor',                       # django-compressor
     'maintenancemode',                  # django-maintenancemode
     'djangosecure',                     # django-secure
@@ -171,7 +171,7 @@ BOOTSTRAP3 = {
 AUTH_USER_MODEL = 'users.CustomUser'
 
 AUTHENTICATION_BACKENDS = [
-    'social.backends.twitter.TwitterOAuth',
+    'social_core.backends.twitter.TwitterOAuth',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
