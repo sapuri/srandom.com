@@ -3,7 +3,7 @@
 
 ## 環境
 * Python 3.5
-* Django 1.10
+* Django 1.11
 * MySQL 5.6
 
 ## コマンド
