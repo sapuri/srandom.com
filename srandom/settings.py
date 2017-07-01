@@ -101,6 +101,9 @@ DATABASES = {
         'USER': 'sysco',
         'PASSWORD': 'm3imsWM8JcBM',
         'HOST': '',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        },
     }
 }
 
