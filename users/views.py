@@ -15,7 +15,7 @@ from .forms import *
 def list(request):
     ''' ユーザーリスト '''
     # 有効なアカウントを取得
-    users = CustomUser.objects.filter(is_active=True).exclude(pk=1)
+    users = CustomUser.objects.filter(is_active=True).exclude(pk=1).order_by('id')
 
     # ページング
     paginator = Paginator(users, 50)
