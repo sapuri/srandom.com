@@ -49,8 +49,8 @@ function scrapeHtml($url) {
 
     $lv_num = 0;	// Lvごとに番地を指定
 
-    // #content_1_4 〜 #content_1_17 を指定
-    for ($i = 4; $i <= 17; $i++) {
+    // #content_1_3 〜 #content_1_16 を指定
+    for ($i = 3; $i <= 16; $i++) {
         // Lv表記を探索
         $content = $html->find("h3#content_1_$i", 0);
         $h3 = $content->plaintext;
