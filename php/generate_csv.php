@@ -33,10 +33,6 @@ $columnName = array('レベル', '曲名', 'BPM');
 function scrapeHtml($url) {
     /* Lv5〜Lv18を取得 */
 
-    // FIXME: とりあえず手動で指定している - (1)
-    // 最初の table-responsive を指定
-    $offset = 14;
-
     // HTMLを取得
     $html = file_get_html($url);
 
@@ -49,8 +45,8 @@ function scrapeHtml($url) {
 
     $lv_num = 0;	// Lvごとに番地を指定
 
-    // #content_1_3 〜 #content_1_16 を指定
-    for ($i = 3; $i <= 16; $i++) {
+    // #content_1_2 〜 #content_1_15 を指定
+    for ($i = 2; $i <= 15; $i++) {
         // Lv表記を探索
         $content = $html->find("h3#content_1_$i", 0);
         $h3 = $content->plaintext;
@@ -69,10 +65,8 @@ function scrapeHtml($url) {
         $tr_address = 0;	// <tr>の場所を指定
         // 全ての<tr>を走査
         while (1) {
-            // div.table-responsive(2~17)->table->tbody->tr
-            // $tr = $html->find('div.table-responsive', $i-3)->children(0)->children(0)->children($tr_address);
-            // FIXME: とりあえず手動で指定している - (1)
-            $tr = $html->find('div.table-responsive', $i+$offset)->children(0)->children(0)->children($tr_address);
+            // div.table-responsive(0~13)->table->tbody->tr
+            $tr = $html->find('div.table-responsive', $i-2)->children(0)->children(0)->children($tr_address);
 
             // <tr>が存在しなければループを抜ける
             if (!isset($tr)) break;
