@@ -67,7 +67,7 @@
 <div id="activity" class="row">
     <div id="updated-recently" class="col-xs-12 col-md-5">
         <h3 class="page-header">最近更新された曲</h2>
-        <p>現在 {{ medal_num }} 件の記録が登録されています！</p>
+        <p>現在 <b>{{ medal_num }}</b> 件の記録が登録されています！</p>
         <ul class="music-list">
             {% for recent in recent_medal %}
             <a href="{% url 'main:ranking_detail' recent.music.id %}">
