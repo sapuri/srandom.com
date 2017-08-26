@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^auth/', include('django.contrib.auth.urls', namespace='auth')),
     url(r'^social/', include('social_django.urls', namespace='social')),
     url(r'^users/', include('users.urls')),
-    url(r'^api/', include('api.urls')),
+    url(r'^api/v1/', include('api.urls')),
 ]
 
 if settings.DEBUG:
