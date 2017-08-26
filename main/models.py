@@ -67,6 +67,11 @@ class Music(models.Model):
     class Meta:
         verbose_name = '曲'
         verbose_name_plural = '曲'
+        indexes = [
+            models.Index(fields=['title'], name='title'),
+            models.Index(fields=['level'], name='level'),
+            models.Index(fields=['sran_level'], name='sran_level'),
+        ]
 
 class Medal(models.Model):
     medal = models.IntegerField('クリアメダル')
@@ -115,6 +120,11 @@ class Medal(models.Model):
     class Meta:
         verbose_name = 'クリアメダル'
         verbose_name_plural = 'クリアメダル'
+        indexes = [
+            models.Index(fields=['music', 'user'], name='music_user'),
+            models.Index(fields=['updated_at'], name='updated_at'),
+            models.Index(fields=['user', 'updated_at'], name='user_updated_at'),
+        ]
 
 class Bad_Count(models.Model):
     bad_count = models.PositiveIntegerField('BAD数')
@@ -136,6 +146,11 @@ class Bad_Count(models.Model):
     class Meta:
         verbose_name = 'BAD数'
         verbose_name_plural = 'BAD数'
+        indexes = [
+            models.Index(fields=['music', 'user'], name='music_user'),
+            models.Index(fields=['updated_at'], name='updated_at'),
+            models.Index(fields=['user', 'updated_at'], name='user_updated_at'),
+        ]
 
 class Extra_Option(models.Model):
     hard = models.BooleanField('ハード')
@@ -157,6 +172,11 @@ class Extra_Option(models.Model):
     class Meta:
         verbose_name = 'Extra Option'
         verbose_name_plural = 'Extra Option'
+        indexes = [
+            models.Index(fields=['music', 'user'], name='music_user'),
+            models.Index(fields=['updated_at'], name='updated_at'),
+            models.Index(fields=['user', 'updated_at'], name='user_updated_at'),
+        ]
 
 class News(models.Model):
     KIND_CHOICES = (
@@ -191,3 +211,6 @@ class Activity(models.Model):
     class Meta:
         verbose_name = 'アクティビティ'
         verbose_name_plural = 'アクティビティ'
+        indexes = [
+            models.Index(fields=['music', 'user'], name='music_user'),
+        ]
