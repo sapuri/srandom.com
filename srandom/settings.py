@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',                    # django-debug-toolbar
     'bootstrap3',                       # django-bootstrap3
     'social_django',                    # python-social-auth
     'compressor',                       # django-compressor
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'djangosecure',                     # django-secure
     'sslserver',                        # django-sslserver
     'rest_framework',                   # djangorestframework
+    'django_filters',                   # django-filters
     'main.apps.MainConfig',             # Main
     'users.apps.UsersConfig',           # Users
     'api.apps.ApiConfig',               # Api
@@ -58,6 +60,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # django-debug-toolbar
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     # django-htmlmin
     'htmlmin.middleware.HtmlMinifyMiddleware',
     'htmlmin.middleware.MarkRequestMiddleware',
@@ -162,6 +166,10 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 # ログインせずに @login_required ページにアクセスしたら飛ばす
 LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+
+
+# django-debug-toolbar
+INTERNAL_IPS = ['127.0.0.1']
 
 
 # django-bootstrap3
