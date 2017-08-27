@@ -69,10 +69,10 @@
         <h3 class="page-header">最近更新された曲</h2>
         <p>現在 <b>{{ medal_num }}</b> 件の記録が登録されています！</p>
         <ul class="music-list">
-            {% for recent in recent_medal %}
-            <a href="{% url 'main:ranking_detail' recent.music.id %}">
-                <li class="music {% if recent.music.difficulty.difficulty_short == 'EX' %}extra{% elif recent.music.difficulty.difficulty_short == 'H' %}hyper{% elif recent.music.difficulty.difficulty_short == 'N' %}normal{% else %}easy{% endif %}">
-                    {{ recent.music.title }} ({{ recent.music.difficulty }})
+            {% for music in recent_music %}
+            <a href="{% url 'main:ranking_detail' music.id %}">
+                <li class="music {% if music.difficulty.difficulty_short == 'EX' %}extra{% elif music.difficulty.difficulty_short == 'H' %}hyper{% elif music.difficulty.difficulty_short == 'N' %}normal{% else %}easy{% endif %}">
+                    {{ music.title }} ({{ music.difficulty }})
                 </li>
             </a>
             {% endfor %}

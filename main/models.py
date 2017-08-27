@@ -107,8 +107,10 @@ class Medal(models.Model):
             return '●'
         elif self.medal == 11:
             return '易'
+        elif self.medal == 12:
+            return '未プレイ'
         else:
-            return 0
+            return ''
 
     # 更新日時をJSTで返す
     def updated_at_jst(self):
