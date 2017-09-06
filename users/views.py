@@ -3,7 +3,7 @@ import os, zenhan, json
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, Http404
 
@@ -52,6 +52,137 @@ def mypage(request, username):
         'recent_medal': recent_medal
     }
     return render(request, 'users/mypage.html', context)
+
+@login_required
+def statistics(request, username):
+    '''
+    統計情報
+    :param str: username
+    '''
+    # ユーザーを取得
+    selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
+
+    max_s_lv = 18
+    s_lv_range = range(max_s_lv, 0, -1)
+
+    graph_data = {
+        'clearRate': {
+            'labels': [],
+            'datasets': [{
+                'label': 'Perfect',
+                'data': [],
+                'backgroundColor': [],
+                'borderWidth': 1
+            }, {
+                'label': 'Full Combo',
+                'data': [],
+                'backgroundColor': [],
+                'borderWidth': 1
+            }, {
+                'label': 'Hard Clear',
+                'data': [],
+                'backgroundColor': [],
+                'borderWidth': 1
+            }, {
+                'label': 'Clear',
+                'data': [],
+                'backgroundColor': [],
+                'borderWidth': 1
+            }, {
+                'label': 'Easy Clear',
+                'data': [],
+                'backgroundColor': [],
+                'borderWidth': 1
+            }, {
+                'label': 'Failed',
+                'data': [],
+                'backgroundColor': [],
+                'borderWidth': 1,
+            }, {
+                'label': 'No Play',
+                'data': [],
+                'backgroundColor': [],
+                'borderWidth': 0
+            }]
+        }
+    }
+
+    # clearRate
+    music_num = [0] * max_s_lv
+    medal_num = {
+        'perfect': [0] * max_s_lv,
+        'fullcombo': [0] * max_s_lv,
+        'hard': [0] * max_s_lv,
+        'clear': [0] * max_s_lv,
+        'easy': [0] * max_s_lv,
+        'failed': [0] * max_s_lv,
+        'no-play': [0] * max_s_lv
+    }
+    percentage_of_medals = {
+        'perfect': [0] * max_s_lv,
+        'fullcombo': [0] * max_s_lv,
+        'hard': [0] * max_s_lv,
+        'clear': [0] * max_s_lv,
+        'easy': [0] * max_s_lv,
+        'failed': [0] * max_s_lv
+    }
+    for s_lv in s_lv_range:
+        music_list = Music.objects.filter(sran_level=s_lv)
+        music_num[s_lv - 1] = len(music_list)
+        for music in music_list:
+            try:
+                medal = Medal.objects.get(user=selected_user, music=music)
+                if medal.medal == 1:
+                    medal_num['perfect'][s_lv - 1] += 1
+                elif medal.medal >= 2 and medal.medal <= 4:
+                    medal_num['fullcombo'][s_lv - 1] += 1
+                elif medal.medal >= 5 and medal.medal <= 7:
+                    try:
+                        extra_option = Extra_Option.objects.get(user=selected_user, music=music)
+                        if extra_option.hard:
+                            medal_num['hard'][s_lv - 1] += 1
+                        else:
+                            medal_num['clear'][s_lv - 1] += 1
+                    except ObjectDoesNotExist:
+                        medal_num['clear'][s_lv - 1] += 1
+                elif medal.medal == 11:
+                    medal_num['easy'][s_lv - 1] += 1
+                elif medal.medal >= 8 and medal.medal <= 10:
+                    medal_num['failed'][s_lv - 1] += 1
+                else:
+                    medal_num['no-play'][s_lv - 1] += 1
+            except ObjectDoesNotExist:
+                medal_num['no-play'][s_lv - 1] += 1
+
+        # 各レベルのメダルの割合を計算
+        percentage_of_medals['perfect'][s_lv - 1] = round(medal_num['perfect'][s_lv - 1] * 100 / music_num[s_lv - 1])
+        percentage_of_medals['fullcombo'][s_lv - 1] = round(medal_num['fullcombo'][s_lv - 1] * 100 / music_num[s_lv - 1])
+        percentage_of_medals['hard'][s_lv - 1] = round(medal_num['hard'][s_lv - 1] * 100 / music_num[s_lv - 1])
+        percentage_of_medals['clear'][s_lv - 1] = round(medal_num['clear'][s_lv - 1] * 100 / music_num[s_lv - 1])
+        percentage_of_medals['easy'][s_lv - 1] = round(medal_num['easy'][s_lv - 1] * 100 / music_num[s_lv - 1])
+        percentage_of_medals['failed'][s_lv - 1] = round(medal_num['failed'][s_lv - 1] * 100 / music_num[s_lv - 1])
+
+        graph_data['clearRate']['labels'].append("Lv" + str(s_lv))
+
+        graph_data['clearRate']['datasets'][0]['data'].append(percentage_of_medals['perfect'][s_lv - 1])
+        graph_data['clearRate']['datasets'][1]['data'].append(percentage_of_medals['fullcombo'][s_lv - 1])
+        graph_data['clearRate']['datasets'][2]['data'].append(percentage_of_medals['hard'][s_lv - 1])
+        graph_data['clearRate']['datasets'][3]['data'].append(percentage_of_medals['clear'][s_lv - 1])
+        graph_data['clearRate']['datasets'][4]['data'].append(percentage_of_medals['easy'][s_lv - 1])
+        graph_data['clearRate']['datasets'][5]['data'].append(percentage_of_medals['failed'][s_lv - 1])
+
+        graph_data['clearRate']['datasets'][0]['backgroundColor'].append('#4a4a4a')
+        graph_data['clearRate']['datasets'][1]['backgroundColor'].append('rgb(153, 207, 229)')
+        graph_data['clearRate']['datasets'][2]['backgroundColor'].append('rgb(243, 192, 171)')
+        graph_data['clearRate']['datasets'][3]['backgroundColor'].append('rgb(255, 242, 128)')
+        graph_data['clearRate']['datasets'][4]['backgroundColor'].append('rgb(166, 227, 157)')
+        graph_data['clearRate']['datasets'][5]['backgroundColor'].append('#C6C6C6')
+
+    context = {
+        'selected_user': selected_user,
+        'graph_data': graph_data
+    }
+    return render(request, 'users/statistics.html', context)
 
 @login_required
 def settings(request):

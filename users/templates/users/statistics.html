@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}{{ selected_user.player_name|default:selected_user.username }}(統計) - スパランドットコム{% endblock %}
+
+{% block extrahead %}
+<meta property="og:title" content="{{ selected_user.player_name|default:selected_user.username }}(統計) - スパランドットコム" />
+<meta property="og:type" content="article" />
+<meta name="description" content="スパランドットコムの統計情報ページです。">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<h1 class="page-header">{% bootstrap_icon "book" %} 統計 (Beta)</h1>
+<p><b>This page is under development.</b></p>
+
+<h2>
+    {% if selected_user.premium %}
+    <span class="premium">★</span>
+    {% endif %}
+    {{ selected_user.player_name|default:selected_user.username }}
+</h2>
+<p class="username"><i class="fa fa-twitter" aria-hidden="true"></i> <a href="https://twitter.com/{{ selected_user.username }}" target="_blank">@{{ selected_user.username }}</a></p>
+<p>ポプともID: {{ selected_user.split_poputomo_id|default:'------' }}</p>
+<p>都道府県: {{ selected_user.location|default:'------' }}</p>
+<p>コメント:<br>{{ selected_user.profile|default:'------' }}</p>
+<p>登録日時: {{ selected_user.date_joined|date:"Y/n/d G:i" }}</p>
+{% ifequal selected_user user %}
+<p>最終ログイン日時: {{ selected_user.last_login|date:"Y/n/d G:i" }}</p>
+{% endifequal %}
+
+{% ifequal selected_user user %}
+<a href="{% url 'users:settings' %}" class="btn btn-default">{% bootstrap_icon "pencil" %} 編集する</a>
+{% endifequal %}
+
+<a href="https://twitter.com/intent/tweet?text={{ selected_user.player_name|default:selected_user.username }}さんのプロフィールページです。&url={{ request.build_absolute_uri }}&hashtags=スパランドットコム" class="btn btn-info"><i class="fa fa-twitter" aria-hidden="true"></i> ツイートする</a>
+
+<h2 class="clear-data page-header">
+    {% if selected_user.cleardata_privacy == 2 and selected_user == user %}
+    {% bootstrap_icon "star-empty" %} クリア状況 (非公開)
+    {% else %}
+    {% bootstrap_icon "star-empty" %} クリア状況
+    {% endif %}
+</h2>
+{% if selected_user.cleardata_privacy == 1 or selected_user == user %}
+<canvas id="clearRate" width="1" height="3"></canvas>
+{% else %}
+<p>クリアデータは非公開に設定されています。</p>
+{% endif %}
+
+<script>
+    var ctx = document.getElementById("clearRate");
+    var clearRate = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {{ graph_data.clearRate|safe }},
+        options: {
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                    ticks: {
+                        min: 0,
+                        max: 100,
+                        callback: function(value) {
+                            return value + "%";
+                        }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Percentage"
+                    },
+                }],
+                yAxes: [{
+                    stacked: true,
+                    categoryPercentage: 0.9,
+                    barPercentage: 1.0
+                }]
+            },
+            title: {
+                display: true,
+                text: '各メダルの割合'
+            }
+        }
+    });
+</script>
+{% endblock %}

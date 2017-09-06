@@ -33,6 +33,11 @@
 
 <a href="https://twitter.com/intent/tweet?text={{ selected_user.player_name|default:selected_user.username }}さんのプロフィールページです。&url={{ request.build_absolute_uri }}&hashtags=スパランドットコム" class="btn btn-info"><i class="fa fa-twitter" aria-hidden="true"></i> ツイートする</a>
 
+{% if selected_user.cleardata_privacy == 1 or selected_user == user %}
+<br /><br />
+<a href="{% url 'users:statistics' selected_user.username %}" class="btn btn-default">{% bootstrap_icon "book" %} 統計 (Beta)</a>
+{% endif %}
+
 <h2 class="clear-data page-header">
     {% if selected_user.cleardata_privacy == 2 and selected_user == user %}
     {% bootstrap_icon "star-empty" %} クリア状況 (非公開)
