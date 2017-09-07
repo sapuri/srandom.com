@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
+{% load compress %}
 
 {% block title %}{{ selected_user.player_name|default:selected_user.username }}(統計) - スパランドットコム{% endblock %}
 
@@ -55,6 +56,7 @@
 <p>クリアデータは非公開に設定されています。</p>
 {% endif %}
 
+{% compress js inline %}
 <script>
 	var cal = new CalHeatMap();
     var start = new Date;
@@ -105,4 +107,5 @@
         }
     });
 </script>
+{% endcompress %}
 {% endblock %}
