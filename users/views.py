@@ -404,3 +404,36 @@ def get_percentage_of_clear(request, user_id):
         return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
     else:
         return HttpResponse('invalid access')
+
+def get_activity_map(request):
+    # パラメータチェック
+    if (not 'user_id' in request.GET) or (not 'start' in request.GET) or (not 'stop' in request.GET):
+        raise Http404()
+
+    user_id = request.GET['user_id']
+    user = get_object_or_404(CustomUser, pk=user_id)
+
+    # 権限を確認
+    if user != request.user:
+        if user.is_active == False or user.cleardata_privacy == 2:
+            raise PermissionDenied
+
+    start = int(request.GET['start'])
+    end = int(request.GET['stop'])
+
+    start_datetime = datetime.fromtimestamp(start / 1000.0)
+    end_datetime = datetime.fromtimestamp(end / 1000.0)
+    print ('start_datetime:', start_datetime)
+    print ('end_datetime:', end_datetime)
+
+    activities = Activity.objects.filter(user=user_id, updated_at__range=(start_datetime, end_datetime))
+    result = {}
+    for activity in activities:
+        updated_at = str(int(datetime.timestamp(activity.updated_at)))
+        if updated_at in result:
+            result[updated_at] += 1
+        else:
+            result.update({updated_at: 1})
+
+    json_str = json.dumps(result, ensure_ascii=False)
+    return HttpResponse(json_str, content_type='application/json; charset=UTF-8')

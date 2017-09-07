@@ -8,6 +8,9 @@
 <meta property="og:type" content="article" />
 <meta name="description" content="スパランドットコムの統計情報ページです。">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+<script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.css" />
 {% endblock %}
 
 {% block content %}
@@ -43,11 +46,35 @@
     {% endif %}
 </h2>
 {% if selected_user.cleardata_privacy == 1 or selected_user == user %}
+<center style="margin-bottom:30px">
+    <div id="activityMap"></div>
+</center>
+
 <canvas id="clearRate" width="1" height="3"></canvas>
 {% else %}
 <p>クリアデータは非公開に設定されています。</p>
 {% endif %}
 
+<script>
+	var cal = new CalHeatMap();
+    var start = new Date;
+    var end = new Date;
+    var range = 12;
+    start = start.setMonth(start.getMonth() - (range - 1));
+    end = end.setMonth(end.getMonth());
+	cal.init({
+        itemSelector: "#activityMap",
+        data: "/users/api/get_activity_map/?user_id={{selected_user.id}}&start="+start+"&stop="+end,
+        domain: "month",
+        subDomain: "day",
+        domainLabelFormat: "%Y-%m",
+        range: range,
+        cellSize: 10,
+        displayLegend: false,
+        tooltip: true,
+        start: start
+    });
+</script>
 <script>
     var ctx = document.getElementById("clearRate");
     var clearRate = new Chart(ctx, {
@@ -63,10 +90,6 @@
                         callback: function(value) {
                             return value + "%";
                         }
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Percentage"
                     },
                 }],
                 yAxes: [{
