@@ -11,8 +11,8 @@ require_once('simple_html_dom.php');
 // require_once($srandom_dir . '/php/simple_html_dom.php');
 
 // URLを設定
-$url1 = 'http://hellwork.jp/popn/wiki/734.html';	// S乱クリア難易度表
-$url2 = 'http://hellwork.jp/popn/wiki/?%E3%81%9D%E3%81%AE%E4%BB%96%2FS%E4%B9%B1Lv0%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8';	// S乱Lv0難易度表
+$url1 = 'https://hellwork.jp/popn/wiki/734.html';	// S乱クリア難易度表
+$url2 = 'https://hellwork.jp/popn/wiki/?%E3%81%9D%E3%81%AE%E4%BB%96/S%E4%B9%B1Lv0%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8';	// S乱Lv0難易度表
 
 // 出力するCSVのファイル名を設定
 // ローカル
@@ -26,6 +26,29 @@ $columnName = array('レベル', '曲名', 'BPM');
 
 /* ---------- 関数定義 ---------- */
 /**
+ * Download page (simple_html_dom.php を使用)
+ * @param string $url
+ * @return object $dom
+ */
+function dlPage($url) {
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_REFERER, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0");
+    $str = curl_exec($curl);
+    curl_close($curl);
+
+    // Create a DOM object
+    $dom = new simple_html_dom();
+    // Load HTML from a string
+    $dom->load($str);
+
+    return $dom;
+}
+
+/**
  * ポップン難易度表からデータを収集する (simple_html_dom.php を使用)
  * @param string $url		スクレイピング対象のURL
  * @return array $csv_data	CSVに書き込むデータ
@@ -34,7 +57,7 @@ function scrapeHtml($url) {
     /* Lv5〜Lv18を取得 */
 
     // HTMLを取得
-    $html = file_get_html($url);
+    $html = dlPage($url);
 
     // データ格納用配列を定義
     $lv = array();
@@ -115,7 +138,7 @@ function scrapeHtml2($url) {
     /* Lv1〜Lv4を取得 */
 
     // HTMLを取得
-    $html = file_get_html($url);
+    $html = dlPage($url);
 
     // データ格納用配列を定義
     $lv = array();
