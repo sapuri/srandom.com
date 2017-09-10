@@ -53,7 +53,6 @@ def mypage(request, username):
     }
     return render(request, 'users/mypage.html', context)
 
-@login_required
 def statistics(request, username):
     '''
     統計情報
