@@ -60,9 +60,11 @@ def statistics(request, username):
     '''
     # ユーザーを取得
     selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
+    activity_count = Activity.objects.filter(user=selected_user).count()
 
     context = {
-        'selected_user': selected_user
+        'selected_user': selected_user,
+        'activity_count': activity_count
     }
     return render(request, 'users/statistics.html', context)
 
