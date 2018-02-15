@@ -1,34 +1,19 @@
-"""srandom URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.9/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import include
 from django.urls import path
 from django.contrib import admin
 
 urlpatterns = [
-    url('', include('main.urls')),
-    url(r'^mastermind/', admin.site.urls),
+    path('', include('main.urls')),
+    path('mastermind/', admin.site.urls),
     path('auth/', include(('django.contrib.auth.urls', 'auth'))),
     path('social/', include(('social_django.urls', 'social'))),
-    url(r'^users/', include('users.urls')),
-    url(r'^api/v1/', include('api.urls')),
+    path('users/', include('users.urls')),
+    path('api/v1/', include('api.urls')),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
+        path('__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns

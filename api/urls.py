@@ -1,4 +1,5 @@
-from django.conf.urls import include, url
+from django.conf.urls import include
+from django.urls import path
 from rest_framework import routers
 from .views import MusicViewSet, ActivityViewSet, CustomUserViewSet
 
@@ -9,5 +10,5 @@ router.register(r'users', CustomUserViewSet)
 
 app_name = 'api'
 urlpatterns = [
-    url('', include(router.urls)),
+    path('', include(router.urls)),
 ]
