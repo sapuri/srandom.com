@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'social_django',                    # python-social-auth
     'compressor',                       # django-compressor
     'maintenancemode',                  # django-maintenancemode
-    'djangosecure',                     # django-secure
     'sslserver',                        # django-sslserver
     'rest_framework',                   # djangorestframework
     'django_filters',                   # django-filters
@@ -51,25 +50,20 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',               # Api
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     # django-debug-toolbar
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     # django-htmlmin
     'htmlmin.middleware.HtmlMinifyMiddleware',
     'htmlmin.middleware.MarkRequestMiddleware',
-    # django-maintenancemode
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'maintenancemode.middleware.MaintenanceModeMiddleware',
-    # django-secure
-    'djangosecure.middleware.SecurityMiddleware',
 ]
 
 ROOT_URLCONF = 'srandom.urls'
@@ -196,7 +190,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAdminUser',
     ),
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
-    'PAGE_SIZE': 200
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
 }
 
 
