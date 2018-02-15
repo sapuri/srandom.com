@@ -58,14 +58,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     # django-debug-toolbar
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     # django-htmlmin
     'htmlmin.middleware.HtmlMinifyMiddleware',
     'htmlmin.middleware.MarkRequestMiddleware',
-    # django-maintenancemode
-    # 'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # 'maintenancemode.middleware.MaintenanceModeMiddleware',
 ]
 
 ROOT_URLCONF = 'srandom.urls'
