@@ -3,7 +3,7 @@ beautifulsoup4==4.6.0
 certifi==2018.1.18
 chardet==3.0.4
 defusedxml==0.5.0
-Django==1.11.7
+Django==2.0.2
 django-appconf==1.0.2
 django-bootstrap3==9.1.0
 django-compressor==2.2
@@ -11,7 +11,6 @@ django-debug-toolbar==1.9.1
 django-filter==1.1.0
 django-htmlmin==0.10.0
 django-maintenancemode==0.11.2
-django-secure==1.0.1
 django-sslserver==0.20
 djangorestframework==3.7.7
 html5lib==1.0.1
