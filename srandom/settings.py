@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'bootstrap3',                       # django-bootstrap3
     'social_django',                    # python-social-auth
     'compressor',                       # django-compressor
-    'maintenancemode',                  # django-maintenancemode
+    'maintenance_mode',                 # django-maintenance-mode
     'sslserver',                        # django-sslserver
     'rest_framework',                   # djangorestframework
     'django_filters',                   # django-filters
@@ -64,6 +64,8 @@ MIDDLEWARE = [
     # django-htmlmin
     'htmlmin.middleware.HtmlMinifyMiddleware',
     'htmlmin.middleware.MarkRequestMiddleware',
+    # django-maintenance-mode
+    'maintenance_mode.middleware.MaintenanceModeMiddleware',
 ]
 
 ROOT_URLCONF = 'srandom.urls'
