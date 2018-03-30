@@ -19,10 +19,12 @@ $table_name = 'main_music';
 
 // 追加例外曲リスト
 $exceptionMusicList = array(
-    '&quot;Schall&quot; we step?', // "Schall" we step?
-    '混乱少女?そふらんちゃん!!',       // 混乱少女♥そふらんちゃん!!
-    'good night mommy',            // good night, mommy
-    'EBONY &amp; IVORY',           // EBONY & IVORY
+    '&quot;Schall&quot; we step?',  // "Schall" we step?
+    '混乱少女?そふらんちゃん!!',        // 混乱少女♥そふらんちゃん!!
+    'good night mommy',             // good night, mommy
+    'EBONY &amp; IVORY',            // EBONY & IVORY
+    '難易度表/ハイパーJロック(brave!)', // ハイパーJロック(brave!)
+    'Strawberry Chu?Chu?',          // Strawberry Chu♡Chu♡
 );
 /* ---------- /パラメータ設定 ---------- */
 
