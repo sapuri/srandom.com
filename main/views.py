@@ -1,22 +1,21 @@
-import pytz
-from twitter import *
-
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponse, Http404
-from django.db.models import Avg
-from datetime import datetime, timedelta
 import json
 
-from .models import *
-from users.models import CustomUser
+import pytz
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Avg
+from django.http import HttpResponse, Http404
+from django.shortcuts import get_object_or_404, render, redirect
+from twitter import *
+
 from .forms import *
+from .models import *
+
 
 def index(request):
-    ''' トップページ '''
+    """ トップページ """
     medal_num = Medal.objects.all().count()
     recent_medal = Medal.objects.all().order_by('-updated_at')[:10]
     recent_music_id_list = list(recent_medal.values_list('music', flat=True))
@@ -33,8 +32,9 @@ def index(request):
     }
     return render(request, 'main/index.html', context)
 
+
 def news(request):
-    ''' NEWS '''
+    """ NEWS """
     news = News.objects.filter(status=True).order_by('-id')
 
     context = {
@@ -42,8 +42,10 @@ def news(request):
     }
     return render(request, 'main/news.html', context)
 
+
 def search(request):
-    ''' 検索結果 '''
+    """ 検索結果 """
+
     def search_items(q=None):
         filter_params = {}
         if q:
@@ -73,10 +75,11 @@ def search(request):
     }
     return render(request, 'main/search.html', context)
 
+
 def level_select(request):
-    '''
+    """
     公式難易度表: レベル選択
-    '''
+    """
     # 最大レベル
     max_lv = 50
 
@@ -84,7 +87,7 @@ def level_select(request):
     min_lv = 38
 
     # レベル 50〜38
-    lv_range = range(max_lv, min_lv-1, -1)
+    lv_range = range(max_lv, min_lv - 1, -1)
 
     context = {
         'lv_range': lv_range
@@ -92,11 +95,12 @@ def level_select(request):
 
     return render(request, 'main/level/level_select.html', context)
 
+
 def level(request, level):
-    '''
+    """
     難易度表
     @param level: レベル
-    '''
+    """
     # 最大レベル
     max_lv = 50
 
@@ -137,10 +141,11 @@ def level(request, level):
 
     return render(request, 'main/level/level.html', context)
 
+
 def difflist_level_select(request):
-    '''
+    """
     難易度表: S乱レベル選択
-    '''
+    """
     # 最大S乱レベル
     max_s_lv = 18
 
@@ -152,11 +157,12 @@ def difflist_level_select(request):
 
     return render(request, 'main/difflist_level_select.html', context)
 
+
 def difflist(request, sran_level):
-    '''
+    """
     難易度表
     @param sran_level: S乱レベル
-    '''
+    """
     # 最大S乱レベル
     max_s_lv = 18
 
@@ -198,13 +204,14 @@ def difflist(request, sran_level):
 
     return render(request, 'main/difflist.html', context)
 
+
 # 記録編集
 @login_required
 def edit(request, music_id):
-    '''
+    """
     指定された曲の記録を編集
     @param music_id: 曲ID
-    '''
+    """
     # 曲を取得
     music = get_object_or_404(Music, pk=music_id)
 
@@ -233,11 +240,11 @@ def edit(request, music_id):
             if medal_form.is_valid():
                 if medal_form.has_changed():
                     # 保存処理
-                    medal = medal_form.save(commit = False)                 # 後でまとめて保存
-                    medal.music = music                                     # 曲
-                    medal.user = myself                                     # ユーザー
-                    medal.updated_at = now_datetime                         # 現在日時
-                    medal.save()                                            # 保存
+                    medal = medal_form.save(commit=False)  # 後でまとめて保存
+                    medal.music = music  # 曲
+                    medal.user = myself  # ユーザー
+                    medal.updated_at = now_datetime  # 現在日時
+                    medal.save()  # 保存
 
             # BAD数を登録
             try:
@@ -251,11 +258,11 @@ def edit(request, music_id):
             if medal_form.is_valid():
                 if bad_count_form.has_changed():
                     # 保存処理
-                    bad_count = bad_count_form.save(commit = False)         # 後でまとめて保存
-                    bad_count.music = music                                 # 曲
-                    bad_count.user = myself                                 # ユーザー
-                    bad_count.updated_at = now_datetime                     # 現在日時
-                    bad_count.save()                                        # 保存
+                    bad_count = bad_count_form.save(commit=False)  # 後でまとめて保存
+                    bad_count.music = music  # 曲
+                    bad_count.user = myself  # ユーザー
+                    bad_count.updated_at = now_datetime  # 現在日時
+                    bad_count.save()  # 保存
 
             # エクストラオプションを記録
             try:
@@ -267,27 +274,27 @@ def edit(request, music_id):
                     # BooleanFieldの場合、チェックを入れないとvalidにならないのでis_validでTrue/Falseを判定
                     if extra_option_form.is_valid():
                         # チェックされていればTrueを設定
-                        extra_option = extra_option_form.save(commit = False)   # 後でまとめて保存
+                        extra_option = extra_option_form.save(commit=False)  # 後でまとめて保存
                     else:
                         # チェックされていなければFalseを設定
-                        extra_option.hard = 0   # False
+                        extra_option.hard = 0  # False
 
                     # 保存処理
-                    extra_option.music = music                              # 曲
-                    extra_option.user = myself                              # ユーザー
-                    extra_option.updated_at = now_datetime                  # 現在日時
-                    extra_option.save()                                     # 保存
+                    extra_option.music = music  # 曲
+                    extra_option.user = myself  # ユーザー
+                    extra_option.updated_at = now_datetime  # 現在日時
+                    extra_option.save()  # 保存
             except:
                 # エクストラオプションが存在しなければ新規追加
                 extra_option_form = Extra_OptionForm(request.POST)
 
                 if extra_option_form.is_valid():
                     # 保存処理
-                    extra_option = extra_option_form.save(commit = False)   # 後でまとめて保存
-                    extra_option.music = music                              # 曲
-                    extra_option.user = myself                              # ユーザー
-                    extra_option.updated_at = now_datetime                  # 現在日時
-                    extra_option.save()                                     # 保存
+                    extra_option = extra_option_form.save(commit=False)  # 後でまとめて保存
+                    extra_option.music = music  # 曲
+                    extra_option.user = myself  # ユーザー
+                    extra_option.updated_at = now_datetime  # 現在日時
+                    extra_option.save()  # 保存
 
             # 更新をツイート
             if 'tweet' in request.POST:
@@ -302,9 +309,10 @@ def edit(request, music_id):
                 twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
                 # ツイート
                 if request.POST['bad_count']:
-                    tweet = '『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』のBAD数を' + request.POST['bad_count'] + 'に更新！ https://srandom.com/ranking/detail/' + str(music.id) + '/ #スパランドットコム'
+                    tweet = '『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』のBAD数を' + request.POST[
+                        'bad_count'] + 'に更新！ https://srandom.com/ranking/detail/' + str(music.id) + '/ #スパランドットコム'
                     try:
-                        twitter.statuses.update(status = tweet)
+                        twitter.statuses.update(status=tweet)
                         # リダイレクト先にメッセージを表示
                         msg = '更新内容をツイートしました！'
                         messages.success(request, msg)
@@ -362,8 +370,8 @@ def edit(request, music_id):
             medal_form = MedalForm(instance=medal)
         except:
             # メダルが存在しなければ初期値を未プレイに設定
-            medal_form = MedalForm(initial = {
-                'medal': 12     # 未プレイ
+            medal_form = MedalForm(initial={
+                'medal': 12  # 未プレイ
             })
 
         try:
@@ -391,11 +399,12 @@ def edit(request, music_id):
     }
     return render(request, 'main/edit.html', context)
 
+
 @login_required
 def ranking_level_select(request):
-    '''
+    """
     ランキング: S乱レベル選択
-    '''
+    """
     # 最大S乱レベル
     max_s_lv = 18
 
@@ -407,12 +416,13 @@ def ranking_level_select(request):
 
     return render(request, 'main/ranking_level_select.html', context)
 
+
 @login_required
 def ranking(request, sran_level):
-    '''
+    """
     ランキング
     @param sran_level: S乱レベル
-    '''
+    """
     # 最高S乱レベル
     max_s_lv = 18
 
@@ -452,25 +462,27 @@ def ranking(request, sran_level):
 
     return render(request, 'main/ranking.html', context)
 
+
 def ranking_detail(request, music_id):
-    '''
+    """
     ランキング: 詳細
     @param music_id: 曲ID
-    '''
+    """
+
     def bad_count_rank(bad_count_list_ordered, user):
-        '''
+        """
         指定されたユーザーの順位を返す
         @param list|bad_count_list_ordered: 曲で絞込済みのBAD数リスト(昇順)
         @param CustomUser|user: 指定されたユーザー
         @return int|rank: 順位
-        '''
+        """
         if not bad_count_list_ordered:
             return None
 
-        bad_count_num = 0   # BAD数の個数
+        bad_count_num = 0  # BAD数の個数
         bad_count_now = -1  # 現在のBAD数
-        rank = -1           # ランク
-        found = False       # BAD数を登録済であればTrueを返す
+        rank = -1  # ランク
+        found = False  # BAD数を登録済であればTrueを返す
 
         for bad_count in bad_count_list_ordered:
             bad_count_before = bad_count_now
@@ -516,9 +528,12 @@ def ranking_detail(request, music_id):
     # ランキングを生成
     results = []
     for bad_count in bad_count_list:
+        print(bad_count)
         selected_user = users.get(pk=bad_count.user.id)
+        print(selected_user)
         try:
             medal = medal_list.get(user=selected_user)
+            print(medal.id, medal)
             if medal.medal == 12:
                 medal = None
         except ObjectDoesNotExist:
@@ -544,12 +559,13 @@ def ranking_detail(request, music_id):
 
     return render(request, 'main/ranking_detail.html', context)
 
+
 @login_required
 def omikuji(request):
-    '''
+    """
     スパランおみくじ
     指定されたS乱レベルの範囲の曲からランダムで選曲
-    '''
+    """
     myself = request.user
     sran_level_form = Sran_LevelForm()
 
@@ -566,10 +582,12 @@ def omikuji(request):
                 sran_level_to = request.POST['sran_level_to']
                 if sran_level_from <= sran_level_to:
                     # from から to までの範囲でランダムで1曲取得
-                    music = Music.objects.filter(sran_level__level__range=(sran_level_from, sran_level_to)).order_by('?')[0]
+                    music = \
+                        Music.objects.filter(sran_level__level__range=(sran_level_from, sran_level_to)).order_by('?')[0]
                 else:
                     # to から from までの範囲でランダムで1曲取得
-                    music = Music.objects.filter(sran_level__level__range=(sran_level_to, sran_level_from)).order_by('?')[0]
+                    music = \
+                        Music.objects.filter(sran_level__level__range=(sran_level_to, sran_level_from)).order_by('?')[0]
             # from のみ指定された場合
             elif request.POST['sran_level_from']:
                 # 指定されたS乱レベルの曲からランダムで1曲取得
@@ -597,7 +615,7 @@ def omikuji(request):
             # ツイート
             tweet = '今日のスパランおすすめ曲は『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』です！ https://srandom.com/omikuji/' + ' #スパランドットコム'
             try:
-                twitter.statuses.update(status = tweet)
+                twitter.statuses.update(status=tweet)
                 # メッセージを表示
                 msg = 'おみくじの結果をツイートしました！'
                 messages.success(request, msg)
@@ -633,18 +651,20 @@ def omikuji(request):
         }
         return render(request, 'main/omikuji.html', context)
 
+
 def premium(request):
-    ''' プレミアムユーザー '''
+    """ プレミアムユーザー """
     return render(request, 'main/premium.html')
+
 
 # ---------- API ---------- #
 def get_clear_status(request, music_id):
-    '''
+    """
     指定された曲のクリア状況を返す
     @param {int} music_id 曲ID
     @param {int} ?user_id ユーザーID
     @return {json} クリア状況
-    '''
+    """
     if request.is_ajax():
         # ユーザーを取得
         try:
@@ -706,13 +726,14 @@ def get_clear_status(request, music_id):
     else:
         return HttpResponse('invalid access')
 
+
 def get_bad_count(request, music_id):
-    '''
+    """
     指定された曲のBAD数を返す
     @param {int} music_id 曲ID
     @param {int} ?user_id ユーザーID
     @return {json} BAD数
-    '''
+    """
     if request.is_ajax():
         # ユーザーを取得
         try:
@@ -742,13 +763,14 @@ def get_bad_count(request, music_id):
     else:
         return HttpResponse('invalid access')
 
+
 def get_medal(request, music_id):
-    '''
+    """
     指定された曲のメダルを返す
     @param {int} music_id 曲ID
     @param {int} ?user_id ユーザーID
     @return {json} メダル(int)
-    '''
+    """
     if request.is_ajax():
         # ユーザーを取得
         try:
@@ -778,13 +800,14 @@ def get_medal(request, music_id):
     else:
         return HttpResponse('invalid access')
 
+
 def get_latest_updated_at(request, music_id):
-    '''
+    """
     指定された曲の最新の更新日時を返す
     @param {int} music_id 曲ID
     @param {int} ?user_id ユーザーID
     @return {json} 更新日時
-    '''
+    """
     if request.is_ajax():
         # ユーザーを取得
         try:
@@ -827,12 +850,13 @@ def get_latest_updated_at(request, music_id):
     else:
         return HttpResponse('invalid access')
 
+
 def get_bad_count_avg(request, music_id):
-    '''
+    """
     指定された曲の平均BAD数を返す
     @param {int} music_id 曲ID
     @return {json} 平均BAD数
-    '''
+    """
     if request.is_ajax():
         bad_count_list = Bad_Count.objects.filter(music=music_id)
         if not bad_count_list:
@@ -850,14 +874,15 @@ def get_bad_count_avg(request, music_id):
     else:
         return HttpResponse('invalid access')
 
+
 @login_required
 def get_myrank(request, music_id):
-    '''
+    """
     指定された曲の順位を返す
     @param {int} music_id 曲ID
     @param {int} ?user_id ユーザーID
     @return {json} 順位
-    '''
+    """
     if request.is_ajax():
         # ユーザーを取得
         try:
@@ -875,10 +900,10 @@ def get_myrank(request, music_id):
         # 該当曲のBAD数リストを取得（昇順）
         bad_count_list = Bad_Count.objects.filter(music=music_id).order_by('bad_count')
 
-        bad_count_num = 0   # BAD数の個数
+        bad_count_num = 0  # BAD数の個数
         bad_count_now = -1  # 現在のBAD数
-        myrank = 0          # 自ランク
-        found = False       # BAD数を登録済であればTrueを返す
+        myrank = 0  # 自ランク
+        found = False  # BAD数を登録済であればTrueを返す
 
         for bad_count in bad_count_list:
             bad_count_before = bad_count_now
@@ -915,12 +940,13 @@ def get_myrank(request, music_id):
     else:
         return HttpResponse('invalid access')
 
+
 def get_medal_count(request, music_id):
-    '''
+    """
     指定された曲の各メダルの枚数を返す
     @param {int} music_id 曲ID
     @return {json} 各メダルの枚数, メダルの総数
-    '''
+    """
     if request.is_ajax():
         medal_count_list = []
         medal_count_total = 0
@@ -939,14 +965,15 @@ def get_medal_count(request, music_id):
     else:
         return HttpResponse('invalid access')
 
+
 def get_folder_lamp(request, level):
-    '''
+    """
     指定されたレベルのフォルダランプを返す
     @param {int} level レベル
     @param {bool} ?is_srandom S乱レベルかどうか
     @param {int} ?user_id ユーザーID
     @return {json} フォルダランプ
-    '''
+    """
     if request.is_ajax():
         if request.user.is_authenticated():
             # ユーザーを取得
@@ -995,7 +1022,7 @@ def get_folder_lamp(request, level):
                     easy_flg = True
 
                 # クリアメダルの場合はハード判定
-                elif medal.medal >= 5 and medal.medal <=7 and hard_flg:
+                elif medal.medal >= 5 and medal.medal <= 7 and hard_flg:
                     # 1曲でも未ハードなら未ハードで確定
                     try:
                         extra_option = Extra_Option.objects.get(music=medal.music, user=user)

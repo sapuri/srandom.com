@@ -1,19 +1,20 @@
-import os, zenhan, json
+import json
+import os
+import zenhan
 
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, Http404
+from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import CustomUser
 from main.models import *
 from .forms import *
 
 
 def list(request):
-    ''' ユーザーリスト '''
+    """ ユーザーリスト """
     # 有効なアカウントを取得
     users = CustomUser.objects.filter(is_active=True).exclude(pk=1).order_by('id')
 
@@ -30,14 +31,15 @@ def list(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         users = paginator.page(paginator.num_pages)
 
-    context = { 'users': users }
+    context = {'users': users}
     return render(request, 'users/list.html', context)
 
+
 def mypage(request, username):
-    '''
+    """
     マイページ (プロフィールページ)
     @param username: ユーザー名
-    '''
+    """
     # ユーザーを取得
     selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
 
@@ -53,11 +55,12 @@ def mypage(request, username):
     }
     return render(request, 'users/mypage.html', context)
 
+
 def statistics(request, username):
-    '''
+    """
     統計情報
     :param str: username
-    '''
+    """
     # ユーザーを取得
     selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
     activity_count = Activity.objects.filter(user=selected_user).count()
@@ -68,9 +71,10 @@ def statistics(request, username):
     }
     return render(request, 'users/statistics.html', context)
 
+
 @login_required
 def settings(request):
-    ''' 設定 '''
+    """ 設定 """
     user = request.user
 
     # フォームの読み込み
@@ -87,12 +91,12 @@ def settings(request):
                 if custom_user_form.has_changed():
                     # 保存処理
                     if request.POST['player_name']:
-                        custom_user = custom_user_form.save(commit = False) # 後でまとめて保存
+                        custom_user = custom_user_form.save(commit=False)  # 後でまとめて保存
                         # 全角大文字に変換
                         custom_user.player_name = zenhan.h2z(request.POST['player_name']).upper()
                         custom_user.save()  # 保存
                     if request.POST['poputomo_id']:
-                        custom_user = custom_user_form.save(commit = False) # 後でまとめて保存
+                        custom_user = custom_user_form.save(commit=False)  # 後でまとめて保存
                         # 文字列に変換
                         custom_user.poputomo_id = str(request.POST['poputomo_id'])
                         custom_user.save()  # 保存
@@ -122,12 +126,13 @@ def settings(request):
     }
     return render(request, 'users/settings.html', context)
 
+
 def cleardata(request, username, sran_level):
-    '''
+    """
     クリア状況
     @param username: ユーザー名
     @param sran_level: S乱レベル
-    '''
+    """
     # ユーザーを取得
     selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
 
@@ -179,11 +184,12 @@ def cleardata(request, username, sran_level):
     }
     return render(request, 'users/cleardata.html', context)
 
+
 @login_required
 def deactivate(request):
-    '''
+    """
     アカウント削除
-    '''
+    """
     # 自ユーザーを取得
     myself = request.user
 
@@ -217,34 +223,36 @@ def deactivate(request):
 
     return render(request, 'users/deactivate.html')
 
+
 @login_required
 def download(request, file_type):
-    '''
+    """
     ファイルダウンロード
     @param {string} file_type ダウンロードするファイルの種類
-    '''
+    """
     if file_type == 'csv':
         if request.user.premium:
-            ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))   # /srandom.com
-            file_path = ROOT_DIR+'/csv/export/'+request.user.username+'.csv'
+            ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # /srandom.com
+            file_path = ROOT_DIR + '/csv/export/' + request.user.username + '.csv'
             try:
                 response = HttpResponse(open(file_path).read(), content_type='text/csv; charset=cp932')
             except FileNotFoundError:
                 raise Http404
-            response['Content-Disposition'] = 'attachment; filename='+request.user.username+'.csv'
+            response['Content-Disposition'] = 'attachment; filename=' + request.user.username + '.csv'
         else:
             raise PermissionDenied
         return response
     else:
         raise Http404
 
+
 # ---------- API ---------- #
 def get_percentage_of_clear(request, user_id):
-    '''
+    """
     指定されたユーザーの各レベルのクリア率を返す
     @param {int} user_id ユーザーID
     @return {json} 各レベルのクリア率
-    '''
+    """
     if request.is_ajax():
         # ユーザーを取得
         user = get_object_or_404(CustomUser, pk=user_id)
@@ -289,6 +297,7 @@ def get_percentage_of_clear(request, user_id):
     else:
         return HttpResponse('invalid access')
 
+
 def get_activity_map(request):
     # パラメータチェック
     if (not 'user_id' in request.GET) or (not 'start' in request.GET) or (not 'stop' in request.GET):
@@ -307,8 +316,8 @@ def get_activity_map(request):
 
     start_datetime = datetime.fromtimestamp(start / 1000.0)
     end_datetime = datetime.fromtimestamp(end / 1000.0)
-    print ('start_datetime:', start_datetime)
-    print ('end_datetime:', end_datetime)
+    print('start_datetime:', start_datetime)
+    print('end_datetime:', end_datetime)
 
     activities = Activity.objects.filter(user=user_id, updated_at__range=(start_datetime, end_datetime))
     result = {}
@@ -321,6 +330,7 @@ def get_activity_map(request):
 
     json_str = json.dumps(result, ensure_ascii=False)
     return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
+
 
 def get_clear_rate(request):
     # パラメータチェック
@@ -424,7 +434,8 @@ def get_clear_rate(request):
 
         # 各レベルのメダルの割合を計算
         percentage_of_medals['perfect'][s_lv - 1] = round(medal_num['perfect'][s_lv - 1] * 100 / music_num[s_lv - 1])
-        percentage_of_medals['fullcombo'][s_lv - 1] = round(medal_num['fullcombo'][s_lv - 1] * 100 / music_num[s_lv - 1])
+        percentage_of_medals['fullcombo'][s_lv - 1] = round(
+            medal_num['fullcombo'][s_lv - 1] * 100 / music_num[s_lv - 1])
         percentage_of_medals['hard'][s_lv - 1] = round(medal_num['hard'][s_lv - 1] * 100 / music_num[s_lv - 1])
         percentage_of_medals['clear'][s_lv - 1] = round(medal_num['clear'][s_lv - 1] * 100 / music_num[s_lv - 1])
         percentage_of_medals['easy'][s_lv - 1] = round(medal_num['easy'][s_lv - 1] * 100 / music_num[s_lv - 1])
