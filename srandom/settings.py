@@ -58,7 +58,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
     # django-debug-toolbar
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     # django-htmlmin
@@ -205,6 +204,8 @@ REST_FRAMEWORK = {
 # DEBUG と反対の値になるため通常は指定する必要無し
 # HTML_MINIFY = True
 
+# django-maintenance-mode
+MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 
 # SSL settings
 # SESSION_COOKIE_SECURE = True
@@ -212,6 +213,3 @@ REST_FRAMEWORK = {
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # SECURE_HSTS_SECONDS = 31536000
 # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-
-# django-secure
-# SECURE_SSL_REDIRECT = True
