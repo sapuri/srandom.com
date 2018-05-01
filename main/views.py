@@ -528,12 +528,9 @@ def ranking_detail(request, music_id):
     # ランキングを生成
     results = []
     for bad_count in bad_count_list:
-        print(bad_count)
         selected_user = users.get(pk=bad_count.user.id)
-        print(selected_user)
         try:
             medal = medal_list.get(user=selected_user)
-            print(medal.id, medal)
             if medal.medal == 12:
                 medal = None
         except ObjectDoesNotExist:
