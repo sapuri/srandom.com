@@ -972,7 +972,7 @@ def get_folder_lamp(request, level):
     @return {json} フォルダランプ
     """
     if request.is_ajax():
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             # ユーザーを取得
             try:
                 # クエリでユーザーIDが指定されればそのユーザーを取得
