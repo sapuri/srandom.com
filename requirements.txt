@@ -23,7 +23,7 @@ packaging==17.1
 PyJWT==1.6.1
 PyMySQL==0.8.1
 pyparsing==2.2.0
-python-dateutil==2.7.2
+python-dateutil==2.7.3
 python-openid==2.2.5
 python-social-auth==0.3.6
 python3-openid==3.1.0
