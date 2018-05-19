@@ -10,7 +10,7 @@ django-compressor==2.2
 django-debug-toolbar==1.9.1
 django-filter==1.1.0
 django-htmlmin==0.10.0
-django-maintenance-mode==0.9.0
+django-maintenance-mode==0.9.1
 django-sslserver==0.20
 djangorestframework==3.8.2
 html5lib==1.0.1
@@ -20,7 +20,7 @@ IPy==0.83
 oauth2==1.9.0.post1
 oauthlib==2.0.7
 packaging==17.1
-PyJWT==1.6.1
+PyJWT==1.6.3
 PyMySQL==0.8.1
 pyparsing==2.2.0
 python-dateutil==2.7.3
