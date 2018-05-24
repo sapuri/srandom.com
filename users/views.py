@@ -235,7 +235,7 @@ def download(request, file_type):
             ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # /srandom.com
             file_path = ROOT_DIR + '/csv/export/' + request.user.username + '.csv'
             try:
-                response = HttpResponse(open(file_path).read(), content_type='text/csv; charset=cp932')
+                response = HttpResponse(open(file_path).read(), content_type='text/csv; charset=utf-8')
             except FileNotFoundError:
                 raise Http404
             response['Content-Disposition'] = 'attachment; filename=' + request.user.username + '.csv'

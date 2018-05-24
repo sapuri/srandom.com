@@ -49,7 +49,7 @@
         <h2 class="settings-header page-header">{% bootstrap_icon "export" %} CSV エクスポート <span class="premium">★</span></h2>
         <p>クリアデータを CSV ファイルで保存できます。</p>
         <p>CSV ファイルは毎日 AM 0:30 頃に最新のデータに更新されます。</p>
-        <p>※ 文字コードは "Shift_JIS (CP932)" で出力されます。</p>
+        <p>※ 文字コードは "UTF-8" で出力されます。</p>
         <br>
         {% if user.premium %}
         <a href="{% url 'users:download' 'csv' %}"><button class="btn btn-success" type="button">{% bootstrap_icon "download" %} ダウンロードする</button></a>
