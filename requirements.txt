@@ -30,14 +30,14 @@ python3-openid==3.1.0
 pytz==2018.4
 rcssmin==1.0.6
 requests==2.18.4
-requests-oauthlib==0.8.0
+requests-oauthlib==1.0.0
 rjsmin==1.0.12
 six==1.11.0
 social-auth-app-django==2.1.0
 social-auth-core==1.7.0
 sqlparse==0.2.4
 twitter==1.18.0
-urllib3==1.22
+urllib3==1.23
 webencodings==0.5.1
 xerox==0.4.1
 zenhan==0.5.2
