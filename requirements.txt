@@ -1,14 +1,14 @@
 appdirs==1.4.3
 asn1crypto==0.24.0
 beautifulsoup4==4.6.3
-certifi==2018.8.13
+certifi==2018.8.24
 cffi==1.11.5
 chardet==3.0.4
 cryptography==2.3.1
 defusedxml==0.5.0
-Django==2.1
+Django==2.1.1
 django-appconf==1.0.2
-django-bootstrap3==10.0.1
+django-bootstrap3==11.0.0
 django-compressor==2.2
 django-debug-toolbar==1.9.1
 django-filter==2.0.0
