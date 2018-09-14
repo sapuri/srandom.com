@@ -1,6 +1,6 @@
 /* 各レベルのクリア率を取得 */
 function getPercentageOfClear(user_id) {
-    for (var i = 18; i >= 1; i--) {
+    for (var i = 19; i >= 1; i--) {
         var selector = 'div#slv-'+i+' a span.bar';
         showLoadingImage(selector);
     }
@@ -10,7 +10,7 @@ function getPercentageOfClear(user_id) {
     })
     .then(
         function(response) {
-            for (var i = 18; i >= 1; i--) {
+            for (var i = 19; i >= 1; i--) {
                 var selector = 'div#slv-'+i+' a span.bar';
                 $(selector).attr('style', 'width: '+response.percentage_of_clear[i-1]+'%');
                 $(selector).text(response.percentage_of_clear[i-1]+'%');
