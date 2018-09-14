@@ -1,7 +1,7 @@
 import json
-import os
-import zenhan
 
+import zenhan
+from django.conf import settings as setting
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
@@ -43,7 +43,7 @@ def mypage(request, username):
     # ユーザーを取得
     selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
 
-    max_s_lv = 18
+    max_s_lv = 19
     s_lv_range = range(max_s_lv, 0, -1)
 
     recent_medal = Medal.objects.filter(user=selected_user).order_by('-updated_at')[:20]
@@ -137,7 +137,7 @@ def cleardata(request, username, sran_level):
     selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
 
     # 最大S乱レベル
-    max_s_lv = 18
+    max_s_lv = 19
 
     # S乱レベルを数値に変換
     sran_level = int(sran_level)
@@ -232,8 +232,7 @@ def download(request, file_type):
     """
     if file_type == 'csv':
         if request.user.premium:
-            ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # /srandom.com
-            file_path = ROOT_DIR + '/csv/export/' + request.user.username + '.csv'
+            file_path = f'{setting.BASE_DIR}/csv/export/{request.user.username}.csv'
             try:
                 response = HttpResponse(open(file_path).read(), content_type='text/csv; charset=utf-8')
             except FileNotFoundError:
@@ -259,10 +258,10 @@ def get_percentage_of_clear(request, user_id):
 
         # 権限を確認
         if user != request.user:
-            if user.is_active == False or user.cleardata_privacy == 2:
+            if not user.is_active or user.cleardata_privacy == 2:
                 raise PermissionDenied
 
-        max_s_lv = 18
+        max_s_lv = 19
         s_lv_range = range(max_s_lv, 0, -1)
 
         music_num = [0] * max_s_lv
@@ -340,7 +339,7 @@ def get_clear_rate(request):
     user_id = request.GET['user_id']
     user = get_object_or_404(CustomUser, pk=user_id)
 
-    max_s_lv = 18
+    max_s_lv = 19
     s_lv_range = range(max_s_lv, 0, -1)
 
     chart_data = {

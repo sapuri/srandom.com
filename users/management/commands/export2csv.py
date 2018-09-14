@@ -1,9 +1,12 @@
-from django.core.management.base import BaseCommand
-from django.core.exceptions import ObjectDoesNotExist
 import csv
 
-from users.models import CustomUser
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.management.base import BaseCommand
+
 from main.models import Bad_Count, Medal, Extra_Option, Music
+from users.models import CustomUser
+
 
 class Command(BaseCommand):
     help = 'プレミアムユーザーのクリアデータを CSV にエクスポートします。'
@@ -14,21 +17,21 @@ class Command(BaseCommand):
         username = ''
 
         if username:
-            print ('ユーザー名が指定されました\n')
+            print('ユーザー名が指定されました\n')
             selected_users = CustomUser.objects.filter(username=username)
         else:
             # プレミアムユーザーを取得
             selected_users = CustomUser.objects.filter(is_active=True, premium=True)
             selected_users_count = CustomUser.objects.filter(is_active=True, premium=True).count()
-            print ('active premium user: '+str(selected_users.count())+' users\n')
+            print('active premium user: ' + str(selected_users.count()) + ' users\n')
 
         for selected_user in selected_users:
-            print ('"{username}" のクリアデータを読み込んでいます...'.format(username=selected_user.username))
+            print('"{username}" のクリアデータを読み込んでいます...'.format(username=selected_user.username))
 
             # CSV書き込み用データ (2次元配列)
             csv_data = [['S乱Lv', 'Lv', '曲名', '難易度', 'BPM', 'メダル', 'ハード', 'BAD数', '更新日時']]
 
-            max_s_lv = 18
+            max_s_lv = 19
             s_lv_range = range(max_s_lv, 0, -1)
             for s_lv in s_lv_range:
                 sran_level_id = s_lv
@@ -52,24 +55,24 @@ class Command(BaseCommand):
                         hard = ''
                     updated_at = get_latest_updated_at(music.id, selected_user.id)
 
-                    row = [music.sran_level, music.level, music.title, music.difficulty, music.bpm, medal, hard, bad_count, updated_at]
+                    row = [music.sran_level, music.level, music.title, music.difficulty, music.bpm, medal, hard,
+                           bad_count, updated_at]
                     # print (row) # debug
                     csv_data.append(row)
                 if s_lv != 1:
                     csv_data.append(['', '', '', '', '', '', '', '', ''])
 
             # CSVファイルに書き込み
-            BASE_DIR = '/Users/minami/workspace/srandom.com'   # ローカル
-            # BASE_DIR = '/var/www/srandom.com'                  # VPS
-            file_path = BASE_DIR+'/csv/export/'+selected_user.username+'.csv'
+            file_path = f'{settings.BASE_DIR}/csv/export/{selected_user.username}.csv'
             f = open(file_path, 'w')
             writer = csv.writer(f)
             writer.writerows(csv_data)
             f.close()
 
-            print ('"{username}" のクリアデータを出力しました: {username}.csv\n'.format(username=selected_user.username))
+            print('"{username}" のクリアデータを出力しました: {username}.csv\n'.format(username=selected_user.username))
 
-        print ('Complete!')
+        print('Complete!')
+
 
 def get_latest_updated_at(music_id, user_id):
     '''
@@ -129,7 +132,7 @@ def get_latest_updated_at(music_id, user_id):
 
     if latest:
         # 時間調整
-        latest_hour = latest.hour + 9   # UTC+9
+        latest_hour = latest.hour + 9  # UTC+9
         latest_day = latest.day
         if latest_hour > 24:
             latest_day += 1
