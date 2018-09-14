@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = 'S乱難易度表を取得して CSV を生成します。'
+    help = 'S乱難易度表から曲情報を取得し、CSVファイルに出力します。'
 
     def add_arguments(self, parser):
         parser.add_argument(

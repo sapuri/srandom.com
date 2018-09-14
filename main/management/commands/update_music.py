@@ -7,7 +7,7 @@ from main.models import Music, Difficulty, Level, Sran_Level
 
 
 class Command(BaseCommand):
-    help = 'CSV から曲情報を読み取り、データベースを更新します。'
+    help = 'CSVファイルから曲情報を読み取り、データベースを更新します。'
 
     def handle(self, *args, **options):
         file_path = f'{settings.BASE_DIR}/csv/srandom.csv'
