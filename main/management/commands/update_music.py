@@ -20,6 +20,10 @@ class Command(BaseCommand):
 
     @staticmethod
     def parse_csv(file_path: str) -> list:
+        """
+        :param file_path:
+        :return: music_list
+        """
         music_list = []
 
         with open(file_path, 'r') as f:
@@ -33,6 +37,11 @@ class Command(BaseCommand):
         return music_list
 
     def update_db(self, music_list: list, max_lv: int) -> int:
+        """
+        :param music_list:
+        :param max_lv:
+        :return: update_count
+        """
         sran_level = max_lv
         update_count = 0
 
@@ -88,6 +97,11 @@ class Command(BaseCommand):
 
     @staticmethod
     def split_difficulty(title: str) -> tuple:
+        """
+        タイトルと難易度を分割
+        :param title:
+        :return: (title, difficulty)
+        """
         spl = title[-4:]
         if '(EX)' in spl:
             return title[:-4], 'EXTRA'
