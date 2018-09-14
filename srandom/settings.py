@@ -43,8 +43,6 @@ INSTALLED_APPS = [
     'compressor',                       # django-compressor
     'maintenance_mode',                 # django-maintenance-mode
     'sslserver',                        # django-sslserver
-    'rest_framework',                   # djangorestframework
-    'django_filters',                   # django-filters
     'main.apps.MainConfig',             # Main
     'users.apps.UsersConfig',           # Users
 ]
@@ -182,17 +180,6 @@ AUTHENTICATION_BACKENDS = [
 
 SOCIAL_AUTH_TWITTER_KEY = 'Pwyx6QZgunJsbrArLub7pNKwu'
 SOCIAL_AUTH_TWITTER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO'
-
-
-# djangorestframework
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAdminUser',
-    ),
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 100
-}
 
 
 # django-compressor
