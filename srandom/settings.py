@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'django_filters',                   # django-filters
     'main.apps.MainConfig',             # Main
     'users.apps.UsersConfig',           # Users
-    'api.apps.ApiConfig',               # Api
 ]
 
 MIDDLEWARE = [
@@ -169,7 +168,7 @@ INTERNAL_IPS = ['127.0.0.1']
 
 # django-bootstrap3
 BOOTSTRAP3 = {
-    'css_url':'/static/css/bootstrap.min.css'
+    'css_url': '/static/css/bootstrap.min.css'
 }
 
 
@@ -181,7 +180,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-SOCIAL_AUTH_TWITTER_KEY    = 'Pwyx6QZgunJsbrArLub7pNKwu'
+SOCIAL_AUTH_TWITTER_KEY = 'Pwyx6QZgunJsbrArLub7pNKwu'
 SOCIAL_AUTH_TWITTER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO'
 
 
