@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 from users.models import CustomUser
 
+
 class Difficulty(models.Model):
     difficulty = models.CharField('難易度', max_length=10)
 
@@ -26,6 +27,7 @@ class Difficulty(models.Model):
         verbose_name = '難易度'
         verbose_name_plural = '難易度'
 
+
 class Level(models.Model):
     level = models.IntegerField('レベル')
 
@@ -40,6 +42,7 @@ class Level(models.Model):
         verbose_name = 'レベル'
         verbose_name_plural = 'レベル'
 
+
 class Sran_Level(models.Model):
     level = models.IntegerField('S乱レベル')
 
@@ -53,6 +56,7 @@ class Sran_Level(models.Model):
     class Meta:
         verbose_name = 'S乱レベル'
         verbose_name_plural = 'S乱レベル'
+
 
 class Music(models.Model):
     title = models.CharField('曲名', max_length=255)
@@ -72,6 +76,7 @@ class Music(models.Model):
             models.Index(fields=['level'], name='level'),
             models.Index(fields=['sran_level'], name='sran_level'),
         ]
+
 
 class Medal(models.Model):
     medal = models.IntegerField('クリアメダル')
@@ -128,6 +133,7 @@ class Medal(models.Model):
             models.Index(fields=['user', 'updated_at'], name='user_updated_at'),
         ]
 
+
 class Bad_Count(models.Model):
     bad_count = models.PositiveIntegerField('BAD数')
     music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.PROTECT)
@@ -153,6 +159,7 @@ class Bad_Count(models.Model):
             models.Index(fields=['updated_at'], name='updated_at'),
             models.Index(fields=['user', 'updated_at'], name='user_updated_at'),
         ]
+
 
 class Extra_Option(models.Model):
     hard = models.BooleanField('ハード')
@@ -180,6 +187,7 @@ class Extra_Option(models.Model):
             models.Index(fields=['user', 'updated_at'], name='user_updated_at'),
         ]
 
+
 class News(models.Model):
     KIND_CHOICES = (
         ('新規', '新規'),
@@ -200,8 +208,9 @@ class News(models.Model):
         verbose_name = 'News'
         verbose_name_plural = 'News'
 
+
 class Activity(models.Model):
-    ''' 更新履歴 '''
+    """ 更新履歴 """
     music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.PROTECT)
     user = models.ForeignKey(CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
