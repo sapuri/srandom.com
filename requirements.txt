@@ -1,6 +1,6 @@
 appdirs==1.4.3
 beautifulsoup4==4.6.3
-certifi==2018.8.24
+certifi==2018.10.15
 cffi==1.11.5
 chardet==3.0.4
 cryptography==2.3.1
@@ -11,7 +11,7 @@ django-bootstrap3==11.0.0
 django-compressor==2.2
 django-debug-toolbar==1.10.1
 django-htmlmin==0.10.0
-django-maintenance-mode==0.10.0
+django-maintenance-mode==0.11.0
 django-sslserver==0.20
 html5lib==1.0.1
 httplib2==0.11.3
@@ -31,7 +31,7 @@ python-social-auth==0.3.6
 python3-openid==3.1.0
 pytz==2018.5
 rcssmin==1.0.6
-requests==2.19.1
+requests==2.20.0
 requests-oauthlib==1.0.0
 rjsmin==1.0.12
 six==1.11.0
@@ -39,7 +39,7 @@ social-auth-app-django==2.1.0
 social-auth-core==1.7.0
 sqlparse==0.2.4
 twitter==1.18.0
-urllib3==1.23
+urllib3==1.24
 webencodings==0.5.1
 xerox==0.4.1
 zenhan==0.5.2
