@@ -56,8 +56,8 @@ class Command(BaseCommand):
 
             title, difficulty = self.split_difficulty(title)
             if not difficulty:
-                print('undefined difficulty')
-                quit(1)
+                print('[skip] undefined difficulty:', title)
+                continue
 
             music, created = Music.objects.get_or_create(
                 title=title,
