@@ -6,6 +6,7 @@ node_modules/
 npm-debug.log
 
 # django
+local_settings.py
 migrations/
 
 csv/
