@@ -190,7 +190,24 @@ AUTHENTICATION_BACKENDS = [
 # django-maintenance-mode
 MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 
-# SSL settings
+
 if not DEBUG:
+    # SSL settings
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+
+    # Travis CI
+    if 'TRAVIS' in os.environ:
+        SECRET_KEY = 'mj8f0l0)noi_7#l(+t9f8az72$)v+icvf6^87v6847!osel6+d'
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': 'travis_ci',
+                'USER': 'root',
+                'PASSWORD': '',
+                'HOST': '',
+                'OPTIONS': {
+                    'charset': 'utf8mb4',
+                },
+            }
+        }
