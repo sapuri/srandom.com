@@ -3,16 +3,12 @@ cache: pip
 python:
   - 3.6
 service: mysql
-addons:
-  apt:
-    sources:
-      - mysql-5.7-trusty
-    packages:
-      - mysql-server
-      - mysql-client
 install:
   - pip install -r requirements.txt
 before_script:
+  - mysql -u root -e "SET GLOBAL innodb_file_format=barracuda"
+  - mysql -u root -e "SET GLOBAL innodb_file_per_table=ON"
+  - mysql -u root -e "SET GLOBAL innodb_large_prefix=ON"
   - mysql -u root -e "CREATE DATABASE travis_ci CHARACTER SET utf8mb4"
 script:
   - python manage.py makemigrations main
