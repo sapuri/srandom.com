@@ -207,20 +207,3 @@ if not DEBUG:
                 },
             }
         }
-
-    # Heroku
-    else:
-        import django_heroku
-
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.mysql',
-                'NAME': 'srandom',
-                'OPTIONS': {
-                    'charset': 'utf8mb4',
-                },
-            }
-        }
-
-        django_heroku.settings(locals())
-        del DATABASES['default']['OPTIONS']['sslmode']
