@@ -8,5 +8,6 @@ npm-debug.log
 # django
 local_settings.py
 migrations/
+staticfiles/
 
 csv/
