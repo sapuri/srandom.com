@@ -141,13 +141,10 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-if DEBUG:
-    STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, "static"),
-    )
 
 # メッセージ設定
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
@@ -193,10 +190,6 @@ MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 
 
 if not DEBUG:
-    # SSL settings
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-
     # Travis CI
     if 'TRAVIS' in os.environ:
         SECRET_KEY = 'mj8f0l0)noi_7#l(+t9f8az72$)v+icvf6^87v6847!osel6+d'
@@ -212,3 +205,19 @@ if not DEBUG:
                 },
             }
         }
+
+    # Heroku
+    else:
+        import django_heroku
+
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': 'srandom',
+                'OPTIONS': {
+                    'charset': 'utf8mb4',
+                },
+            }
+        }
+
+        django_heroku.settings(locals())
