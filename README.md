@@ -1,6 +1,8 @@
 # srandom.com
 スパランドットコム - ポップンミュージックのスパラン愛好家のためのクリア状況管理サイト
 
+[![Build Status](https://travis-ci.com/sapuri/srandom.com.svg?token=xwpmsyc4SnBSSQnifEya&branch=master)](https://travis-ci.com/sapuri/srandom.com)
+
 ## 環境
 * Python 3.6 >=
 * Django 2.0 >=
