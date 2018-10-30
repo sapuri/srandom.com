@@ -223,3 +223,4 @@ if not DEBUG:
         }
 
         django_heroku.settings(locals())
+        del DATABASES['default']['OPTIONS']['sslmode']
