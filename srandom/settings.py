@@ -188,6 +188,7 @@ AUTHENTICATION_BACKENDS = [
 # HTML_MINIFY = True
 
 # django-maintenance-mode
+MAINTENANCE_MODE_STATE_FILE_PATH = 'srandom/maintenance_mode_state.txt'
 MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 
 
