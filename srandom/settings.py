@@ -20,12 +20,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!xw174_49f)d8llpm8)k3k-azlak^y)fi@y^ami_x2f(3es6%q'
+# Load SECRET_KEY from local_settings.py
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Load DEBUG from local_settings.py
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+# Load ALLOWED_HOSTS from local_settings.py
 
 
 # Application definition
@@ -69,7 +70,7 @@ ROOT_URLCONF = 'srandom.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -90,18 +91,7 @@ WSGI_APPLICATION = 'srandom.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'srandom',
-        'USER': 'sysco',
-        'PASSWORD': 'm3imsWM8JcBM',
-        'HOST': '',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        },
-    }
-}
+# Load DATABASES from local_settings.py
 
 
 # Password validation
@@ -137,20 +127,26 @@ USE_L10N = True
 USE_TZ = True
 
 
+# Load all local settings
+try:
+    from .local_settings import *
+except ImportError:
+    pass
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# ローカル時はON
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
 
 # メッセージ設定
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
@@ -161,7 +157,8 @@ LOGIN_REDIRECT_URL = '/'
 
 
 # django-debug-toolbar
-INTERNAL_IPS = ['127.0.0.1']
+if DEBUG:
+    INTERNAL_IPS = ['127.0.0.1']
 
 
 # django-bootstrap3
@@ -178,8 +175,8 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-SOCIAL_AUTH_TWITTER_KEY = 'Pwyx6QZgunJsbrArLub7pNKwu'
-SOCIAL_AUTH_TWITTER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO'
+# Load SOCIAL_AUTH_TWITTER_KEY from local_settings.py
+# Load SOCIAL_AUTH_TWITTER_SECRET from local_settings.py
 
 
 # django-compressor
@@ -193,9 +190,20 @@ SOCIAL_AUTH_TWITTER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO
 # django-maintenance-mode
 MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 
-# SSL settings
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SECURE_HSTS_SECONDS = 31536000
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+if not DEBUG:
+    # Travis CI
+    if 'TRAVIS' in os.environ:
+        SECRET_KEY = 'mj8f0l0)noi_7#l(+t9f8az72$)v+icvf6^87v6847!osel6+d'
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': 'travis_ci',
+                'USER': 'root',
+                'PASSWORD': '',
+                'HOST': '',
+                'OPTIONS': {
+                    'charset': 'utf8mb4',
+                },
+            }
+        }
