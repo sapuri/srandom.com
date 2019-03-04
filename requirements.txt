@@ -4,10 +4,10 @@ beautifulsoup4==4.7.1
 certifi==2018.11.29
 cffi==1.12.2
 chardet==3.0.4
-cryptography==2.5
+cryptography==2.6.1
 defusedxml==0.5.0
 Django==2.1.7
-django-appconf==1.0.2
+django-appconf==1.0.3
 django-bootstrap3==11.0.0
 django-compressor==2.2
 django-debug-toolbar==1.11
@@ -17,8 +17,8 @@ django-sslserver==0.20
 html5lib==1.0.1
 httplib2==0.12.1
 idna==2.8
-IPy==0.83
-lxml==4.3.1
+IPy==1.0
+lxml==4.3.2
 mysqlclient==1.4.2.post1
 oauth2==1.9.0.post1
 oauthlib==3.0.1
