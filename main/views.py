@@ -1,6 +1,7 @@
 import json
 
 import pytz
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
@@ -302,8 +303,8 @@ def edit(request, music_id):
                 # パラメータを取得
                 oauth_token = social.extra_data['access_token']['oauth_token']
                 oauth_secret = social.extra_data['access_token']['oauth_token_secret']
-                CONSUMER_KEY = 'Pwyx6QZgunJsbrArLub7pNKwu'
-                CONSUMER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO'
+                CONSUMER_KEY = settings.SOCIAL_AUTH_TWITTER_KEY
+                CONSUMER_SECRET = settings.SOCIAL_AUTH_TWITTER_SECRET
                 # Twitterクラスを作成
                 twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
                 # ツイート
@@ -604,8 +605,8 @@ def omikuji(request):
             # パラメータを取得
             oauth_token = social.extra_data['access_token']['oauth_token']
             oauth_secret = social.extra_data['access_token']['oauth_token_secret']
-            CONSUMER_KEY = 'Pwyx6QZgunJsbrArLub7pNKwu'
-            CONSUMER_SECRET = 'D7J4xAE7aXLrqGyaKy8adpxtU1rrAEuZy8MaRUw3GUUzG6BLeO'
+            CONSUMER_KEY = settings.SOCIAL_AUTH_TWITTER_KEY
+            CONSUMER_SECRET = settings.SOCIAL_AUTH_TWITTER_SECRET
             # Twitterクラスを作成
             twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
             # ツイート
