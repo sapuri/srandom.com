@@ -9,7 +9,7 @@ defusedxml==0.6.0
 Django==2.2.1
 django-appconf==1.0.3
 django-bootstrap3==11.0.0
-django-compressor==2.2
+django-compressor==2.3
 django-debug-toolbar==1.11
 django-htmlmin==0.11.0
 django-maintenance-mode==0.13.1
