@@ -8,7 +8,7 @@ cryptography==2.7
 defusedxml==0.6.0
 Django==2.2.3
 django-appconf==1.0.3
-django-bootstrap3==11.0.0
+django-bootstrap3==11.1.0
 django-compressor==2.3
 django-debug-toolbar==2.0
 django-htmlmin==0.11.0
