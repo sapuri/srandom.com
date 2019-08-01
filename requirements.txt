@@ -6,7 +6,7 @@ cffi==1.12.3
 chardet==3.0.4
 cryptography==2.7
 defusedxml==0.6.0
-Django==2.2.3
+Django==2.2.4
 django-appconf==1.0.3
 django-bootstrap3==11.1.0
 django-compressor==2.3
@@ -22,15 +22,15 @@ lxml==4.4.0
 mysqlclient==1.4.2.post1
 oauth2==1.9.0.post1
 oauthlib==3.0.2
-packaging==19.0
+packaging==19.1
 pycparser==2.19
 PyJWT==1.7.1
-pyparsing==2.4.1.1
+pyparsing==2.4.2
 python-dateutil==2.8.0
 python-openid==2.2.5
 python-social-auth==0.3.6
 python3-openid==3.1.0
-pytz==2019.1
+pytz==2019.2
 rcssmin==1.0.6
 requests==2.22.0
 requests-oauthlib==1.2.0
