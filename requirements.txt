@@ -13,7 +13,7 @@ django-compressor==2.3
 django-debug-toolbar==2.0
 django-htmlmin==0.11.0
 django-maintenance-mode==0.13.3
-django-sslserver==0.20
+django-sslserver==0.21
 html5lib==1.0.1
 httplib2==0.13.1
 idna==2.8
