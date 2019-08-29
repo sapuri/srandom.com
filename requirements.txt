@@ -13,7 +13,7 @@ django-compressor==2.3
 django-debug-toolbar==2.0
 django-htmlmin==0.11.0
 django-maintenance-mode==0.13.3
-django-sslserver==0.20
+django-sslserver==0.21
 html5lib==1.0.1
 httplib2==0.13.1
 idna==2.8
@@ -38,7 +38,7 @@ rjsmin==1.1.0
 six==1.12.0
 social-auth-app-django==3.1.0
 social-auth-core==3.2.0
-soupsieve==1.9.2
+soupsieve==1.9.3
 sqlparse==0.3.0
 twitter==1.18.0
 urllib3==1.25.3
