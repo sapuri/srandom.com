@@ -6,7 +6,7 @@ cffi==1.12.3
 chardet==3.0.4
 cryptography==2.7
 defusedxml==0.6.0
-Django==2.2.4
+Django==2.2.5
 django-appconf==1.0.3
 django-bootstrap3==11.1.0
 django-compressor==2.3
