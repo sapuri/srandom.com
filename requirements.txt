@@ -22,7 +22,7 @@ lxml==4.4.1
 mysqlclient==1.4.4
 oauth2==1.9.0.post1
 oauthlib==3.1.0
-packaging==19.1
+packaging==19.2
 pycparser==2.19
 PyJWT==1.7.1
 pyparsing==2.4.2
