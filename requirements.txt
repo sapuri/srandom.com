@@ -1,6 +1,6 @@
 appdirs==1.4.3
 asn1crypto==1.0.0
-beautifulsoup4==4.8.0
+beautifulsoup4==4.8.1
 certifi==2019.9.11
 cffi==1.12.3
 chardet==3.0.4
