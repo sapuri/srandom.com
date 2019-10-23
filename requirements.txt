@@ -2,7 +2,7 @@ appdirs==1.4.3
 asn1crypto==1.2.0
 beautifulsoup4==4.8.0
 certifi==2019.9.11
-cffi==1.13.0
+cffi==1.13.1
 chardet==3.0.4
 cryptography==2.8
 defusedxml==0.6.0
