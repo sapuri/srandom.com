@@ -24,7 +24,6 @@
         <thead>
             <th>Lv</th>
             <th>曲名</th>
-            <th>難易度</th>
             <th>BAD数</th>
             <th>平均BAD数</th>
             <th>順位</th>
@@ -34,8 +33,7 @@
             <tr id="music-{{ music.id }}">
                 <script>$(function() { getClearStatus({{ music.id }}); });</script>
                 <td class="level">{{ music.level }}</td>
-                <td class="title"><a href="{% url 'main:ranking_detail' music.id %}">{{ music.title }}</a></td>
-                <td class="difficulty">{{ music.difficulty }}</td>
+                <td class="title"><a href="{% url 'main:ranking_detail' music.id %}">{{ music.title }} ({{ music.difficulty }})</a></td>
                 <td class="bad_count">
                     <script>$(function() { getBadCount({{ music.id }}); });</script>
                 </td>

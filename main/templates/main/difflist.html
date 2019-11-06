@@ -37,7 +37,6 @@
         <thead>
             <th>Lv</th>
             <th>曲名</th>
-            <th>難易度</th>
             <th>BPM</th>
             <th>メダル</th>
             <th>BAD数</th>
@@ -48,8 +47,7 @@
             <tr id="music-{{ music.id }}">
                 <script>$(function() { getClearStatus({{ music.id }}); });</script>
                 <td class="level">{{ music.level }}</td>
-                <td class="title"><a href="{% url 'main:edit' music.id %}">{{ music.title }}</a></td>
-                <td class="difficulty">{{ music.difficulty }}</td>
+                <td class="title"><a href="{% url 'main:edit' music.id %}">{{ music.title }} ({{ music.difficulty }})</a></td>
                 <td class="bpm">{{ music.bpm|default:'-' }}</td>
                 <td class="medal">
                     <img>
