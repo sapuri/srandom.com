@@ -19,7 +19,7 @@ httplib2==0.14.0
 idna==2.8
 IPy==1.0
 lxml==4.4.1
-mysqlclient==1.4.4
+mysqlclient==1.4.5
 oauth2==1.9.0.post1
 oauthlib==3.1.0
 packaging==19.2
