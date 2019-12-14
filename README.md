@@ -1,55 +1,55 @@
 # srandom.com
-スパランドットコム - ポップンミュージックのスパラン愛好家のためのクリア状況管理サイト
+A clear status management site for super-random enthusiasts of pop'n music
 
 [![Build Status](https://travis-ci.com/sapuri/srandom.com.svg?token=xwpmsyc4SnBSSQnifEya&branch=master)](https://travis-ci.com/sapuri/srandom.com)
 [![Updates](https://pyup.io/repos/github/sapuri/srandom.com/shield.svg)](https://pyup.io/repos/github/sapuri/srandom.com/)
 
-## 環境
+## Environment
 * Python 3.6 >=
 * Django 2.0 >=
 * MySQL 5.5 >=
 
-## コマンド
-Django のコマンド機能を利用したコマンドの一覧です。
+## Commands
+A list of commands that use Django's command functions.
 
-### スクレイピング
-S乱難易度表から曲情報を取得し、CSVファイルに出力します。
+### Scraping
+Obtain music information from the S-Random Difficulty Table and output it to a CSV file.
 
 ```
 python manage.py scraping [--silent]
 ```
 
-### 曲情報更新
-CSVファイルから曲情報を読み取り、データベースを更新します。
+### Update music information
+Read music information from CSV file and update database.
 
 ```
 python manage.py update_music
 ```
 
-### データ移行
-移行元ユーザーの全てのクリアデータを移行先ユーザーに移行します。
+### Data migration
+All the clear data of the migration source user is migrated to the migration destination user.
 
-移行元ユーザーのクリアデータは復元できません。
+The clear data of the migration source user cannot be restored.
 
 ```
-python manage.py data_migration <移行元のユーザ名> <移行先のユーザ名>
+python manage.py data_migration <migration source username> <migration destination username>
 ```
 
-### CSVエクスポート
-プレミアムユーザーのクリアデータをそれぞれCSVファイルで出力します。
+### CSV export
+Output clear data of premium users as CSV files.
 
-/csv/export/<ユーザー名>.csv に出力されます。
+Output to `/csv/export/<username>.csv`.
 
-通常は cron で実行されます。
+Usually run as cron.
 
 ```
 python manage.py export2csv
 ```
 
-### ユーザアカウント削除
-指定したユーザアカウントを無効化し、クリアデータを完全に削除します。
+### Delete user account
+Disable the specified user account and delete the clear data completely.
 
-クリアデータは復元できません。
+Clear data cannot be restored.
 
 ```
 python manage.py delete_account <username>
