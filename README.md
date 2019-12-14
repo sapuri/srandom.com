@@ -38,7 +38,7 @@ python manage.py data_migration <migration source username> <migration destinati
 ### CSV export
 Output clear data of premium users as CSV files.
 
-Output to `/csv/export/<username>.csv`.
+Output to `csv/export/<username>.csv`.
 
 Usually run as cron.
 
