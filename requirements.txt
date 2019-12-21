@@ -15,7 +15,7 @@ django-htmlmin==0.11.0
 django-maintenance-mode==0.14.0
 django-sslserver==0.22
 html5lib==1.0.1
-httplib2==0.14.0
+httplib2==0.15.0
 idna==2.8
 IPy==1.0
 lxml==4.4.2
