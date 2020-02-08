@@ -4,7 +4,7 @@ asn1crypto==1.3.0
 attrs==19.3.0
 beautifulsoup4==4.8.2
 certifi==2019.11.28
-cffi==1.13.2
+cffi==1.14.0
 chardet==3.0.4
 cryptography==2.8
 defusedxml==0.6.0
