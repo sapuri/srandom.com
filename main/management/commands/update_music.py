@@ -2,6 +2,7 @@ import csv
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.db import DataError
 
 from main.models import Music, Difficulty, Level, Sran_Level
 
@@ -59,17 +60,21 @@ class Command(BaseCommand):
                 print('[skip] undefined difficulty:', title)
                 continue
 
-            music, created = Music.objects.get_or_create(
-                title=title,
-                difficulty=Difficulty.objects.get(difficulty=difficulty),
-                defaults={
-                    'title': title,
-                    'difficulty': Difficulty.objects.get(difficulty=difficulty),
-                    'level': Level.objects.get(level=level),
-                    'sran_level': Sran_Level.objects.get(level=sran_level),
-                    'bpm': bpm
-                }
-            )
+            try:
+                music, created = Music.objects.get_or_create(
+                    title=title,
+                    difficulty=Difficulty.objects.get(difficulty=difficulty),
+                    defaults={
+                        'title': title,
+                        'difficulty': Difficulty.objects.get(difficulty=difficulty),
+                        'level': Level.objects.get(level=level),
+                        'sran_level': Sran_Level.objects.get(level=sran_level),
+                        'bpm': bpm
+                    }
+                )
+            except DataError:
+                print(f'failed Music.objects.get_or_create with DataError: {music}\n')
+                raise DataError
 
             if created:
                 print(f'#{music.id}: {music.title}({music.difficulty}) を追加しました。')
