@@ -8,7 +8,7 @@ cffi==1.14.0
 chardet==3.0.4
 cryptography==2.8
 defusedxml==0.6.0
-Django==2.2.10
+Django==2.2.11
 django-appconf==1.0.3
 django-bootstrap3==12.0.3
 django-compressor==2.4
@@ -24,8 +24,8 @@ lxml==4.5.0
 mysqlclient==1.4.6
 oauth2==1.9.0.post1
 oauthlib==3.1.0
-packaging==20.1
-pycparser==2.19
+packaging==20.3
+pycparser==2.20
 PyJWT==1.7.1
 pyparsing==2.4.6
 python-dateutil==2.8.1
@@ -41,7 +41,7 @@ six==1.14.0
 social-auth-app-django==3.1.0
 social-auth-core==3.2.0
 soupsieve==2.0
-sqlparse==0.3.0
+sqlparse==0.3.1
 twitter==1.18.0
 urllib3==1.25.8
 webencodings==0.5.1
