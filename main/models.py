@@ -63,7 +63,7 @@ class Music(models.Model):
     difficulty = models.ForeignKey(Difficulty, verbose_name='難易度', on_delete=models.PROTECT)
     level = models.ForeignKey(Level, verbose_name='レベル', on_delete=models.PROTECT)
     sran_level = models.ForeignKey(Sran_Level, verbose_name='S乱レベル', on_delete=models.PROTECT)
-    bpm = models.CharField('BPM', max_length=10, null=True, blank=True)
+    bpm = models.CharField('BPM', max_length=15, null=True, blank=True)
 
     def __str__(self):
         return self.title
