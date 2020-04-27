@@ -2,7 +2,6 @@
 A clear status management site for super-random enthusiasts of pop'n music
 
 [![Build Status](https://travis-ci.com/sapuri/srandom.com.svg?token=xwpmsyc4SnBSSQnifEya&branch=master)](https://travis-ci.com/sapuri/srandom.com)
-[![Updates](https://pyup.io/repos/github/sapuri/srandom.com/shield.svg)](https://pyup.io/repos/github/sapuri/srandom.com/)
 
 ## Environment
 * Python 3.6 >=
