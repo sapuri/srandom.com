@@ -128,9 +128,9 @@ class Medal(models.Model):
         verbose_name = 'クリアメダル'
         verbose_name_plural = 'クリアメダル'
         indexes = [
-            models.Index(fields=['music', 'user'], name='music_user'),
-            models.Index(fields=['updated_at'], name='updated_at'),
-            models.Index(fields=['user', 'updated_at'], name='user_updated_at'),
+            models.Index(fields=['music', 'user'], name='medal_by_music_and_user'),
+            models.Index(fields=['updated_at'], name='medal_by_updated_at'),
+            models.Index(fields=['user', 'updated_at'], name='medal_by_user_and_updated_at'),
         ]
 
 
@@ -155,9 +155,9 @@ class Bad_Count(models.Model):
         verbose_name = 'BAD数'
         verbose_name_plural = 'BAD数'
         indexes = [
-            models.Index(fields=['music', 'user'], name='music_user'),
-            models.Index(fields=['updated_at'], name='updated_at'),
-            models.Index(fields=['user', 'updated_at'], name='user_updated_at'),
+            models.Index(fields=['music', 'user'], name='bc_by_music_and_user'),
+            models.Index(fields=['updated_at'], name='bc_by_updated_at'),
+            models.Index(fields=['user', 'updated_at'], name='bc_by_user_and_updated_at'),
         ]
 
 
@@ -182,9 +182,9 @@ class Extra_Option(models.Model):
         verbose_name = 'Extra Option'
         verbose_name_plural = 'Extra Option'
         indexes = [
-            models.Index(fields=['music', 'user'], name='music_user'),
-            models.Index(fields=['updated_at'], name='updated_at'),
-            models.Index(fields=['user', 'updated_at'], name='user_updated_at'),
+            models.Index(fields=['music', 'user'], name='eo_by_music_user'),
+            models.Index(fields=['updated_at'], name='eo_by_updated_at'),
+            models.Index(fields=['user', 'updated_at'], name='eo_by_user_and_updated_at'),
         ]
 
 
