@@ -16,7 +16,7 @@ django-debug-toolbar==2.2
 django-htmlmin==0.11.0
 django-maintenance-mode==0.14.0
 django-sslserver==0.22
-html5lib==1.0.1
+html5lib==1.1
 httplib2==0.18.1
 idna==2.10
 IPy==1.0
