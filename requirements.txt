@@ -1,5 +1,5 @@
 appdirs==1.4.4
-asgiref==3.2.10
+asgiref==3.3.0
 asn1crypto==1.4.0
 attrs==20.2.0
 beautifulsoup4==4.9.3
