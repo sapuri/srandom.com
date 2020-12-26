@@ -26,13 +26,13 @@ oauth2==1.9.0.post1
 oauthlib==3.1.0
 packaging==20.8
 pycparser==2.20
-PyJWT==1.7.1
+PyJWT==2.0.0
 pyparsing==2.4.7
 python-dateutil==2.8.1
 python-openid==2.2.5
 python-social-auth==0.3.6
 python3-openid==3.2.0
-pytz==2020.4
+pytz==2020.5
 rcssmin==1.0.6
 requests==2.25.1
 requests-oauthlib==1.3.0
