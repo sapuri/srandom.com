@@ -44,7 +44,7 @@ social-auth-core==4.0.3
 soupsieve==2.2
 sqlparse==0.4.1
 twitter==1.18.0
-urllib3==1.26.2
+urllib3==1.26.3
 webencodings==0.5.1
 xerox==0.4.1
 zenhan==0.5.2
