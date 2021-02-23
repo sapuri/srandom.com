@@ -19,7 +19,7 @@ django-sslserver==0.22
 html5lib==1.1
 httplib2==0.19.0
 idna==2.10
-importlib-metadata==1.7.0
+importlib-metadata==3.5.0
 IPy==1.1
 lxml==4.6.2
 mysqlclient==2.0.3
