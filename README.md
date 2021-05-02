@@ -3,10 +3,34 @@ A clear status management site for super-random enthusiasts of pop'n music
 
 [![Build Status](https://travis-ci.com/sapuri/srandom.com.svg?token=xwpmsyc4SnBSSQnifEya&branch=master)](https://travis-ci.com/sapuri/srandom.com)
 
-## Environment
-* Python 3.6 >=
-* Django 2.0 >=
-* MySQL 5.5 >=
+## Installation
+### Requirements
+- [Python](https://www.python.org/) 3.9 >=
+- [Django](https://www.djangoproject.com/) 3.0 >=
+- [MySQL](https://www.mysql.com/) 5.6 >=
+- [direnv](https://github.com/direnv/direnv#install) (optional)
+
+### Install dependent tools
+```
+pipenv install
+```
+
+### Set environment variables
+```shell
+cp .envrc_sample .envrc
+direnv allow
+```
+
+### Create local_settings.py
+```shell
+cp srandom/local_settings_sample.py srandom/local_settings.py
+vi srandom/local_settings.py
+```
+
+### Run test
+```
+python manage.py test
+```
 
 ## Commands
 A list of commands that use Django's command functions.
