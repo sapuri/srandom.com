@@ -1,7 +1,7 @@
 appdirs==1.4.4
 asgiref==3.3.4
 asn1crypto==1.4.0
-attrs==20.3.0
+attrs==21.1.0
 beautifulsoup4==4.9.3
 certifi==2020.12.5
 cffi==1.14.5
