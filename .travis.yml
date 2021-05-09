@@ -1,11 +1,12 @@
 language: python
 cache: pip
 python:
-  - 3.6
+  - 3.9
 services:
   - mysql
 install:
-  - pip install -r requirements.txt
+  - pip install pipenv
+  - pipenv install
 before_script:
   - |
     echo -e "[mysqld]
@@ -17,10 +18,9 @@ before_script:
   - sudo service mysql restart
   - mysql -u root -e "CREATE DATABASE travis_ci CHARACTER SET utf8mb4"
 script:
-  - python manage.py makemigrations main
-  - python manage.py makemigrations users
-  - python manage.py migrate
-  - python manage.py test
-notifications:
-  slack:
-    secure: eY41NyB2xZ1C4Z79E2ULV5OwLJoXeF3iiiRTqvCpYaO9RxJhTK7Jw7NJeCcCLM2sT9AH0YlF3Nj3873x7jtANgCCOuHo5erxbMM40dvd5GLtz3Xj4BzVgLehgBrUyWUTPj83wjntbOPTVqgV0g+QN0+wt6X2lCUrrsP+aFNRbYVSarhUukRANa1gbJc2lWIWwcI8JmNnSwdutdRsvDMSkpz5/XGjckkcTlPS/0BV/+IEFEp1SiD93zcTkWxFXjS3LmSlRC4AXSsfnGSpczv3twwo+pxvj06jgzE+k9QZ+9Rm/iatjwzHQYRM/zZdW4KPvtON2Ty9FAtPHZuWROz5aee8BbbZ8kfBnpBGA5+rN3qg7H2A0JOBH/ouiwoDHak8/O9azf5pfWguiLSlugFutXv9cL6XQTlM8ZGC5X+EC2lz3VZJodYvNHCGJfP0JFf0gV0fqUs1HlzGybjlnN5iJ7Wa5vlfAK2LwecNVG+ft/A5SEcWe09cZFPd5QCwHaJNrxi9zo9m9gVkyjML925KqAJiRIyCzsicc7Y0fYC/H9mtqjxZfS51hirqaNUJzRmJzGuOnseUiN3RwG8nwclvyMlVlbNukaWhMDXA7gU8ze7q2t+Bk8f0FBGn8Osn5cUOizinhyTFDeBSygbmT/YltUI5nLMLMqL70dWY7YLq62g=
+  - pipenv run python manage.py makemigrations main
+  - pipenv run python manage.py makemigrations users
+  - pipenv run python manage.py migrate
+  - pipenv run python manage.py test
+env:
+  - PIPENV_IGNORE_VIRTUALENVS=1
