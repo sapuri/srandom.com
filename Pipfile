@@ -51,7 +51,7 @@ webencodings = "==0.5.1"
 xerox = "==0.4.1"
 zenhan = "==0.5.2"
 zipp = "==3.5.1"
-Django = "==3.2.7"
+Django = "==4.0.6"
 IPy = "==1.1"
 PyJWT = "==2.1.0"
 
