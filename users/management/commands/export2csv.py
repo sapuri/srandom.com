@@ -1,4 +1,5 @@
 import csv
+import os
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -13,6 +14,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # FIXME: メダルが存在しない記録を読み込むとエラーになる
+
+        os.makedirs(f'{settings.BASE_DIR}/csv/export/', exist_ok=True)
 
         username = ''
 
@@ -86,11 +89,11 @@ class Command(BaseCommand):
 
 
 def get_latest_updated_at(music_id, user_id):
-    '''
+    """
     @param {int} music_id 曲ID
     @param {int} user_id ユーザーID
     @return {string} 最新の更新日時
-    '''
+    """
     try:
         bad_count = Bad_Count.objects.get(music=music_id, user=user_id)
     except ObjectDoesNotExist:
@@ -149,6 +152,6 @@ def get_latest_updated_at(music_id, user_id):
         if latest_hour > 24:
             latest_day += 1
             latest_hour -= 24
-        return ("%d/%d/%02d %d:%02d") % (latest.year, latest.month, latest_day, latest_hour, latest.minute)
+        return "%d/%d/%02d %d:%02d" % (latest.year, latest.month, latest_day, latest_hour, latest.minute)
     else:
         return ''
