@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "27410c8349d3bed7b9b08e1e83cbe16c72150bb66f584fdbe615c767c5d21128"
+            "sha256": "1e28d7ba8c4caa33bfa05eca0cd985b810c24cc275f0e733c6091703fe9561ce"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -123,6 +123,14 @@
             "index": "pypi",
             "version": "==4.0.0"
         },
+        "click": {
+            "hashes": [
+                "sha256:7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e",
+                "sha256:bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==8.1.3"
+        },
         "cryptography": {
             "hashes": [
                 "sha256:0a7dcbcd3f1913f664aca35d47c1331fce738d44ec34b7be8b9d332151b0b01e",
@@ -217,6 +225,14 @@
             ],
             "index": "pypi",
             "version": "==0.22"
+        },
+        "h11": {
+            "hashes": [
+                "sha256:70813c1135087a248a4d38cc0e1a0181ffab2188141a93eaf567940c3957ff06",
+                "sha256:8ddd78563b633ca55346c8cd41ec0af27d3c79931828beffb46ce70a379e7442"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==0.13.0"
         },
         "html5lib": {
             "hashes": [
@@ -370,23 +386,6 @@
             "index": "pypi",
             "version": "==2.8.2"
         },
-        "python-openid": {
-            "hashes": [
-                "sha256:92c51c3ecec846cbec4aeff11f9ff47303d4a63f93b0e6ac0ec02a091fed70ef",
-                "sha256:c2d133e47e0a7705c9272eef00d7a09c174f5bf17a127fed8e2c6499556cc782"
-            ],
-            "index": "pypi",
-            "version": "==2.2.5"
-        },
-        "python-social-auth": {
-            "hashes": [
-                "sha256:6986220df76934aee15c54938a13ebe370a1976e043af01fa3bea417f6722e74",
-                "sha256:8aac8531f7dd4d1b9af606654532fef4f615cb437774a7a1f8dcdebe89c17664",
-                "sha256:9aaad6f7bf83fd129620eadaab1e78e63200da61a5d8898fd1aa243686b36575"
-            ],
-            "index": "pypi",
-            "version": "==0.3.6"
-        },
         "python3-openid": {
             "hashes": [
                 "sha256:33fbf6928f401e0b790151ed2b5290b02545e8775f982485205a066f874aaeaf",
@@ -464,11 +463,11 @@
         },
         "social-auth-core": {
             "hashes": [
-                "sha256:5ab43b3b15dce5f059db69cc3082c216574739f0edbc98629c8c6e8769c67eb4",
-                "sha256:983b53167ac56e7ba4909db555602a6e7a98c97ca47183bb222eb85ba627bf2b"
+                "sha256:1e3440d104f743b02dfe258c9d4dba5b4065abf24b2f7eb362b47054d21797df",
+                "sha256:4686f0e43cf12954216875a32e944847bb1dc69e7cd9573d16a9003bb05ca477"
             ],
             "index": "pypi",
-            "version": "==4.1.0"
+            "version": "==4.3.0"
         },
         "soupsieve": {
             "hashes": [
@@ -501,6 +500,14 @@
             ],
             "index": "pypi",
             "version": "==1.26.7"
+        },
+        "uvicorn": {
+            "hashes": [
+                "sha256:0abd429ebb41e604ed8d2be6c60530de3408f250e8d2d84967d85ba9e86fe3af",
+                "sha256:9a66e7c42a2a95222f76ec24a4b754c158261c4696e683b9dadc72b590e0311b"
+            ],
+            "index": "pypi",
+            "version": "==0.18.3"
         },
         "webencodings": {
             "hashes": [
