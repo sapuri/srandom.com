@@ -19,7 +19,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Difficulty',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('difficulty', models.CharField(max_length=10, verbose_name='難易度')),
             ],
             options={
@@ -30,7 +31,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Level',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('level', models.IntegerField(verbose_name='レベル')),
             ],
             options={
@@ -41,11 +43,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Music',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=255, verbose_name='曲名')),
-                ('bpm', models.CharField(blank=True, max_length=15, null=True, verbose_name='BPM')),
-                ('difficulty', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.difficulty', verbose_name='難易度')),
-                ('level', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.level', verbose_name='レベル')),
+                ('bpm', models.CharField(blank=True,
+                 max_length=15, null=True, verbose_name='BPM')),
+                ('difficulty', models.ForeignKey(
+                    on_delete=django.db.models.deletion.PROTECT, to='main.difficulty', verbose_name='難易度')),
+                ('level', models.ForeignKey(
+                    on_delete=django.db.models.deletion.PROTECT, to='main.level', verbose_name='レベル')),
             ],
             options={
                 'verbose_name': '曲',
@@ -55,7 +61,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Sran_Level',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('level', models.IntegerField(verbose_name='S乱レベル')),
             ],
             options={
@@ -66,11 +73,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='News',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('kind', models.CharField(choices=[('新規', '新規'), ('レベル更新', 'レベル更新'), ('S乱レベル更新', 'S乱レベル更新'), ('削除', '削除')], max_length=10, verbose_name='種類')),
-                ('created_at', models.DateField(default=django.utils.timezone.now, verbose_name='作成日')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('kind', models.CharField(choices=[('新規', '新規'), ('レベル更新', 'レベル更新'), (
+                    'S乱レベル更新', 'S乱レベル更新'), ('削除', '削除')], max_length=10, verbose_name='種類')),
+                ('created_at', models.DateField(
+                    default=django.utils.timezone.now, verbose_name='作成日')),
                 ('status', models.BooleanField(default=True, verbose_name='状態')),
-                ('music', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.music', verbose_name='曲')),
+                ('music', models.ForeignKey(
+                    on_delete=django.db.models.deletion.PROTECT, to='main.music', verbose_name='曲')),
             ],
             options={
                 'verbose_name': 'News',
@@ -80,16 +91,21 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='music',
             name='sran_level',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.sran_level', verbose_name='S乱レベル'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to='main.sran_level', verbose_name='S乱レベル'),
         ),
         migrations.CreateModel(
             name='Medal',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('medal', models.IntegerField(verbose_name='クリアメダル')),
-                ('updated_at', models.DateTimeField(default=datetime.datetime.now, verbose_name='更新日時')),
-                ('music', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.music', verbose_name='曲')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL, verbose_name='ユーザー')),
+                ('updated_at', models.DateTimeField(
+                    default=datetime.datetime.now, verbose_name='更新日時')),
+                ('music', models.ForeignKey(
+                    on_delete=django.db.models.deletion.PROTECT, to='main.music', verbose_name='曲')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT,
+                 to=settings.AUTH_USER_MODEL, verbose_name='ユーザー')),
             ],
             options={
                 'verbose_name': 'クリアメダル',
@@ -99,11 +115,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Extra_Option',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('hard', models.BooleanField(verbose_name='ハード')),
-                ('updated_at', models.DateTimeField(default=datetime.datetime.now, verbose_name='更新日時')),
-                ('music', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.music', verbose_name='曲')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL, verbose_name='ユーザー')),
+                ('updated_at', models.DateTimeField(
+                    default=datetime.datetime.now, verbose_name='更新日時')),
+                ('music', models.ForeignKey(
+                    on_delete=django.db.models.deletion.PROTECT, to='main.music', verbose_name='曲')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT,
+                 to=settings.AUTH_USER_MODEL, verbose_name='ユーザー')),
             ],
             options={
                 'verbose_name': 'Extra Option',
@@ -113,11 +133,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Bad_Count',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('bad_count', models.PositiveIntegerField(verbose_name='BAD数')),
-                ('updated_at', models.DateTimeField(default=datetime.datetime.now, verbose_name='更新日時')),
-                ('music', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.music', verbose_name='曲')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL, verbose_name='ユーザー')),
+                ('updated_at', models.DateTimeField(
+                    default=datetime.datetime.now, verbose_name='更新日時')),
+                ('music', models.ForeignKey(
+                    on_delete=django.db.models.deletion.PROTECT, to='main.music', verbose_name='曲')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT,
+                 to=settings.AUTH_USER_MODEL, verbose_name='ユーザー')),
             ],
             options={
                 'verbose_name': 'BAD数',
@@ -127,11 +151,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Activity',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('updated_at', models.DateTimeField(default=datetime.datetime.now, verbose_name='更新日時')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('updated_at', models.DateTimeField(
+                    default=datetime.datetime.now, verbose_name='更新日時')),
                 ('status', models.BooleanField(default=True, verbose_name='状態')),
-                ('music', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.music', verbose_name='曲')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL, verbose_name='ユーザー')),
+                ('music', models.ForeignKey(
+                    on_delete=django.db.models.deletion.PROTECT, to='main.music', verbose_name='曲')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT,
+                 to=settings.AUTH_USER_MODEL, verbose_name='ユーザー')),
             ],
             options={
                 'verbose_name': 'アクティビティ',
@@ -152,19 +180,23 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name='medal',
-            index=models.Index(fields=['music', 'user'], name='medal_by_music_and_user'),
+            index=models.Index(
+                fields=['music', 'user'], name='medal_by_music_and_user'),
         ),
         migrations.AddIndex(
             model_name='medal',
-            index=models.Index(fields=['updated_at'], name='medal_by_updated_at'),
+            index=models.Index(fields=['updated_at'],
+                               name='medal_by_updated_at'),
         ),
         migrations.AddIndex(
             model_name='medal',
-            index=models.Index(fields=['user', 'updated_at'], name='medal_by_user_and_updated_at'),
+            index=models.Index(
+                fields=['user', 'updated_at'], name='medal_by_user_and_updated_at'),
         ),
         migrations.AddIndex(
             model_name='extra_option',
-            index=models.Index(fields=['music', 'user'], name='eo_by_music_user'),
+            index=models.Index(
+                fields=['music', 'user'], name='eo_by_music_user'),
         ),
         migrations.AddIndex(
             model_name='extra_option',
@@ -172,11 +204,13 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name='extra_option',
-            index=models.Index(fields=['user', 'updated_at'], name='eo_by_user_and_updated_at'),
+            index=models.Index(
+                fields=['user', 'updated_at'], name='eo_by_user_and_updated_at'),
         ),
         migrations.AddIndex(
             model_name='bad_count',
-            index=models.Index(fields=['music', 'user'], name='bc_by_music_and_user'),
+            index=models.Index(
+                fields=['music', 'user'], name='bc_by_music_and_user'),
         ),
         migrations.AddIndex(
             model_name='bad_count',
@@ -184,7 +218,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name='bad_count',
-            index=models.Index(fields=['user', 'updated_at'], name='bc_by_user_and_updated_at'),
+            index=models.Index(
+                fields=['user', 'updated_at'], name='bc_by_user_and_updated_at'),
         ),
         migrations.AddIndex(
             model_name='activity',

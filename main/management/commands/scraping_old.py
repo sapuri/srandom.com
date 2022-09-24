@@ -79,7 +79,8 @@ class Command(BaseCommand):
             tr_addr = 1  # tr の場所を指定
             while 1:
                 try:
-                    tr = soup.find_all('div', class_='table-responsive')[i].tbody.find_all('tr')[tr_addr]
+                    tr = soup.find_all(
+                        'div', class_='table-responsive')[i].tbody.find_all('tr')[tr_addr]
                 except IndexError:
                     if not music_list:
                         print('music list not found')

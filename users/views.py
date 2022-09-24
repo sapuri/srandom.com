@@ -16,7 +16,8 @@ from .forms import *
 def list(request):
     """ ユーザーリスト """
     # 有効なアカウントを取得
-    users = CustomUser.objects.filter(is_active=True).exclude(pk=1).order_by('id')
+    users = CustomUser.objects.filter(
+        is_active=True).exclude(pk=1).order_by('id')
 
     # ページング
     paginator = Paginator(users, 50)
@@ -41,12 +42,14 @@ def mypage(request, username):
     @param username: ユーザー名
     """
     # ユーザーを取得
-    selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
+    selected_user = get_object_or_404(
+        CustomUser, username=username, is_active=True)
 
     max_s_lv = 19
     s_lv_range = range(max_s_lv, 0, -1)
 
-    recent_medal = Medal.objects.filter(user=selected_user).order_by('-updated_at')[:20]
+    recent_medal = Medal.objects.filter(
+        user=selected_user).order_by('-updated_at')[:20]
 
     context = {
         'selected_user': selected_user,
@@ -62,7 +65,8 @@ def statistics(request, username):
     :param str: username
     """
     # ユーザーを取得
-    selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
+    selected_user = get_object_or_404(
+        CustomUser, username=username, is_active=True)
     activity_count = Activity.objects.filter(user=selected_user).count()
 
     context = {
@@ -91,14 +95,18 @@ def settings(request):
                 if custom_user_form.has_changed():
                     # 保存処理
                     if request.POST['player_name']:
-                        custom_user = custom_user_form.save(commit=False)  # 後でまとめて保存
+                        custom_user = custom_user_form.save(
+                            commit=False)  # 後でまとめて保存
                         # 全角大文字に変換
-                        custom_user.player_name = zenhan.h2z(request.POST['player_name']).upper()
+                        custom_user.player_name = zenhan.h2z(
+                            request.POST['player_name']).upper()
                         custom_user.save()  # 保存
                     if request.POST['poputomo_id']:
-                        custom_user = custom_user_form.save(commit=False)  # 後でまとめて保存
+                        custom_user = custom_user_form.save(
+                            commit=False)  # 後でまとめて保存
                         # 文字列に変換
-                        custom_user.poputomo_id = str(request.POST['poputomo_id'])
+                        custom_user.poputomo_id = str(
+                            request.POST['poputomo_id'])
                         custom_user.save()  # 保存
                     else:
                         custom_user_form.save()
@@ -134,7 +142,8 @@ def cleardata(request, username, sran_level):
     @param sran_level: S乱レベル
     """
     # ユーザーを取得
-    selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
+    selected_user = get_object_or_404(
+        CustomUser, username=username, is_active=True)
 
     # 最大S乱レベル
     max_s_lv = 19
@@ -150,7 +159,8 @@ def cleardata(request, username, sran_level):
     sran_level_id = sran_level
 
     # 対象レベルの曲を取得
-    music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level')
+    music_list = Music.objects.filter(
+        sran_level=sran_level_id).order_by('level')
 
     # 取得曲数を取得
     music_list_count = len(music_list)
@@ -234,10 +244,12 @@ def download(request, file_type):
         if request.user.premium:
             file_path = f'{setting.BASE_DIR}/csv/export/{request.user.username}.csv'
             try:
-                response = HttpResponse(open(file_path).read(), content_type='text/csv; charset=utf-8')
+                response = HttpResponse(
+                    open(file_path).read(), content_type='text/csv; charset=utf-8')
             except FileNotFoundError:
                 raise Http404
-            response['Content-Disposition'] = 'attachment; filename=' + request.user.username + '.csv'
+            response['Content-Disposition'] = 'attachment; filename=' + \
+                request.user.username + '.csv'
         else:
             raise PermissionDenied
         return response
@@ -276,14 +288,17 @@ def get_percentage_of_clear(request, user_id):
                 try:
                     medal = Medal.objects.get(user=user, music=music)
                     if medal.medal <= 7:
-                        clear_num[sran_level - 1] = clear_num[sran_level - 1] + 1
+                        clear_num[sran_level -
+                                  1] = clear_num[sran_level - 1] + 1
                 except:
                     pass
 
             # 各レベルのクリア率を計算
-            percentage_of_clear[sran_level - 1] = clear_num[sran_level - 1] * 100 / music_num[sran_level - 1]
+            percentage_of_clear[sran_level - 1] = clear_num[sran_level -
+                                                            1] * 100 / music_num[sran_level - 1]
             # 小数点以下四捨五入
-            percentage_of_clear[sran_level - 1] = round(percentage_of_clear[sran_level - 1])
+            percentage_of_clear[sran_level -
+                                1] = round(percentage_of_clear[sran_level - 1])
 
         context = {
             'percentage_of_clear': percentage_of_clear,
@@ -318,7 +333,8 @@ def get_activity_map(request):
     print('start_datetime:', start_datetime)
     print('end_datetime:', end_datetime)
 
-    activities = Activity.objects.filter(user=user_id, updated_at__range=(start_datetime, end_datetime))
+    activities = Activity.objects.filter(
+        user=user_id, updated_at__range=(start_datetime, end_datetime))
     result = {}
     for activity in activities:
         updated_at = str(int(datetime.timestamp(activity.updated_at)))
@@ -415,7 +431,8 @@ def get_clear_rate(request):
                     medal_num['fullcombo'][s_lv - 1] += 1
                 elif medal.medal >= 5 and medal.medal <= 7:
                     try:
-                        extra_option = Extra_Option.objects.get(user=user, music=music)
+                        extra_option = Extra_Option.objects.get(
+                            user=user, music=music)
                         if extra_option.hard:
                             medal_num['hard'][s_lv - 1] += 1
                         else:
@@ -432,29 +449,46 @@ def get_clear_rate(request):
                 medal_num['no-play'][s_lv - 1] += 1
 
         # 各レベルのメダルの割合を計算
-        percentage_of_medals['perfect'][s_lv - 1] = round(medal_num['perfect'][s_lv - 1] * 100 / music_num[s_lv - 1])
+        percentage_of_medals['perfect'][s_lv - 1] = round(
+            medal_num['perfect'][s_lv - 1] * 100 / music_num[s_lv - 1])
         percentage_of_medals['fullcombo'][s_lv - 1] = round(
             medal_num['fullcombo'][s_lv - 1] * 100 / music_num[s_lv - 1])
-        percentage_of_medals['hard'][s_lv - 1] = round(medal_num['hard'][s_lv - 1] * 100 / music_num[s_lv - 1])
-        percentage_of_medals['clear'][s_lv - 1] = round(medal_num['clear'][s_lv - 1] * 100 / music_num[s_lv - 1])
-        percentage_of_medals['easy'][s_lv - 1] = round(medal_num['easy'][s_lv - 1] * 100 / music_num[s_lv - 1])
-        percentage_of_medals['failed'][s_lv - 1] = round(medal_num['failed'][s_lv - 1] * 100 / music_num[s_lv - 1])
+        percentage_of_medals['hard'][s_lv - 1] = round(
+            medal_num['hard'][s_lv - 1] * 100 / music_num[s_lv - 1])
+        percentage_of_medals['clear'][s_lv - 1] = round(
+            medal_num['clear'][s_lv - 1] * 100 / music_num[s_lv - 1])
+        percentage_of_medals['easy'][s_lv - 1] = round(
+            medal_num['easy'][s_lv - 1] * 100 / music_num[s_lv - 1])
+        percentage_of_medals['failed'][s_lv - 1] = round(
+            medal_num['failed'][s_lv - 1] * 100 / music_num[s_lv - 1])
 
         chart_data['clearRate']['labels'].append("Lv" + str(s_lv))
 
-        chart_data['clearRate']['datasets'][0]['data'].append(percentage_of_medals['perfect'][s_lv - 1])
-        chart_data['clearRate']['datasets'][1]['data'].append(percentage_of_medals['fullcombo'][s_lv - 1])
-        chart_data['clearRate']['datasets'][2]['data'].append(percentage_of_medals['hard'][s_lv - 1])
-        chart_data['clearRate']['datasets'][3]['data'].append(percentage_of_medals['clear'][s_lv - 1])
-        chart_data['clearRate']['datasets'][4]['data'].append(percentage_of_medals['easy'][s_lv - 1])
-        chart_data['clearRate']['datasets'][5]['data'].append(percentage_of_medals['failed'][s_lv - 1])
+        chart_data['clearRate']['datasets'][0]['data'].append(
+            percentage_of_medals['perfect'][s_lv - 1])
+        chart_data['clearRate']['datasets'][1]['data'].append(
+            percentage_of_medals['fullcombo'][s_lv - 1])
+        chart_data['clearRate']['datasets'][2]['data'].append(
+            percentage_of_medals['hard'][s_lv - 1])
+        chart_data['clearRate']['datasets'][3]['data'].append(
+            percentage_of_medals['clear'][s_lv - 1])
+        chart_data['clearRate']['datasets'][4]['data'].append(
+            percentage_of_medals['easy'][s_lv - 1])
+        chart_data['clearRate']['datasets'][5]['data'].append(
+            percentage_of_medals['failed'][s_lv - 1])
 
-        chart_data['clearRate']['datasets'][0]['backgroundColor'].append('#4a4a4a')
-        chart_data['clearRate']['datasets'][1]['backgroundColor'].append('rgb(153, 207, 229)')
-        chart_data['clearRate']['datasets'][2]['backgroundColor'].append('rgb(243, 192, 171)')
-        chart_data['clearRate']['datasets'][3]['backgroundColor'].append('rgb(255, 242, 128)')
-        chart_data['clearRate']['datasets'][4]['backgroundColor'].append('rgb(166, 227, 157)')
-        chart_data['clearRate']['datasets'][5]['backgroundColor'].append('#C6C6C6')
+        chart_data['clearRate']['datasets'][0]['backgroundColor'].append(
+            '#4a4a4a')
+        chart_data['clearRate']['datasets'][1]['backgroundColor'].append(
+            'rgb(153, 207, 229)')
+        chart_data['clearRate']['datasets'][2]['backgroundColor'].append(
+            'rgb(243, 192, 171)')
+        chart_data['clearRate']['datasets'][3]['backgroundColor'].append(
+            'rgb(255, 242, 128)')
+        chart_data['clearRate']['datasets'][4]['backgroundColor'].append(
+            'rgb(166, 227, 157)')
+        chart_data['clearRate']['datasets'][5]['backgroundColor'].append(
+            '#C6C6C6')
 
     json_str = json.dumps(chart_data['clearRate'], ensure_ascii=False)
     return HttpResponse(json_str, content_type='application/json; charset=UTF-8')

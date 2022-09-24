@@ -73,7 +73,8 @@ class Command(BaseCommand):
                     }
                 )
             except DataError:
-                print(f'failed Music.objects.get_or_create with DataError: {music}\n')
+                print(
+                    f'failed Music.objects.get_or_create with DataError: {music}\n')
                 raise DataError
 
             if created:

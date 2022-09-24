@@ -5,6 +5,7 @@ import sys
 from users.models import CustomUser
 from main.models import Bad_Count, Medal, Extra_Option
 
+
 class Command(BaseCommand):
     help = '指定されたアカウントを削除します。'
     args = '<username>'
@@ -20,7 +21,7 @@ class Command(BaseCommand):
         try:
             user = CustomUser.objects.get(username=username)
         except ObjectDoesNotExist:
-            print ('ユーザー "{0}" は存在しません。'.format(username))
+            print('ユーザー "{0}" は存在しません。'.format(username))
             sys.exit()
 
         # クリアデータ数を取得
@@ -29,14 +30,14 @@ class Command(BaseCommand):
         extra_option_num = Extra_Option.objects.filter(user=user).count()
 
         # 確認
-        print ('アカウント "{0}" を削除します。'.format(user.username))
-        print ('アカウントが無効になり、これらのクリアデータは完全に削除されます。')
-        print ('メダル: {0} 件'.format(medal_num))
-        print ('BAD数: {0} 件'.format(bad_count_num))
-        print ('エクストラオプション: {0} 件'.format(extra_option_num))
-        print ('\n本当によろしいですか？ (y/N)')
+        print('アカウント "{0}" を削除します。'.format(user.username))
+        print('アカウントが無効になり、これらのクリアデータは完全に削除されます。')
+        print('メダル: {0} 件'.format(medal_num))
+        print('BAD数: {0} 件'.format(bad_count_num))
+        print('エクストラオプション: {0} 件'.format(extra_option_num))
+        print('\n本当によろしいですか？ (y/N)')
         if input('> ') != 'y':
-            print ('終了します。')
+            print('終了します。')
             sys.exit()
 
         # 全クリアデータを削除
@@ -48,4 +49,4 @@ class Command(BaseCommand):
         user.is_active = False
         user.save()
 
-        print ('\n完了しました！')
+        print('\n完了しました！')

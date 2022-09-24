@@ -55,6 +55,8 @@ PyJWT = "==2.1.0"
 uvicorn = "==0.18.3"
 
 [dev-packages]
+autopep8 = "==1.7.0"
+flake8 = "==5.0.4"
 
 [scripts]
 format = "autopep8 -ivr ."

@@ -21,39 +21,49 @@ class Command(BaseCommand):
             selected_users = CustomUser.objects.filter(username=username)
         else:
             # プレミアムユーザーを取得
-            selected_users = CustomUser.objects.filter(is_active=True, premium=True)
-            selected_users_count = CustomUser.objects.filter(is_active=True, premium=True).count()
-            print('active premium user: ' + str(selected_users.count()) + ' users\n')
+            selected_users = CustomUser.objects.filter(
+                is_active=True, premium=True)
+            selected_users_count = CustomUser.objects.filter(
+                is_active=True, premium=True).count()
+            print('active premium user: ' +
+                  str(selected_users.count()) + ' users\n')
 
         for selected_user in selected_users:
-            print('"{username}" のクリアデータを読み込んでいます...'.format(username=selected_user.username))
+            print('"{username}" のクリアデータを読み込んでいます...'.format(
+                username=selected_user.username))
 
             # CSV書き込み用データ (2次元配列)
-            csv_data = [['S乱Lv', 'Lv', '曲名', '難易度', 'BPM', 'メダル', 'ハード', 'BAD数', '更新日時']]
+            csv_data = [['S乱Lv', 'Lv', '曲名', '難易度',
+                         'BPM', 'メダル', 'ハード', 'BAD数', '更新日時']]
 
             max_s_lv = 19
             s_lv_range = range(max_s_lv, 0, -1)
             for s_lv in s_lv_range:
                 sran_level_id = s_lv
-                music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
+                music_list = Music.objects.filter(
+                    sran_level=sran_level_id).order_by('level', 'title')
                 for music in music_list:
                     try:
-                        bad_count = Bad_Count.objects.get(music=music, user=selected_user)
+                        bad_count = Bad_Count.objects.get(
+                            music=music, user=selected_user)
                     except ObjectDoesNotExist:
                         bad_count = ''
                     try:
-                        medal = Medal.objects.get(music=music, user=selected_user)
+                        medal = Medal.objects.get(
+                            music=music, user=selected_user)
                     except ObjectDoesNotExist:
                         medal = ''
                     try:
-                        extra_option = Extra_Option.objects.get(music=music, user=selected_user)
+                        extra_option = Extra_Option.objects.get(
+                            music=music, user=selected_user)
                         if extra_option.hard:
                             hard = '○'
                         else:
                             hard = ''
                     except ObjectDoesNotExist:
                         hard = ''
-                    updated_at = get_latest_updated_at(music.id, selected_user.id)
+                    updated_at = get_latest_updated_at(
+                        music.id, selected_user.id)
 
                     row = [music.sran_level, music.level, music.title, music.difficulty, music.bpm, medal, hard,
                            bad_count, updated_at]
@@ -69,7 +79,8 @@ class Command(BaseCommand):
             writer.writerows(csv_data)
             f.close()
 
-            print('"{username}" のクリアデータを出力しました: {username}.csv\n'.format(username=selected_user.username))
+            print('"{username}" のクリアデータを出力しました: {username}.csv\n'.format(
+                username=selected_user.username))
 
         print('Complete!')
 
@@ -98,7 +109,8 @@ def get_latest_updated_at(music_id, user_id):
         bad_count_updated_at = bad_count.updated_at
         medal_updated_at = medal.updated_at
         extra_option_updated_at = extra_option.updated_at
-        latest = max(bad_count_updated_at, medal_updated_at, extra_option_updated_at)
+        latest = max(bad_count_updated_at, medal_updated_at,
+                     extra_option_updated_at)
     elif bad_count and medal:
         bad_count_updated_at = bad_count.updated_at
         medal_updated_at = medal.updated_at
