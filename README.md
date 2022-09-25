@@ -10,26 +10,20 @@ A clear status management site for super-random enthusiasts of pop'n music
 - [MySQL](https://www.mysql.com/) 5.6 >=
 - [direnv](https://github.com/direnv/direnv#install) (optional)
 
-### Install dependent tools
+### Create development environment
 ```
 pipenv install
 ```
 
 ### Set environment variables
 ```shell
-cp .envrc_sample .envrc
-direnv allow
-```
-
-### Create local_settings.py
-```shell
-cp srandom/local_settings_sample.py srandom/local_settings.py
-vi srandom/local_settings.py
+cp .env.sample .env
+vi .env # edit it
 ```
 
 ### Run test
 ```
-python manage.py test
+pipenv run test
 ```
 
 ## Commands

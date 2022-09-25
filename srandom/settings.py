@@ -12,22 +12,25 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
+import environ
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Take environment variables from .env file
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# Load SECRET_KEY from local_settings.py
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# Load DEBUG from local_settings.py
-DEBUG = False
+DEBUG = env.bool('DEBUG', False)
 
-# Load ALLOWED_HOSTS from local_settings.py
-
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Application definition
 
@@ -91,7 +94,21 @@ WSGI_APPLICATION = 'srandom.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-# Load DATABASES from local_settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'HOST': env('DATABASE_HOST'),
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        },
+        'TEST': {
+            'NAME': 'test_srandom'
+        }
+    }
+}
 
 # https://docs.djangoproject.com/en/3.2/releases/3.2/#customizing-type-of-auto-created-primary-keys
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -128,13 +145,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Load all local settings
-try:
-    from .local_settings import *
-except ImportError:
-    pass
 
 
 # Static files (CSS, JavaScript, Images)
@@ -180,6 +190,8 @@ AUTHENTICATION_BACKENDS = [
 
 # Load SOCIAL_AUTH_TWITTER_KEY from local_settings.py
 # Load SOCIAL_AUTH_TWITTER_SECRET from local_settings.py
+SOCIAL_AUTH_TWITTER_KEY = env('SOCIAL_AUTH_TWITTER_KEY')
+SOCIAL_AUTH_TWITTER_SECRET = env('SOCIAL_AUTH_TWITTER_SECRET')
 
 
 # django-compressor

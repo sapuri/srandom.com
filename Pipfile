@@ -53,15 +53,17 @@ Django = "==3.2.7"
 IPy = "==1.1"
 PyJWT = "==2.1.0"
 uvicorn = "==0.18.3"
+django-environ = "==0.9.0"
 
 [dev-packages]
 autopep8 = "==1.7.0"
 flake8 = "==5.0.4"
 
 [scripts]
+test = "python manage.py test"
+serve = "python main.py"
 format = "autopep8 -ivr ."
 lint = "flake8 --show-source ."
-test = "python manage.py test"
 docker_up = "docker-compose up -d --build"
 docker_down = "docker-compose down"
 
