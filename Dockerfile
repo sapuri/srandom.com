@@ -10,11 +10,13 @@ RUN PIPENV_VENV_IN_PROJECT=1 pipenv install
 
 FROM python:3.9-slim as runner
 
-RUN apt-get update && apt-get -y install --no-install-recommends gcc libmariadb-dev
+RUN apt-get update && apt-get -y install --no-install-recommends gcc libmariadb-dev ca-certificates
 
 WORKDIR /app
 COPY --from=builder /app /app
 COPY . /app
+
+RUN .venv/bin/python manage.py collectstatic --noinput
 
 EXPOSE 8000
 

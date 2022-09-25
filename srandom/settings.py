@@ -98,19 +98,36 @@ WSGI_APPLICATION = 'srandom.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': env('DATABASE_ENGINE'),
         'NAME': env('DATABASE_NAME'),
         'USER': env('DATABASE_USER'),
         'PASSWORD': env('DATABASE_PASSWORD'),
         'HOST': env('DATABASE_HOST'),
         'OPTIONS': {
             'charset': 'utf8mb4',
+            'ssl': {
+                'ca': env('DATABASE_SSL_CA'),
+            }
         },
-        'TEST': {
-            'NAME': 'test_srandom'
-        }
     }
 }
+
+if env('DATABASE_HOST') == '127.0.0.1':
+    DATABASES = {
+        'default': {
+            'ENGINE': env('DATABASE_ENGINE'),
+            'NAME': env('DATABASE_NAME'),
+            'USER': env('DATABASE_USER'),
+            'PASSWORD': env('DATABASE_PASSWORD'),
+            'HOST': env('DATABASE_HOST'),
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+            },
+            'TEST': {
+                'NAME': 'test_srandom'
+            }
+        }
+    }
 
 # https://docs.djangoproject.com/en/3.2/releases/3.2/#customizing-type-of-auto-created-primary-keys
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

@@ -25,6 +25,7 @@ jobs:
 
       - name: Build and push a container
         run: |-
+          git clone https://github.com/planetscale/django_psdb_engine.git
           ./scripts/decrypt-env.sh production
           docker build . -t ${{ env.IMAGE }}
           docker push ${{ env.IMAGE }}
