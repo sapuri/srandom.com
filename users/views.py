@@ -8,6 +8,7 @@ from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, render, redirect
+from google.cloud import storage
 
 from main.models import *
 from .forms import *
@@ -242,14 +243,22 @@ def download(request, file_type):
     """
     if file_type == 'csv':
         if request.user.premium:
+            env = getattr(setting, 'ENV', None)
+            if env is None:
+                raise Exception('failed to read env')
+
             file_path = f'{setting.BASE_DIR}/csv/export/{request.user.username}.csv'
             try:
+                bucket = storage.Client().bucket(env('GCP_STORAGE_BUCKET'))
+                blob = bucket.blob(f'csv/export/{request.user.username}.csv')
+                blob.download_to_filename(file_path)
+
                 response = HttpResponse(
                     open(file_path).read(), content_type='text/csv; charset=utf-8')
             except FileNotFoundError:
                 raise Http404
             response['Content-Disposition'] = 'attachment; filename=' + \
-                request.user.username + '.csv'
+                                              request.user.username + '.csv'
         else:
             raise PermissionDenied
         return response

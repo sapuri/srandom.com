@@ -4,6 +4,7 @@ import os
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
+from google.cloud import storage
 
 from main.models import Bad_Count, Medal, Extra_Option, Music
 from users.models import CustomUser
@@ -14,6 +15,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # FIXME: メダルが存在しない記録を読み込むとエラーになる
+
+        env = getattr(settings, 'ENV', None)
+        if env is None:
+            raise Exception('failed to read env')
 
         os.makedirs(f'{settings.BASE_DIR}/csv/export/', exist_ok=True)
 
@@ -81,6 +86,11 @@ class Command(BaseCommand):
             writer = csv.writer(f)
             writer.writerows(csv_data)
             f.close()
+
+            storage_client = storage.Client()
+            bucket = storage_client.bucket(env('GCP_STORAGE_BUCKET'))
+            blob = bucket.blob(f'csv/export/{selected_user.username}.csv')
+            blob.upload_from_filename(file_path)
 
             print('"{username}" のクリアデータを出力しました: {username}.csv\n'.format(
                 username=selected_user.username))

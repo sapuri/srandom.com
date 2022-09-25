@@ -13,7 +13,7 @@ services:
       MYSQL_USER: srandom
       MYSQL_PASSWORD: srandom
       MYSQL_ROOT_PASSWORD: root
-  django:
+  app:
     build:
       context: .
       dockerfile: Dockerfile-dev
