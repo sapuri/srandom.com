@@ -1,6 +1,6 @@
 /* クリア状況を取得 */
 function getClearStatus(music_id) {
-    var selector = 'tr#music-'+music_id;
+    const selector = 'tr#music-'+music_id;
     $.ajax({
         url: SERVER_URL+'api/get_clear_status/'+music_id+'/',
         type: 'GET'
@@ -18,14 +18,14 @@ function getClearStatus(music_id) {
 
 /* BAD数を取得 */
 function getBadCount(music_id) {
-    var selector = 'tr#music-'+music_id+' .bad_count';
+    const selector = 'tr#music-'+music_id+' .bad_count';
     $.ajax({
         url: SERVER_URL+'api/get_bad_count/'+music_id+'/',
         type: 'GET'
     })
     .then(
         function(response) {
-            var bad_count = '-';
+            let bad_count = '-';
             if (response.bad_count != null) {
                 bad_count = response.bad_count;
             }
@@ -40,7 +40,7 @@ function getBadCount(music_id) {
 
 /* メダルを取得 */
 function getMedal(music_id) {
-    var selector = 'tr#music-'+music_id+' .medal';
+    const selector = 'tr#music-'+music_id+' .medal';
     $.ajax({
         url: SERVER_URL+'api/get_medal/'+music_id+'/',
         type: 'GET'
@@ -49,10 +49,10 @@ function getMedal(music_id) {
         function(response) {
             if (response.medal && response.medal != 12) {
                 // 未プレイ以外ならメダルを描画
-                var medal = response.medal;
+                const medal = response.medal;
                 $(selector+' .loading').remove();
                 $(selector+' img').attr({
-                    src: '/static/img/medal/'+medal+'.png',
+                    src: `${STATIC_URL}img/medal/${medal}.png`,
                     width: '18',
                     height: '18'
                 });
@@ -69,14 +69,14 @@ function getMedal(music_id) {
 
 /* 最新の更新日時を取得 */
 function getLatestUpdatedAt(music_id) {
-    var selector = 'tr#music-'+music_id+' .updated_at';
+    const selector = 'tr#music-'+music_id+' .updated_at';
     $.ajax({
         url: SERVER_URL+'api/get_latest_updated_at/'+music_id+'/',
         type: 'GET'
     })
     .then(
         function(response) {
-            var updated_at = '-';
+            let updated_at = '-';
             if (response.is_active) {
                 // ゼロパディング
                 response.day = ("0" + response.day).slice(-2);
@@ -94,7 +94,7 @@ function getLatestUpdatedAt(music_id) {
 
 /* フォルダランプを取得 */
 function getFolderLamp(level, is_srandom) {
-    var selector = '#lv'+level+'.level-folder';
+    const selector = '#lv'+level+'.level-folder';
     $.ajax({
         url: SERVER_URL+'api/get_folder_lamp/'+level+'/',
         type: 'GET',

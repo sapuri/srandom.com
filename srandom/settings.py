@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'debug_toolbar',                    # django-debug-toolbar
     'bootstrap3',                       # django-bootstrap3
     'social_django',                    # python-social-auth
-    'compressor',                       # django-compressor
     'maintenance_mode',                 # django-maintenance-mode
     'sslserver',                        # django-sslserver
     'main.apps.MainConfig',             # Main
@@ -63,9 +62,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # django-debug-toolbar
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    # django-htmlmin
-    'htmlmin.middleware.HtmlMinifyMiddleware',
-    'htmlmin.middleware.MarkRequestMiddleware',
     # django-maintenance-mode
     'maintenance_mode.middleware.MaintenanceModeMiddleware',
 ]
@@ -169,16 +165,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
-)
-
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+if not DEBUG:
+    # django-storages
+    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    GS_BUCKET_NAME = 'srandom-static'
+    GS_DEFAULT_ACL = None
+    GS_QUERYSTRING_AUTH = False
+
+    STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    STATIC_URL = 'https://storage.googleapis.com/srandom-static/'
 
 # メッセージ設定
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
@@ -195,7 +194,7 @@ if DEBUG:
 
 # django-bootstrap3
 BOOTSTRAP3 = {
-    'css_url': '/static/css/bootstrap.min.css'
+    'css_url': f'{STATIC_URL}css/bootstrap.min.css'
 }
 
 
@@ -207,19 +206,9 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# Load SOCIAL_AUTH_TWITTER_KEY from local_settings.py
-# Load SOCIAL_AUTH_TWITTER_SECRET from local_settings.py
 SOCIAL_AUTH_TWITTER_KEY = env('SOCIAL_AUTH_TWITTER_KEY')
 SOCIAL_AUTH_TWITTER_SECRET = env('SOCIAL_AUTH_TWITTER_SECRET')
 
-
-# django-compressor
-# DEBUG と反対の値になるため通常は指定する必要無し
-# COMPRESS_ENABLED = True
-
-# django-htmlmin
-# DEBUG と反対の値になるため通常は指定する必要無し
-# HTML_MINIFY = True
 
 # django-maintenance-mode
 MAINTENANCE_MODE_STATE_FILE_PATH = 'srandom/maintenance_mode_state.txt'

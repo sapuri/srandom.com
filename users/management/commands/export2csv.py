@@ -88,7 +88,7 @@ class Command(BaseCommand):
             f.close()
 
             storage_client = storage.Client()
-            bucket = storage_client.bucket(env('GCP_STORAGE_BUCKET'))
+            bucket = storage_client.bucket(env('GCP_INTERNAL_BUCKET'))
             blob = bucket.blob(f'csv/export/{selected_user.username}.csv')
             blob.upload_from_filename(file_path)
 

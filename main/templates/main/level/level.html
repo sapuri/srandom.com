@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load bootstrap3 %}
 
 {% block title %}公式難易度表(Lv{{ level }}) - スパランドットコム{% endblock %}
@@ -7,7 +8,7 @@
 <meta property="og:title" content="公式難易度表(Lv{{ level }}) - スパランドットコム" />
 <meta property="og:type" content="article" />
 <meta name="description" content="スパランドットコムの公式難易度表ページです。(Lv{{ level }})">
-<script src="/static/js/music_list.js?v=20161230"></script>
+<script src="{% static 'js/music_list.js' %}"></script>
 {% endblock %}
 
 {% block content %}

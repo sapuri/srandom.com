@@ -249,7 +249,7 @@ def download(request, file_type):
 
             file_path = f'{setting.BASE_DIR}/csv/export/{request.user.username}.csv'
             try:
-                bucket = storage.Client().bucket(env('GCP_STORAGE_BUCKET'))
+                bucket = storage.Client().bucket(env('GCP_INTERNAL_BUCKET'))
                 blob = bucket.blob(f'csv/export/{request.user.username}.csv')
                 blob.download_to_filename(file_path)
 

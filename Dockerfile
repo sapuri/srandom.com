@@ -16,8 +16,6 @@ WORKDIR /app
 COPY --from=builder /app /app
 COPY . /app
 
-RUN .venv/bin/python manage.py collectstatic --noinput
-
 EXPOSE 8000
 
 ENV PORT 8000
