@@ -15,3 +15,4 @@ local_settings.py
 staticfiles/
 
 csv/
+django_psdb_engine/

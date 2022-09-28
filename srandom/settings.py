@@ -102,13 +102,14 @@ DATABASES = {
         'OPTIONS': {
             'charset': 'utf8mb4',
             'ssl': {
+                # ref. https://planetscale.com/docs/concepts/secure-connections#ca-root-configuration
                 'ca': env('DATABASE_SSL_CA'),
             }
         },
     }
 }
 
-if env('DATABASE_HOST') == '127.0.0.1':
+if env('DATABASE_SSL_CA') == '':
     DATABASES = {
         'default': {
             'ENGINE': env('DATABASE_ENGINE'),
@@ -231,3 +232,43 @@ if not DEBUG:
                 },
             }
         }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    "formatters": {
+        "django.server": {
+            "()": "django.utils.log.ServerFormatter",
+            "format": "[{server_time}] {message}",
+            "style": "{",
+        }
+    },
+    "handlers": {
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+        },
+        "django.server": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "django.server",
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        "django.server": {
+            "handlers": ["django.server"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}

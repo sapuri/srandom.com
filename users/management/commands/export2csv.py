@@ -1,4 +1,5 @@
 import csv
+import logging
 import os
 
 from django.conf import settings
@@ -12,6 +13,8 @@ from users.models import CustomUser
 
 class Command(BaseCommand):
     help = 'プレミアムユーザーのクリアデータを CSV にエクスポートします。'
+
+    logger = logging.getLogger('command.export2csv')
 
     def handle(self, *args, **options):
         # FIXME: メダルが存在しない記録を読み込むとエラーになる
@@ -92,17 +95,16 @@ class Command(BaseCommand):
             blob = bucket.blob(f'csv/export/{selected_user.username}.csv')
             blob.upload_from_filename(file_path)
 
-            print('"{username}" のクリアデータを出力しました: {username}.csv\n'.format(
-                username=selected_user.username))
+            self.logger.info(f'"{selected_user.username}" のクリアデータを出力しました: {selected_user.username}.csv')
 
-        print('Complete!')
+        self.logger.info('Finished')
 
 
-def get_latest_updated_at(music_id, user_id):
+def get_latest_updated_at(music_id: int, user_id: int) -> str:
     """
-    @param {int} music_id 曲ID
-    @param {int} user_id ユーザーID
-    @return {string} 最新の更新日時
+    @param music_id 曲ID
+    @param user_id ユーザーID
+    @return 最新の更新日時
     """
     try:
         bad_count = Bad_Count.objects.get(music=music_id, user=user_id)
