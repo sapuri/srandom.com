@@ -1,4 +1,6 @@
 import csv
+import logging
+from slack_sdk.webhook import WebhookClient
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -10,14 +12,40 @@ from main.models import Music, Difficulty, Level, Sran_Level
 class Command(BaseCommand):
     help = 'CSVファイルから曲情報を読み取り、データベースを更新します。'
 
+    logger = logging.getLogger('command.update_music')
+
     def handle(self, *args, **options):
+        env = getattr(settings, 'ENV', None)
+        if env is None:
+            raise Exception('failed to read env')
+
         file_path = f'{settings.BASE_DIR}/csv/srandom.csv'
         max_lv = 19
 
-        music_list = self.parse_csv(file_path)
-        update_count = self.update_db(music_list, max_lv)
-        if update_count:
-            print(f'更新が {update_count}件 ありました！')
+        music_list = []
+        try:
+            music_list = self.parse_csv(file_path)
+        except Exception as e:
+            self.logger.error(f'failed to parse CSV: {e}')
+
+        update_msg_list = []
+        try:
+            update_msg_list = self.update_db(music_list, max_lv)
+        except Exception as e:
+            self.logger.error(f'failed to update music record: {e}')
+
+        if len(update_msg_list) > 0:
+            text = f'更新が {len(update_msg_list)}件 ありました！\n```'
+            for msg in update_msg_list:
+                text += f'{msg}\n'
+            text += '```'
+
+            webhook = WebhookClient(env('SLACK_WEBHOOK_URL'))
+            resp = webhook.send(text=text)
+            if resp.status_code != 200:
+                self.logger.error("failed to notify Slack")
+
+        self.logger.info("finished")
 
     @staticmethod
     def parse_csv(file_path: str) -> list:
@@ -37,14 +65,14 @@ class Command(BaseCommand):
 
         return music_list
 
-    def update_db(self, music_list: list, max_lv: int) -> int:
+    def update_db(self, music_list: list, max_lv: int) -> list:
         """
         :param music_list:
         :param max_lv:
-        :return: update_count
+        :return: update_msg_list
         """
         sran_level = max_lv
-        update_count = 0
+        update_msg_list = []
 
         for row in music_list:
             if len(row) == 1:
@@ -57,7 +85,7 @@ class Command(BaseCommand):
 
             title, difficulty = self.split_difficulty(title)
             if not difficulty:
-                print('[skip] undefined difficulty:', title)
+                self.logger.warning(f'[skip] undefined difficulty: {title}')
                 continue
 
             try:
@@ -78,8 +106,7 @@ class Command(BaseCommand):
                 raise DataError
 
             if created:
-                print(f'#{music.id}: {music.title}({music.difficulty}) を追加しました。')
-                update_count += 1
+                update_msg_list.append(f'#{music.id}: {music.title}({music.difficulty}) を追加しました。')
                 continue
 
             has_changed = False
@@ -95,11 +122,9 @@ class Command(BaseCommand):
 
             if has_changed:
                 music.save(update_fields=['level', 'sran_level', 'bpm'])
-                print(
-                    f'#{music.id}: {music.title}({music.difficulty}) を S乱レベルID: {music.sran_level} レベル: {music.level} BPM: {music.bpm} に更新しました。')
-                update_count += 1
+                update_msg_list.append(f'#{music.id}: {music.title}({music.difficulty}) を S乱レベルID: {music.sran_level} レベル: {music.level} BPM: {music.bpm} に更新しました。')
 
-        return update_count
+        return update_msg_list
 
     @staticmethod
     def split_difficulty(title: str) -> tuple:
