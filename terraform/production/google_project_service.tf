@@ -17,3 +17,7 @@ resource "google_project_service" "artifactregistry" {
 resource "google_project_service" "cloudbuild" {
   service = "cloudbuild.googleapis.com"
 }
+
+resource "google_project_service" "cloudscheduler" {
+  service = "cloudscheduler.googleapis.com"
+}
