@@ -101,8 +101,7 @@ class Command(BaseCommand):
                     }
                 )
             except DataError:
-                print(
-                    f'failed Music.objects.get_or_create with DataError: {music}\n')
+                self.logger.error(f'Music.objects.get_or_create failed with DataError: {music}')
                 raise DataError
 
             if created:
@@ -143,5 +142,4 @@ class Command(BaseCommand):
         elif '(E)' in spl:
             return title[:-3], 'EASY'
         else:
-            print('difficulty not found')
             return title, ''

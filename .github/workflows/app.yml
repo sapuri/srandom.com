@@ -8,9 +8,12 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      CLOUDSDK_CORE_DISABLE_PROMPTS: 1
       SERVICE: app
       REGION: asia-northeast1
-      IMAGE: asia-northeast1-docker.pkg.dev/srandom/app/app:${{ github.sha }}
+      IMAGE_APP: asia-northeast1-docker.pkg.dev/srandom/app/app:${{ github.sha }}
+      IMAGE_CMD_UPDATE_MUSIC: asia-northeast1-docker.pkg.dev/srandom/cmd/update-music:${{ github.sha }}
+      IMAGE_CMD_EXPORT2CSV: asia-northeast1-docker.pkg.dev/srandom/cmd/export2csv:${{ github.sha }}
     
     steps:
       - uses: actions/checkout@v3
@@ -23,16 +26,25 @@ jobs:
       - name: Configure auth
         run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
 
-      - name: Build and push a container
-        run: |-
+      - name: Build and push containers
+        run: |
           git clone https://github.com/planetscale/django_psdb_engine.git
           ./scripts/decrypt-env.sh production
-          docker build . -t ${{ env.IMAGE }}
-          docker push ${{ env.IMAGE }}
+          docker build . -f docker/Dockerfile -t ${{ env.IMAGE_APP }}
+          docker build . -f docker/Dockerfile_update_music -t ${{ env.IMAGE_CMD_UPDATE_MUSIC }}
+          docker build . -f docker/Dockerfile_export2csv -t ${{ env.IMAGE_CMD_EXPORT2CSV }}
+          docker push ${{ env.IMAGE_APP }}
+          docker push ${{ env.IMAGE_CMD_UPDATE_MUSIC }}
+          docker push ${{ env.IMAGE_CMD_EXPORT2CSV }}
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@main
         with:
           service: ${{ env.SERVICE }}
-          image: ${{ env.IMAGE }}
+          image: ${{ env.IMAGE_APP }}
           region: ${{ env.REGION }}
+
+      - name: Update Cloud Run Jobs
+        run: |
+          gcloud beta run jobs update update-music --image ${{ env.IMAGE_CMD_UPDATE_MUSIC }} --region asia-northeast1
+          gcloud beta run jobs update export2csv --image ${{ env.IMAGE_CMD_EXPORT2CSV }} --region asia-northeast1
