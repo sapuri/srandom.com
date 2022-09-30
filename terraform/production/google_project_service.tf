@@ -21,3 +21,7 @@ resource "google_project_service" "cloudbuild" {
 resource "google_project_service" "cloudscheduler" {
   service = "cloudscheduler.googleapis.com"
 }
+
+resource "google_project_service" "cloud_dns" {
+  service = "dns.googleapis.com"
+}
