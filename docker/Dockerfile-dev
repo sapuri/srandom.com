@@ -1,0 +1,17 @@
+FROM python:3.9-slim as builder
+
+RUN apt-get update && apt-get -y install --no-install-recommends gcc libmariadb-dev
+
+WORKDIR /app
+COPY . ./
+
+RUN pip install -U pip && pip install pipenv
+RUN PIPENV_VENV_IN_PROJECT=1 pipenv install
+
+RUN .venv/bin/python manage.py collectstatic --noinput
+
+EXPOSE 8000
+
+ENV PORT 8000
+
+CMD .venv/bin/python main.py

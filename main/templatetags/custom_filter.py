@@ -3,16 +3,22 @@ from django import template
 register = template.Library()
 
 # リストの添字に変数を与える
+
+
 @register.filter
 def get_at_index(list, index):
     return list[index]
 
 # 2つの変数をコンマで区切った文字列を作成 (filterに3つ引数を渡すため)
+
+
 @register.filter
 def join_comma(var, args):
     return "%s,%s" % (var, args)
 
 # 指定された曲の値をlistから探して返す
+
+
 @register.filter
 def medal_int(medal_list, music):
     if not medal_list:
@@ -27,6 +33,7 @@ def medal_int(medal_list, music):
                 return 0
     return 0
 
+
 @register.filter
 def bad_count_int(bad_count_list, music):
     if not bad_count_list:
@@ -37,6 +44,7 @@ def bad_count_int(bad_count_list, music):
             return bad_count.int()
     return '-'
 
+
 @register.filter
 def bad_count_updated_at(bad_count_list, music):
     if not bad_count_list:
@@ -46,6 +54,7 @@ def bad_count_updated_at(bad_count_list, music):
         if bad_count.music.id == music.id:
             return bad_count.updated_at
     return '-'
+
 
 @register.filter
 def is_hard(extra_option_list, music):

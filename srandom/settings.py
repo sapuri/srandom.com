@@ -12,22 +12,27 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
+import environ
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Take environment variables from .env file
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, '.env'))
+
+ENV = env  # for import from other files
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# Load SECRET_KEY from local_settings.py
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# Load DEBUG from local_settings.py
-DEBUG = False
+DEBUG = env.bool('DEBUG', False)
 
-# Load ALLOWED_HOSTS from local_settings.py
-
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Application definition
 
@@ -41,7 +46,6 @@ INSTALLED_APPS = [
     'debug_toolbar',                    # django-debug-toolbar
     'bootstrap3',                       # django-bootstrap3
     'social_django',                    # python-social-auth
-    'compressor',                       # django-compressor
     'maintenance_mode',                 # django-maintenance-mode
     'sslserver',                        # django-sslserver
     'main.apps.MainConfig',             # Main
@@ -58,9 +62,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # django-debug-toolbar
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    # django-htmlmin
-    'htmlmin.middleware.HtmlMinifyMiddleware',
-    'htmlmin.middleware.MarkRequestMiddleware',
     # django-maintenance-mode
     'maintenance_mode.middleware.MaintenanceModeMiddleware',
 ]
@@ -91,7 +92,39 @@ WSGI_APPLICATION = 'srandom.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-# Load DATABASES from local_settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': env('DATABASE_ENGINE'),
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'HOST': env('DATABASE_HOST'),
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'ssl': {
+                # ref. https://planetscale.com/docs/concepts/secure-connections#ca-root-configuration
+                'ca': env('DATABASE_SSL_CA'),
+            }
+        },
+    }
+}
+
+if env('DATABASE_SSL_CA') == '':
+    DATABASES = {
+        'default': {
+            'ENGINE': env('DATABASE_ENGINE'),
+            'NAME': env('DATABASE_NAME'),
+            'USER': env('DATABASE_USER'),
+            'PASSWORD': env('DATABASE_PASSWORD'),
+            'HOST': env('DATABASE_HOST'),
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+            },
+            'TEST': {
+                'NAME': 'test_srandom'
+            }
+        }
+    }
 
 # https://docs.djangoproject.com/en/3.2/releases/3.2/#customizing-type-of-auto-created-primary-keys
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -130,26 +163,22 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Load all local settings
-try:
-    from .local_settings import *
-except ImportError:
-    pass
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
-)
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+if not DEBUG:
+    # django-storages
+    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    GS_BUCKET_NAME = 'srandom-static'
+    GS_DEFAULT_ACL = None
+    GS_QUERYSTRING_AUTH = False
+
+    STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    STATIC_URL = 'https://storage.googleapis.com/srandom-static/'
 
 # メッセージ設定
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
@@ -166,7 +195,7 @@ if DEBUG:
 
 # django-bootstrap3
 BOOTSTRAP3 = {
-    'css_url': '/static/css/bootstrap.min.css'
+    'css_url': f'{STATIC_URL}css/bootstrap.min.css'
 }
 
 
@@ -178,17 +207,9 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# Load SOCIAL_AUTH_TWITTER_KEY from local_settings.py
-# Load SOCIAL_AUTH_TWITTER_SECRET from local_settings.py
+SOCIAL_AUTH_TWITTER_KEY = env('SOCIAL_AUTH_TWITTER_KEY')
+SOCIAL_AUTH_TWITTER_SECRET = env('SOCIAL_AUTH_TWITTER_SECRET')
 
-
-# django-compressor
-# DEBUG と反対の値になるため通常は指定する必要無し
-# COMPRESS_ENABLED = True
-
-# django-htmlmin
-# DEBUG と反対の値になるため通常は指定する必要無し
-# HTML_MINIFY = True
 
 # django-maintenance-mode
 MAINTENANCE_MODE_STATE_FILE_PATH = 'srandom/maintenance_mode_state.txt'
@@ -211,3 +232,43 @@ if not DEBUG:
                 },
             }
         }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    "formatters": {
+        "django.server": {
+            "()": "django.utils.log.ServerFormatter",
+            "format": "[{server_time}] {message}",
+            "style": "{",
+        }
+    },
+    "handlers": {
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+        },
+        "django.server": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "django.server",
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        "django.server": {
+            "handlers": ["django.server"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}

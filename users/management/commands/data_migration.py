@@ -5,6 +5,7 @@ import sys
 from users.models import CustomUser
 from main.models import Bad_Count, Medal, Extra_Option
 
+
 class Command(BaseCommand):
     help = 'クリアデータを移行します。'
     args = '<source_username destination_username>'
@@ -23,19 +24,20 @@ class Command(BaseCommand):
         try:
             user_from = CustomUser.objects.get(username=username_from)
         except ObjectDoesNotExist:
-            print ('移行元のユーザー "{0}" は存在しません。'.format(username_from))
+            print('移行元のユーザー "{0}" は存在しません。'.format(username_from))
             sys.exit()
         try:
             user_to = CustomUser.objects.get(username=username_to)
         except ObjectDoesNotExist:
-            print ('移行先のユーザー "{0}" は存在しません。'.format(username_to))
+            print('移行先のユーザー "{0}" は存在しません。'.format(username_to))
             sys.exit()
 
         # 確認
-        print ('"{0}" のクリアデータを "{1}" に移行します。'.format(user_from.username, user_to.username))
-        print ('本当によろしいですか？ (y/N)')
+        print('"{0}" のクリアデータを "{1}" に移行します。'.format(
+            user_from.username, user_to.username))
+        print('本当によろしいですか？ (y/N)')
         if input('> ') != 'y':
-            print ('終了します。')
+            print('終了します。')
             sys.exit()
 
         # クリアデータを取得
@@ -54,7 +56,7 @@ class Command(BaseCommand):
             extra_option.user = user_to
             extra_option.save()
 
-        print ('\nメダル: {0}'.format(len(medal_list)))
-        print ('BAD数: {0}'.format(len(bad_count_list)))
-        print ('エクストラオプション: {0}'.format(len(extra_option_list)))
-        print ('\n完了しました！')
+        print('\nメダル: {0}'.format(len(medal_list)))
+        print('BAD数: {0}'.format(len(bad_count_list)))
+        print('エクストラオプション: {0}'.format(len(extra_option_list)))
+        print('\n完了しました！')

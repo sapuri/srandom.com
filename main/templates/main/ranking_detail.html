@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load custom_filter %}
 {% load ranking_detail_filter %}
+{% load static %}
 {% load bootstrap3 %}
 
 {% block title %}{{ music.title }}({{ music.difficulty }}) - スパランドットコム{% endblock %}
@@ -56,17 +57,17 @@
 <h2 class="page-header">メダル分布</h2>
 <table class="table table-condensed">
     <thead>
-        <th><img src="/static/img/medal/1.png" width="18" height="18"/></th>
-        <th><img src="/static/img/medal/2.png" width="18" height="18"/></th>
-        <th><img src="/static/img/medal/3.png" width="18" height="18"/></th>
-        <th><img src="/static/img/medal/4.png" width="18" height="18"/></th>
-        <th><img src="/static/img/medal/5.png" width="18" height="18"/></th>
-        <th><img src="/static/img/medal/6.png" width="18" height="18"/></th>
-        <th><img src="/static/img/medal/7.png" width="18" height="18"/></th>
-        <th><img src="/static/img/medal/8.png" width="18" height="18"/></th>
-        <th><img src="/static/img/medal/9.png" width="18" height="18"/></th>
-        <th><img src="/static/img/medal/10.png" width="18" height="18"/></th>
-        <th><img src="/static/img/medal/11.png" width="18" height="18"/></th>
+        <th><img src="{% static 'img/medal/1.png' %}" width="18" height="18"/></th>
+        <th><img src="{% static 'img/medal/2.png' %}" width="18" height="18"/></th>
+        <th><img src="{% static 'img/medal/3.png' %}" width="18" height="18"/></th>
+        <th><img src="{% static 'img/medal/4.png' %}" width="18" height="18"/></th>
+        <th><img src="{% static 'img/medal/5.png' %}" width="18" height="18"/></th>
+        <th><img src="{% static 'img/medal/6.png' %}" width="18" height="18"/></th>
+        <th><img src="{% static 'img/medal/7.png' %}" width="18" height="18"/></th>
+        <th><img src="{% static 'img/medal/8.png' %}" width="18" height="18"/></th>
+        <th><img src="{% static 'img/medal/9.png' %}" width="18" height="18"/></th>
+        <th><img src="{% static 'img/medal/10.png' %}" width="18" height="18"/></th>
+        <th><img src="{% static 'img/medal/11.png' %}" width="18" height="18"/></th>
         <th>計</th>
     </thead>
     <tbody>
@@ -131,7 +132,7 @@
                 </td>
                 <td class="medal">
                     {% if result.medal.medal %}
-                    <img src="/static/img/medal/{{ result.medal.medal }}.png" width="18" height="18"/>
+                    <img src="{% static 'img/medal' %}/{{ result.medal.medal }}.png" width="18" height="18"/>
                     {% else %}
                     -
                     {% endif %}
@@ -149,7 +150,7 @@
     </tbody>
 </table>
 
-<script src="/static/js/ranking_detail.js?v=20160507"></script>
+<script src="{% static 'js/ranking_detail.js' %}"></script>
 <script>$(function() { getMedalCount({{ music.id }}); });</script>
 <script>$(function() { getBadCountAvg({{ music.id }}); });</script>
 {% endblock %}

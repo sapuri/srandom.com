@@ -6,6 +6,7 @@ from django.core.validators import RegexValidator
 
 from .models import *
 
+
 class CustomUserForm(forms.ModelForm):
     player_name = CharField(
         label='プレイヤー名',
@@ -47,19 +48,25 @@ class CustomUserForm(forms.ModelForm):
         model = CustomUser
         fields = ('player_name', 'poputomo_id', 'email', 'location', 'profile')
 
+
 class PrivacyForm(forms.ModelForm):
     PRIVACY_CHOICES = (
         (1, '公開する'),
         (2, '公開しない'),
     )
 
-    player_name_privacy = ChoiceField(label='プレイヤー名', help_text='ランキングにプレイヤー名とプロフィールページへのリンクが掲載されます。(非公開の場合は"匿名希望さん"と表示されます)', widget=RadioSelect, choices=PRIVACY_CHOICES)
-    cleardata_privacy = ChoiceField(label='クリアデータ', help_text='プロフィールページにクリアデータを表示します。', widget=RadioSelect, choices=PRIVACY_CHOICES)
-    updated_recently_privacy = ChoiceField(label='最近更新した曲', help_text='プロフィールページに最近更新した曲を表示します。', widget=RadioSelect, choices=PRIVACY_CHOICES)
+    player_name_privacy = ChoiceField(
+        label='プレイヤー名', help_text='ランキングにプレイヤー名とプロフィールページへのリンクが掲載されます。(非公開の場合は"匿名希望さん"と表示されます)', widget=RadioSelect, choices=PRIVACY_CHOICES)
+    cleardata_privacy = ChoiceField(
+        label='クリアデータ', help_text='プロフィールページにクリアデータを表示します。', widget=RadioSelect, choices=PRIVACY_CHOICES)
+    updated_recently_privacy = ChoiceField(
+        label='最近更新した曲', help_text='プロフィールページに最近更新した曲を表示します。', widget=RadioSelect, choices=PRIVACY_CHOICES)
 
     class Meta:
         model = CustomUser
-        fields = ('player_name_privacy', 'cleardata_privacy', 'updated_recently_privacy')
+        fields = ('player_name_privacy', 'cleardata_privacy',
+                  'updated_recently_privacy')
+
 
 class ThemeForm(forms.ModelForm):
     theme = ModelChoiceField(

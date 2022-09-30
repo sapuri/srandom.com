@@ -116,7 +116,8 @@ def level(request, level):
     level_id = max_lv - level + 1
 
     # 対象レベルの曲を取得
-    music_list = Music.objects.filter(level=level_id).order_by('-sran_level', 'title')
+    music_list = Music.objects.filter(
+        level=level_id).order_by('-sran_level', 'title')
 
     # 取得曲数を取得
     music_list_count = len(music_list)
@@ -178,7 +179,8 @@ def difflist(request, sran_level):
     sran_level_id = sran_level
 
     # 対象レベルの曲を取得
-    music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
+    music_list = Music.objects.filter(
+        sran_level=sran_level_id).order_by('level', 'title')
 
     # 取得曲数を取得
     music_list_count = len(music_list)
@@ -219,7 +221,8 @@ def edit(request, music_id):
     myself = request.user
 
     # 編集履歴を取得
-    activity_list = Activity.objects.filter(music=music, user=myself).order_by('-id')
+    activity_list = Activity.objects.filter(
+        music=music, user=myself).order_by('-id')
 
     # POSTでアクセスされた場合
     if request.method == 'POST':
@@ -250,7 +253,8 @@ def edit(request, music_id):
             try:
                 # BAD数が存在すれば呼び出して更新
                 bad_count = Bad_Count.objects.get(music=music_id, user=myself)
-                bad_count_form = Bad_CountForm(request.POST, instance=bad_count)
+                bad_count_form = Bad_CountForm(
+                    request.POST, instance=bad_count)
             except:
                 # BAD数が存在しなければ新規追加
                 bad_count_form = Bad_CountForm(request.POST)
@@ -267,14 +271,17 @@ def edit(request, music_id):
             # エクストラオプションを記録
             try:
                 # エクストラオプションが存在すれば呼び出して更新
-                extra_option = Extra_Option.objects.get(music=music_id, user=myself)
-                extra_option_form = Extra_OptionForm(request.POST, instance=extra_option)
+                extra_option = Extra_Option.objects.get(
+                    music=music_id, user=myself)
+                extra_option_form = Extra_OptionForm(
+                    request.POST, instance=extra_option)
 
                 if extra_option_form.has_changed():
                     # BooleanFieldの場合、チェックを入れないとvalidにならないのでis_validでTrue/Falseを判定
                     if extra_option_form.is_valid():
                         # チェックされていればTrueを設定
-                        extra_option = extra_option_form.save(commit=False)  # 後でまとめて保存
+                        extra_option = extra_option_form.save(
+                            commit=False)  # 後でまとめて保存
                     else:
                         # チェックされていなければFalseを設定
                         extra_option.hard = 0  # False
@@ -290,7 +297,8 @@ def edit(request, music_id):
 
                 if extra_option_form.is_valid():
                     # 保存処理
-                    extra_option = extra_option_form.save(commit=False)  # 後でまとめて保存
+                    extra_option = extra_option_form.save(
+                        commit=False)  # 後でまとめて保存
                     extra_option.music = music  # 曲
                     extra_option.user = myself  # ユーザー
                     extra_option.updated_at = now_datetime  # 現在日時
@@ -306,7 +314,8 @@ def edit(request, music_id):
                 CONSUMER_KEY = settings.SOCIAL_AUTH_TWITTER_KEY
                 CONSUMER_SECRET = settings.SOCIAL_AUTH_TWITTER_SECRET
                 # Twitterクラスを作成
-                twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
+                twitter = Twitter(auth=OAuth(
+                    oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
                 # ツイート
                 if request.POST['bad_count']:
                     tweet = '『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』のBAD数を' + request.POST[
@@ -326,10 +335,12 @@ def edit(request, music_id):
                     messages.error(request, msg)
 
             # アクティビティに更新履歴を保存
-            activity = Activity.objects.create(music=music, updated_at=now_datetime, user=myself)
+            activity = Activity.objects.create(
+                music=music, updated_at=now_datetime, user=myself)
 
             # リダイレクト先にメッセージを表示
-            msg = music.title + ' (' + music.difficulty.difficulty_short() + ') を更新しました！'
+            msg = music.title + \
+                ' (' + music.difficulty.difficulty_short() + ') を更新しました！'
             messages.success(request, msg)
 
         if 'delete' in request.POST:
@@ -347,7 +358,8 @@ def edit(request, music_id):
                 bad_count.delete()
 
             # エクストラオプションを取得
-            extra_option = Extra_Option.objects.filter(music=music_id, user=myself)
+            extra_option = Extra_Option.objects.filter(
+                music=music_id, user=myself)
             if extra_option:
                 # エクストラオプションが存在すれば削除
                 extra_option.delete()
@@ -356,7 +368,8 @@ def edit(request, music_id):
             activity_list.delete()
 
             # リダイレクト先にメッセージを表示
-            msg = music.title + ' (' + music.difficulty.difficulty_short() + ') の記録を削除しました'
+            msg = music.title + \
+                ' (' + music.difficulty.difficulty_short() + ') の記録を削除しました'
             messages.success(request, msg)
 
         if 'next' in request.GET:
@@ -384,7 +397,8 @@ def edit(request, music_id):
 
         try:
             # エクストラオプションが存在すれば既存のデータを初期値に設定
-            extra_option = Extra_Option.objects.get(music=music_id, user=myself)
+            extra_option = Extra_Option.objects.get(
+                music=music_id, user=myself)
             extra_option_form = Extra_OptionForm(instance=extra_option)
         except:
             # エクストラオプションが存在しなければ初期値を設定しない
@@ -436,7 +450,8 @@ def ranking(request, sran_level):
     sran_level_id = sran_level
 
     # 対象レベルの曲を取得
-    music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
+    music_list = Music.objects.filter(
+        sran_level=sran_level_id).order_by('level', 'title')
 
     # 取得曲数を取得
     music_list_count = len(music_list)
@@ -518,7 +533,8 @@ def ranking_detail(request, music_id):
     music = get_object_or_404(Music, pk=music_id)
 
     medal_list = Medal.objects.filter(music=music)
-    bad_count_list = Bad_Count.objects.filter(music=music).order_by('bad_count', 'updated_at')
+    bad_count_list = Bad_Count.objects.filter(
+        music=music).order_by('bad_count', 'updated_at')
     extra_option_list = Extra_Option.objects.filter(music=music)
 
     # 対象曲を記録しているユーザーを取得
@@ -580,19 +596,23 @@ def omikuji(request):
                 if sran_level_from <= sran_level_to:
                     # from から to までの範囲でランダムで1曲取得
                     music = \
-                        Music.objects.filter(sran_level__level__range=(sran_level_from, sran_level_to)).order_by('?')[0]
+                        Music.objects.filter(sran_level__level__range=(
+                            sran_level_from, sran_level_to)).order_by('?')[0]
                 else:
                     # to から from までの範囲でランダムで1曲取得
                     music = \
-                        Music.objects.filter(sran_level__level__range=(sran_level_to, sran_level_from)).order_by('?')[0]
+                        Music.objects.filter(sran_level__level__range=(
+                            sran_level_to, sran_level_from)).order_by('?')[0]
             # from のみ指定された場合
             elif request.POST['sran_level_from']:
                 # 指定されたS乱レベルの曲からランダムで1曲取得
-                music = Music.objects.filter(sran_level=request.POST['sran_level_from']).order_by('?')[0]
+                music = Music.objects.filter(
+                    sran_level=request.POST['sran_level_from']).order_by('?')[0]
             # to のみ指定された場合
             else:
                 # 指定されたS乱レベルの曲からランダムで1曲取得
-                music = Music.objects.filter(sran_level=request.POST['sran_level_to']).order_by('?')[0]
+                music = Music.objects.filter(
+                    sran_level=request.POST['sran_level_to']).order_by('?')[0]
         # 何も指定されなかった場合
         else:
             # 全ての曲からランダムで1曲取得
@@ -608,9 +628,12 @@ def omikuji(request):
             CONSUMER_KEY = settings.SOCIAL_AUTH_TWITTER_KEY
             CONSUMER_SECRET = settings.SOCIAL_AUTH_TWITTER_SECRET
             # Twitterクラスを作成
-            twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
+            twitter = Twitter(auth=OAuth(
+                oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
             # ツイート
-            tweet = '今日のスパランおすすめ曲は『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』です！ https://srandom.com/omikuji/' + ' #スパランドットコム'
+            tweet = '今日のスパランおすすめ曲は『' + music.title + \
+                ' (' + music.difficulty.difficulty_short() + \
+                ')』です！ https://srandom.com/omikuji/' + ' #スパランドットコム'
             try:
                 twitter.statuses.update(status=tweet)
                 # メッセージを表示
@@ -860,7 +883,8 @@ def get_bad_count_avg(request, music_id):
             bad_count_avg = -1
         else:
             # BAD数の平均を計算 (小数点以下四捨五入)
-            bad_count_avg = round(bad_count_list.aggregate(Avg('bad_count'))['bad_count__avg'])
+            bad_count_avg = round(bad_count_list.aggregate(
+                Avg('bad_count'))['bad_count__avg'])
 
         context = {
             'bad_count_avg': bad_count_avg
@@ -895,7 +919,8 @@ def get_myrank(request, music_id):
             user = request.user
 
         # 該当曲のBAD数リストを取得（昇順）
-        bad_count_list = Bad_Count.objects.filter(music=music_id).order_by('bad_count')
+        bad_count_list = Bad_Count.objects.filter(
+            music=music_id).order_by('bad_count')
 
         bad_count_num = 0  # BAD数の個数
         bad_count_now = -1  # 現在のBAD数
@@ -1021,7 +1046,8 @@ def get_folder_lamp(request, level):
                 elif medal.medal >= 5 and medal.medal <= 7 and hard_flg:
                     # 1曲でも未ハードなら未ハードで確定
                     try:
-                        extra_option = Extra_Option.objects.get(music=medal.music, user=user)
+                        extra_option = Extra_Option.objects.get(
+                            music=medal.music, user=user)
                         if not extra_option.hard:
                             hard_flg = False
                     except ObjectDoesNotExist:

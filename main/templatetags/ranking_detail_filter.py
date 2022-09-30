@@ -51,7 +51,7 @@ register = template.Library()
 # def bad_count_avg(bad_count_list, music):
 #     if not bad_count_list:
 #         return None
-# 
+#
 #     bad_count_sum = 0   # BAD数の合計
 #     bad_count_num = 0   # BAD数の個数
 #
@@ -64,6 +64,7 @@ register = template.Library()
 #     bad_count_avg = round(bad_count_sum / bad_count_num)
 #
 #     return bad_count_avg
+
 
 @register.filter
 def bad_count_rank(bad_count_list_ordered, user):
@@ -111,6 +112,7 @@ def bad_count_rank(bad_count_list_ordered, user):
     else:
         return None
 
+
 @register.filter
 def medal_int(medal_list, user):
     '''
@@ -132,6 +134,7 @@ def medal_int(medal_list, user):
 
     return 0
 
+
 @register.filter
 def bad_count_int(bad_count_list, user):
     '''
@@ -149,6 +152,7 @@ def bad_count_int(bad_count_list, user):
 
     return None
 
+
 @register.filter
 def bad_count_updated_at(bad_count_list, user):
     '''
@@ -164,6 +168,7 @@ def bad_count_updated_at(bad_count_list, user):
         if bad_count.user.id == user.id:
             return bad_count.updated_at
     return None
+
 
 @register.filter
 def is_hard(extra_option_list, user):

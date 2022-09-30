@@ -1,13 +1,18 @@
+# env
+.env
+.env.production
+.envrc
+
 # OSX
 .DS_Store
 
-# node.js
-node_modules/
-npm-debug.log
-
 # django
+*.log
+*.pot
+*.pyc
+__pycache__/
 local_settings.py
-migrations/
 staticfiles/
 
 csv/
+django_psdb_engine/

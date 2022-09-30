@@ -1,6 +1,6 @@
 /* フォルダランプを取得 */
 function getFolderLamp(level, is_srandom) {
-    var selector = '#lv'+level+'.level-folder';
+    const selector = '#lv'+level+'.level-folder';
     $.ajax({
         url: SERVER_URL+'api/get_folder_lamp/'+level+'/',
         type: 'GET',
