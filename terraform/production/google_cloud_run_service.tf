@@ -10,7 +10,7 @@ resource "google_cloud_run_service" "app" {
         image = "asia-northeast1-docker.pkg.dev/srandom/app/app"
 
         resources {
-          limits = { "memory" : "1G", "cpu" : "2000m" }
+          limits = { "memory" : "512Mi", "cpu" : "2000m" }
         }
       }
 
