@@ -341,7 +341,7 @@ def edit(request, music_id):
 
             # リダイレクト先にメッセージを表示
             msg = music.title + \
-                  ' (' + music.difficulty.difficulty_short() + ') を更新しました！'
+                ' (' + music.difficulty.difficulty_short() + ') を更新しました！'
             messages.success(request, msg)
 
         if 'delete' in request.POST:
@@ -370,7 +370,7 @@ def edit(request, music_id):
 
             # リダイレクト先にメッセージを表示
             msg = music.title + \
-                  ' (' + music.difficulty.difficulty_short() + ') の記録を削除しました'
+                ' (' + music.difficulty.difficulty_short() + ') の記録を削除しました'
             messages.success(request, msg)
 
         if 'next' in request.GET:
