@@ -1,5 +1,5 @@
 resource "google_monitoring_alert_policy" "cloud_run_app_warning_count" {
-  display_name = "[srandom] Warning log count is high"
+  display_name = "[app] Warning log count is high"
   combiner     = "OR"
   conditions {
     display_name = "logging/user/cloud-run-app-warning [COUNT]"
@@ -25,9 +25,8 @@ resource "google_monitoring_alert_policy" "cloud_run_app_warning_count" {
   }
 }
 
-
 resource "google_monitoring_alert_policy" "cloud_run_app_error_count" {
-  display_name = "[srandom] An error log is detected"
+  display_name = "[app] An error log is detected"
   combiner     = "OR"
   conditions {
     display_name = "logging/user/cloud-run-app-error [COUNT]"
