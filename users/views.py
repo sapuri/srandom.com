@@ -246,13 +246,10 @@ def download(request, file_type):
             if env is None:
                 raise Exception('failed to read env')
 
-            file_path = f'{setting.BASE_DIR}/csv/export/{request.user.username}.csv'
             try:
-                bucket = storage.Client().get_bucket(env('GCP_INTERNAL_BUCKET'))
-                blob = bucket.get_blob(f'csv/export/{request.user.username}.csv')
-                blob.download_to_filename(file_path)
-
-                response = HttpResponse(open(file_path).read(), content_type='text/csv; charset=utf-8')
+                bucket = storage.Client().bucket(env('GCP_INTERNAL_BUCKET'))
+                blob = bucket.blob(f'csv/export/{request.user.username}.csv')
+                response = HttpResponse(blob.download_as_string(), content_type='text/csv; charset=utf-8')
             except FileNotFoundError:
                 raise Http404
             except Exception as e:
