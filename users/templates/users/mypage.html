@@ -36,7 +36,7 @@
 
 {% if selected_user.cleardata_privacy == 1 or selected_user == user %}
 <br /><br />
-<a href="{% url 'users:statistics' selected_user.username %}" class="btn btn-default">{% bootstrap_icon "book" %} 統計 (Beta)</a>
+<a href="{% url 'users:statistics' selected_user.username %}" class="btn btn-default">{% bootstrap_icon "book" %} 統計</a>
 {% endif %}
 
 <h2 class="clear-data page-header">

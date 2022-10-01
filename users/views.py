@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpRequest
 from django.shortcuts import get_object_or_404, render, redirect
 from google.cloud import storage
 
@@ -273,7 +273,7 @@ def get_percentage_of_clear(request, user_id):
     @param {int} user_id ユーザーID
     @return {json} 各レベルのクリア率
     """
-    if request.is_ajax():
+    if is_xml_http_request(request):
         # ユーザーを取得
         user = get_object_or_404(CustomUser, pk=user_id)
 
@@ -323,7 +323,7 @@ def get_percentage_of_clear(request, user_id):
 
 def get_activity_map(request):
     # パラメータチェック
-    if (not 'user_id' in request.GET) or (not 'start' in request.GET) or (not 'stop' in request.GET):
+    if ('user_id' not in request.GET) or ('start' not in request.GET) or ('stop' not in request.GET):
         raise Http404()
 
     user_id = request.GET['user_id']
@@ -331,7 +331,7 @@ def get_activity_map(request):
 
     # 権限を確認
     if user != request.user:
-        if user.is_active == False or user.cleardata_privacy == 2:
+        if not user.is_active or user.cleardata_privacy == 2:
             raise PermissionDenied
 
     start = int(request.GET['start'])
@@ -358,7 +358,7 @@ def get_activity_map(request):
 
 def get_clear_rate(request):
     # パラメータチェック
-    if not 'user_id' in request.GET:
+    if 'user_id' not in request.GET:
         raise Http404()
 
     user_id = request.GET['user_id']
@@ -436,9 +436,9 @@ def get_clear_rate(request):
                 medal = Medal.objects.get(user=user, music=music)
                 if medal.medal == 1:
                     medal_num['perfect'][s_lv - 1] += 1
-                elif medal.medal >= 2 and medal.medal <= 4:
+                elif 2 <= medal.medal <= 4:
                     medal_num['fullcombo'][s_lv - 1] += 1
-                elif medal.medal >= 5 and medal.medal <= 7:
+                elif 5 <= medal.medal <= 7:
                     try:
                         extra_option = Extra_Option.objects.get(
                             user=user, music=music)
@@ -450,7 +450,7 @@ def get_clear_rate(request):
                         medal_num['clear'][s_lv - 1] += 1
                 elif medal.medal == 11:
                     medal_num['easy'][s_lv - 1] += 1
-                elif medal.medal >= 8 and medal.medal <= 10:
+                elif 8 <= medal.medal <= 10:
                     medal_num['failed'][s_lv - 1] += 1
                 else:
                     medal_num['no-play'][s_lv - 1] += 1
@@ -501,3 +501,7 @@ def get_clear_rate(request):
 
     json_str = json.dumps(chart_data['clearRate'], ensure_ascii=False)
     return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
+
+
+def is_xml_http_request(req: HttpRequest) -> bool:
+    return req.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
