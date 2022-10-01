@@ -1,9 +1,3 @@
-resource "google_project_iam_member" "cloud_run_app_is_storage_object_admin" {
-  project = local.gcp_project_id
-  role    = "roles/storage.objectAdmin"
-  member  = "serviceAccount:${google_service_account.cloud_run_app.email}"
-}
-
 resource "google_project_iam_member" "github_is_storage_admin" {
   project = local.gcp_project_id
   role    = "roles/storage.admin"
