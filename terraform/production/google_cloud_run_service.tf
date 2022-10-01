@@ -7,7 +7,11 @@ resource "google_cloud_run_service" "app" {
   template {
     spec {
       containers {
-        image = "gcr.io/cloudrun/hello"
+        image = "asia-northeast1-docker.pkg.dev/srandom/app/app"
+
+        resources {
+          limits = { "memory" : "1G", "cpu" : "2000m" }
+        }
       }
 
       service_account_name = google_service_account.cloud_run_app.email
