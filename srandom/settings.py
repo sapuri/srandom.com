@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'bootstrap3',                       # django-bootstrap3
     'social_django',                    # python-social-auth
     'maintenance_mode',                 # django-maintenance-mode
-    'sslserver',                        # django-sslserver
     'main.apps.MainConfig',             # Main
     'users.apps.UsersConfig',           # Users
 ]
