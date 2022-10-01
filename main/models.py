@@ -60,9 +60,12 @@ class Sran_Level(models.Model):
 
 class Music(models.Model):
     title = models.CharField('曲名', max_length=255)
-    difficulty = models.ForeignKey(Difficulty, verbose_name='難易度', on_delete=models.PROTECT)
-    level = models.ForeignKey(Level, verbose_name='レベル', on_delete=models.PROTECT)
-    sran_level = models.ForeignKey(Sran_Level, verbose_name='S乱レベル', on_delete=models.PROTECT)
+    difficulty = models.ForeignKey(
+        Difficulty, verbose_name='難易度', on_delete=models.PROTECT)
+    level = models.ForeignKey(
+        Level, verbose_name='レベル', on_delete=models.PROTECT)
+    sran_level = models.ForeignKey(
+        Sran_Level, verbose_name='S乱レベル', on_delete=models.PROTECT)
     bpm = models.CharField('BPM', max_length=15, null=True, blank=True)
 
     def __str__(self):
@@ -80,8 +83,10 @@ class Music(models.Model):
 
 class Medal(models.Model):
     medal = models.IntegerField('クリアメダル')
-    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.PROTECT)
-    user = models.ForeignKey(CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
+    music = models.ForeignKey(Music, verbose_name='曲',
+                              on_delete=models.PROTECT)
+    user = models.ForeignKey(
+        CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
 
     # int型で返す
@@ -128,16 +133,20 @@ class Medal(models.Model):
         verbose_name = 'クリアメダル'
         verbose_name_plural = 'クリアメダル'
         indexes = [
-            models.Index(fields=['music', 'user'], name='medal_by_music_and_user'),
+            models.Index(fields=['music', 'user'],
+                         name='medal_by_music_and_user'),
             models.Index(fields=['updated_at'], name='medal_by_updated_at'),
-            models.Index(fields=['user', 'updated_at'], name='medal_by_user_and_updated_at'),
+            models.Index(fields=['user', 'updated_at'],
+                         name='medal_by_user_and_updated_at'),
         ]
 
 
 class Bad_Count(models.Model):
     bad_count = models.PositiveIntegerField('BAD数')
-    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.PROTECT)
-    user = models.ForeignKey(CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
+    music = models.ForeignKey(Music, verbose_name='曲',
+                              on_delete=models.PROTECT)
+    user = models.ForeignKey(
+        CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
 
     # 整数型で返す
@@ -155,16 +164,20 @@ class Bad_Count(models.Model):
         verbose_name = 'BAD数'
         verbose_name_plural = 'BAD数'
         indexes = [
-            models.Index(fields=['music', 'user'], name='bc_by_music_and_user'),
+            models.Index(fields=['music', 'user'],
+                         name='bc_by_music_and_user'),
             models.Index(fields=['updated_at'], name='bc_by_updated_at'),
-            models.Index(fields=['user', 'updated_at'], name='bc_by_user_and_updated_at'),
+            models.Index(fields=['user', 'updated_at'],
+                         name='bc_by_user_and_updated_at'),
         ]
 
 
 class Extra_Option(models.Model):
     hard = models.BooleanField('ハード')
-    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.PROTECT)
-    user = models.ForeignKey(CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
+    music = models.ForeignKey(Music, verbose_name='曲',
+                              on_delete=models.PROTECT)
+    user = models.ForeignKey(
+        CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
 
     # ハードしているかを判定
@@ -184,7 +197,8 @@ class Extra_Option(models.Model):
         indexes = [
             models.Index(fields=['music', 'user'], name='eo_by_music_user'),
             models.Index(fields=['updated_at'], name='eo_by_updated_at'),
-            models.Index(fields=['user', 'updated_at'], name='eo_by_user_and_updated_at'),
+            models.Index(fields=['user', 'updated_at'],
+                         name='eo_by_user_and_updated_at'),
         ]
 
 
@@ -196,7 +210,8 @@ class News(models.Model):
         ('削除', '削除'),
     )
 
-    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.PROTECT)
+    music = models.ForeignKey(Music, verbose_name='曲',
+                              on_delete=models.PROTECT)
     kind = models.CharField('種類', max_length=10, choices=KIND_CHOICES)
     created_at = models.DateField('作成日', default=timezone.now)
     status = models.BooleanField('状態', default=True)
@@ -211,8 +226,10 @@ class News(models.Model):
 
 class Activity(models.Model):
     """ 更新履歴 """
-    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.PROTECT)
-    user = models.ForeignKey(CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
+    music = models.ForeignKey(Music, verbose_name='曲',
+                              on_delete=models.PROTECT)
+    user = models.ForeignKey(
+        CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
     status = models.BooleanField('状態', default=True)
 

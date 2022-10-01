@@ -1,4 +1,4 @@
-var SERVER_URL = location.protocol + '//' + location.host + '/';
+const SERVER_URL = location.protocol + '//' + location.host + '/';
 
 /* メッセージボックス */
 $(function () {
@@ -9,7 +9,7 @@ $(function () {
 
 /* トップに戻るボタン */
 $(document).ready(function() {
-    var pagetop = $('.pagetop');
+    const pagetop = $('.pagetop');
     $(window).scroll(function () {
         if ($(this).scrollTop() > 1000) {
             pagetop.fadeIn();
@@ -25,7 +25,7 @@ $(document).ready(function() {
 
 /* ローディング画像を表示 */
 function showLoadingImage(selector) {
-    $(selector+' .loading').append('<img src="/static/img/ajax-loader.gif">');
+    $(selector+' .loading').append(`<img src=${STATIC_URL}img/ajax-loader.gif alt="loading">`);
 }
 
 /* ローディング画像を消す */

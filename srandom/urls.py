@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.conf.urls import include
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path
 from django.contrib import admin
 
@@ -13,6 +14,7 @@ urlpatterns = [
 
 if settings.DEBUG:
     import debug_toolbar
+    # ref. https://docs.djangoproject.com/ja/4.1/ref/contrib/staticfiles/#django.contrib.staticfiles.urls.staticfiles_urlpatterns
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),
-    ] + urlpatterns
+    ] + urlpatterns + staticfiles_urlpatterns()

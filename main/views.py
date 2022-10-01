@@ -1,4 +1,5 @@
 import json
+from random import choice
 
 import pytz
 from django.conf import settings
@@ -7,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Avg
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpRequest
 from django.shortcuts import get_object_or_404, render, redirect
 from twitter import *
 
@@ -116,7 +117,8 @@ def level(request, level):
     level_id = max_lv - level + 1
 
     # 対象レベルの曲を取得
-    music_list = Music.objects.filter(level=level_id).order_by('-sran_level', 'title')
+    music_list = Music.objects.filter(
+        level=level_id).order_by('-sran_level', 'title')
 
     # 取得曲数を取得
     music_list_count = len(music_list)
@@ -178,7 +180,8 @@ def difflist(request, sran_level):
     sran_level_id = sran_level
 
     # 対象レベルの曲を取得
-    music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
+    music_list = Music.objects.filter(
+        sran_level=sran_level_id).order_by('level', 'title')
 
     # 取得曲数を取得
     music_list_count = len(music_list)
@@ -219,7 +222,8 @@ def edit(request, music_id):
     myself = request.user
 
     # 編集履歴を取得
-    activity_list = Activity.objects.filter(music=music, user=myself).order_by('-id')
+    activity_list = Activity.objects.filter(
+        music=music, user=myself).order_by('-id')
 
     # POSTでアクセスされた場合
     if request.method == 'POST':
@@ -250,7 +254,8 @@ def edit(request, music_id):
             try:
                 # BAD数が存在すれば呼び出して更新
                 bad_count = Bad_Count.objects.get(music=music_id, user=myself)
-                bad_count_form = Bad_CountForm(request.POST, instance=bad_count)
+                bad_count_form = Bad_CountForm(
+                    request.POST, instance=bad_count)
             except:
                 # BAD数が存在しなければ新規追加
                 bad_count_form = Bad_CountForm(request.POST)
@@ -267,14 +272,17 @@ def edit(request, music_id):
             # エクストラオプションを記録
             try:
                 # エクストラオプションが存在すれば呼び出して更新
-                extra_option = Extra_Option.objects.get(music=music_id, user=myself)
-                extra_option_form = Extra_OptionForm(request.POST, instance=extra_option)
+                extra_option = Extra_Option.objects.get(
+                    music=music_id, user=myself)
+                extra_option_form = Extra_OptionForm(
+                    request.POST, instance=extra_option)
 
                 if extra_option_form.has_changed():
                     # BooleanFieldの場合、チェックを入れないとvalidにならないのでis_validでTrue/Falseを判定
                     if extra_option_form.is_valid():
                         # チェックされていればTrueを設定
-                        extra_option = extra_option_form.save(commit=False)  # 後でまとめて保存
+                        extra_option = extra_option_form.save(
+                            commit=False)  # 後でまとめて保存
                     else:
                         # チェックされていなければFalseを設定
                         extra_option.hard = 0  # False
@@ -290,7 +298,8 @@ def edit(request, music_id):
 
                 if extra_option_form.is_valid():
                     # 保存処理
-                    extra_option = extra_option_form.save(commit=False)  # 後でまとめて保存
+                    extra_option = extra_option_form.save(
+                        commit=False)  # 後でまとめて保存
                     extra_option.music = music  # 曲
                     extra_option.user = myself  # ユーザー
                     extra_option.updated_at = now_datetime  # 現在日時
@@ -306,7 +315,8 @@ def edit(request, music_id):
                 CONSUMER_KEY = settings.SOCIAL_AUTH_TWITTER_KEY
                 CONSUMER_SECRET = settings.SOCIAL_AUTH_TWITTER_SECRET
                 # Twitterクラスを作成
-                twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
+                twitter = Twitter(auth=OAuth(
+                    oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
                 # ツイート
                 if request.POST['bad_count']:
                     tweet = '『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』のBAD数を' + request.POST[
@@ -326,10 +336,12 @@ def edit(request, music_id):
                     messages.error(request, msg)
 
             # アクティビティに更新履歴を保存
-            activity = Activity.objects.create(music=music, updated_at=now_datetime, user=myself)
+            activity = Activity.objects.create(
+                music=music, updated_at=now_datetime, user=myself)
 
             # リダイレクト先にメッセージを表示
-            msg = music.title + ' (' + music.difficulty.difficulty_short() + ') を更新しました！'
+            msg = music.title + \
+                  ' (' + music.difficulty.difficulty_short() + ') を更新しました！'
             messages.success(request, msg)
 
         if 'delete' in request.POST:
@@ -347,7 +359,8 @@ def edit(request, music_id):
                 bad_count.delete()
 
             # エクストラオプションを取得
-            extra_option = Extra_Option.objects.filter(music=music_id, user=myself)
+            extra_option = Extra_Option.objects.filter(
+                music=music_id, user=myself)
             if extra_option:
                 # エクストラオプションが存在すれば削除
                 extra_option.delete()
@@ -356,7 +369,8 @@ def edit(request, music_id):
             activity_list.delete()
 
             # リダイレクト先にメッセージを表示
-            msg = music.title + ' (' + music.difficulty.difficulty_short() + ') の記録を削除しました'
+            msg = music.title + \
+                  ' (' + music.difficulty.difficulty_short() + ') の記録を削除しました'
             messages.success(request, msg)
 
         if 'next' in request.GET:
@@ -384,7 +398,8 @@ def edit(request, music_id):
 
         try:
             # エクストラオプションが存在すれば既存のデータを初期値に設定
-            extra_option = Extra_Option.objects.get(music=music_id, user=myself)
+            extra_option = Extra_Option.objects.get(
+                music=music_id, user=myself)
             extra_option_form = Extra_OptionForm(instance=extra_option)
         except:
             # エクストラオプションが存在しなければ初期値を設定しない
@@ -436,7 +451,8 @@ def ranking(request, sran_level):
     sran_level_id = sran_level
 
     # 対象レベルの曲を取得
-    music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
+    music_list = Music.objects.filter(
+        sran_level=sran_level_id).order_by('level', 'title')
 
     # 取得曲数を取得
     music_list_count = len(music_list)
@@ -518,7 +534,8 @@ def ranking_detail(request, music_id):
     music = get_object_or_404(Music, pk=music_id)
 
     medal_list = Medal.objects.filter(music=music)
-    bad_count_list = Bad_Count.objects.filter(music=music).order_by('bad_count', 'updated_at')
+    bad_count_list = Bad_Count.objects.filter(
+        music=music).order_by('bad_count', 'updated_at')
     extra_option_list = Extra_Option.objects.filter(music=music)
 
     # 対象曲を記録しているユーザーを取得
@@ -579,24 +596,27 @@ def omikuji(request):
                 sran_level_to = request.POST['sran_level_to']
                 if sran_level_from <= sran_level_to:
                     # from から to までの範囲でランダムで1曲取得
-                    music = \
-                        Music.objects.filter(sran_level__level__range=(sran_level_from, sran_level_to)).order_by('?')[0]
+                    pks = Music.objects.filter(sran_level__level__range=(sran_level_from, sran_level_to)).values_list('pk', flat=True)
+                    music = Music.objects.get(pk=choice(pks))
                 else:
                     # to から from までの範囲でランダムで1曲取得
-                    music = \
-                        Music.objects.filter(sran_level__level__range=(sran_level_to, sran_level_from)).order_by('?')[0]
+                    pks = Music.objects.filter(sran_level__level__range=(sran_level_to, sran_level_from)).values_list('pk', flat=True)
+                    music = Music.objects.get(pk=choice(pks))
             # from のみ指定された場合
             elif request.POST['sran_level_from']:
                 # 指定されたS乱レベルの曲からランダムで1曲取得
-                music = Music.objects.filter(sran_level=request.POST['sran_level_from']).order_by('?')[0]
+                pks = Music.objects.filter(sran_level=request.POST['sran_level_from']).values_list('pk', flat=True)
+                music = Music.objects.get(pk=choice(pks))
             # to のみ指定された場合
             else:
                 # 指定されたS乱レベルの曲からランダムで1曲取得
-                music = Music.objects.filter(sran_level=request.POST['sran_level_to']).order_by('?')[0]
+                pks = Music.objects.filter(sran_level=request.POST['sran_level_to']).values_list('pk', flat=True)
+                music = Music.objects.get(pk=choice(pks))
         # 何も指定されなかった場合
         else:
             # 全ての曲からランダムで1曲取得
-            music = Music.objects.all().order_by('?')[0]
+            pks = Music.objects.values_list('pk', flat=True)
+            music = Music.objects.get(pk=choice(pks))
 
         # おみくじ結果をツイート
         if 'tweet' in request.POST:
@@ -605,12 +625,10 @@ def omikuji(request):
             # パラメータを取得
             oauth_token = social.extra_data['access_token']['oauth_token']
             oauth_secret = social.extra_data['access_token']['oauth_token_secret']
-            CONSUMER_KEY = settings.SOCIAL_AUTH_TWITTER_KEY
-            CONSUMER_SECRET = settings.SOCIAL_AUTH_TWITTER_SECRET
             # Twitterクラスを作成
-            twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
+            twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, settings.SOCIAL_AUTH_TWITTER_KEY, settings.SOCIAL_AUTH_TWITTER_SECRET))
             # ツイート
-            tweet = '今日のスパランおすすめ曲は『' + music.title + ' (' + music.difficulty.difficulty_short() + ')』です！ https://srandom.com/omikuji/' + ' #スパランドットコム'
+            tweet = f'今日のスパランおすすめ曲は『{music.title} ({music.difficulty.difficulty_short()})』です！ https://srandom.com/omikuji/ #スパランドットコム'
             try:
                 twitter.statuses.update(status=tweet)
                 # メッセージを表示
@@ -662,7 +680,7 @@ def get_clear_status(request, music_id):
     @param {int} ?user_id ユーザーID
     @return {json} クリア状況
     """
-    if request.is_ajax():
+    if is_xml_http_request(request):
         # ユーザーを取得
         try:
             # クエリでユーザーIDが指定されればそのユーザーを取得
@@ -701,7 +719,7 @@ def get_clear_status(request, music_id):
                 clear_status = 'perfect'
             elif (medal == 2 or medal == 3 or medal == 4) and bad_count == 0:
                 clear_status = 'fullcombo'
-            elif (medal >= 1 and medal <= 7) and extra_option and extra_option.hard:
+            elif (1 <= medal <= 7) and extra_option and extra_option.hard:
                 clear_status = 'hard-cleared'
             elif medal == 5 or medal == 6 or medal == 7:
                 clear_status = 'cleared'
@@ -731,7 +749,7 @@ def get_bad_count(request, music_id):
     @param {int} ?user_id ユーザーID
     @return {json} BAD数
     """
-    if request.is_ajax():
+    if is_xml_http_request(request):
         # ユーザーを取得
         try:
             # クエリでユーザーIDが指定されればそのユーザーを取得
@@ -768,7 +786,7 @@ def get_medal(request, music_id):
     @param {int} ?user_id ユーザーID
     @return {json} メダル(int)
     """
-    if request.is_ajax():
+    if is_xml_http_request(request):
         # ユーザーを取得
         try:
             # クエリでユーザーIDが指定されればそのユーザーを取得
@@ -805,7 +823,7 @@ def get_latest_updated_at(request, music_id):
     @param {int} ?user_id ユーザーID
     @return {json} 更新日時
     """
-    if request.is_ajax():
+    if is_xml_http_request(request):
         # ユーザーを取得
         try:
             # クエリでユーザーIDが指定されればそのユーザーを取得
@@ -814,7 +832,7 @@ def get_latest_updated_at(request, music_id):
 
             # 権限を確認
             if user != request.user:
-                if user.is_active == False or user.cleardata_privacy == 2:
+                if not user.is_active or user.cleardata_privacy == 2:
                     raise PermissionDenied
         except KeyError:
             user = request.user
@@ -854,13 +872,14 @@ def get_bad_count_avg(request, music_id):
     @param {int} music_id 曲ID
     @return {json} 平均BAD数
     """
-    if request.is_ajax():
+    if is_xml_http_request(request):
         bad_count_list = Bad_Count.objects.filter(music=music_id)
         if not bad_count_list:
             bad_count_avg = -1
         else:
             # BAD数の平均を計算 (小数点以下四捨五入)
-            bad_count_avg = round(bad_count_list.aggregate(Avg('bad_count'))['bad_count__avg'])
+            bad_count_avg = round(bad_count_list.aggregate(
+                Avg('bad_count'))['bad_count__avg'])
 
         context = {
             'bad_count_avg': bad_count_avg
@@ -880,7 +899,7 @@ def get_myrank(request, music_id):
     @param {int} ?user_id ユーザーID
     @return {json} 順位
     """
-    if request.is_ajax():
+    if is_xml_http_request(request):
         # ユーザーを取得
         try:
             # クエリでユーザーIDが指定されればそのユーザーを取得
@@ -889,13 +908,14 @@ def get_myrank(request, music_id):
 
             # 権限を確認
             if user != request.user:
-                if user.is_active == False or user.cleardata_privacy == 2:
+                if not user.is_active or user.cleardata_privacy == 2:
                     raise PermissionDenied
         except KeyError:
             user = request.user
 
         # 該当曲のBAD数リストを取得（昇順）
-        bad_count_list = Bad_Count.objects.filter(music=music_id).order_by('bad_count')
+        bad_count_list = Bad_Count.objects.filter(
+            music=music_id).order_by('bad_count')
 
         bad_count_num = 0  # BAD数の個数
         bad_count_now = -1  # 現在のBAD数
@@ -944,7 +964,7 @@ def get_medal_count(request, music_id):
     @param {int} music_id 曲ID
     @return {json} 各メダルの枚数, メダルの総数
     """
-    if request.is_ajax():
+    if is_xml_http_request(request):
         medal_count_list = []
         medal_count_total = 0
         for i in range(1, 12):
@@ -971,7 +991,7 @@ def get_folder_lamp(request, level):
     @param {int} ?user_id ユーザーID
     @return {json} フォルダランプ
     """
-    if request.is_ajax():
+    if is_xml_http_request(request):
         if request.user.is_authenticated:
             # ユーザーを取得
             try:
@@ -1018,10 +1038,11 @@ def get_folder_lamp(request, level):
                     easy_flg = True
 
                 # クリアメダルの場合はハード判定
-                elif medal.medal >= 5 and medal.medal <= 7 and hard_flg:
+                elif 5 <= medal.medal <= 7 and hard_flg:
                     # 1曲でも未ハードなら未ハードで確定
                     try:
-                        extra_option = Extra_Option.objects.get(music=medal.music, user=user)
+                        extra_option = Extra_Option.objects.get(
+                            music=medal.music, user=user)
                         if not extra_option.hard:
                             hard_flg = False
                     except ObjectDoesNotExist:
@@ -1033,7 +1054,7 @@ def get_folder_lamp(request, level):
 
             # 1曲でもイージーメダルだった場合
             if easy_flg:
-                if medal_max >= 8 and medal_max <= 10:
+                if 8 <= medal_max <= 10:
                     folder_lamp = 'failed'
                 else:
                     folder_lamp = 'easy-cleared'
@@ -1042,14 +1063,14 @@ def get_folder_lamp(request, level):
             elif medal_max:
                 if medal_max == 1:
                     folder_lamp = 'perfect'
-                elif medal_max >= 2 and medal_max <= 4:
+                elif 2 <= medal_max <= 4:
                     folder_lamp = 'fullcombo'
-                elif medal_max >= 5 and medal_max <= 7:
+                elif 5 <= medal_max <= 7:
                     if hard_flg:
                         folder_lamp = 'hard-cleared'
                     else:
                         folder_lamp = 'cleared'
-                elif medal_max >= 8 and medal_max <= 10:
+                elif 8 <= medal_max <= 10:
                     folder_lamp = 'failed'
 
             # 未プレイの場合
@@ -1067,3 +1088,7 @@ def get_folder_lamp(request, level):
         return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
     else:
         return HttpResponse('invalid access')
+
+
+def is_xml_http_request(req: HttpRequest) -> bool:
+    return req.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'

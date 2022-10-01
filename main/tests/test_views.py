@@ -42,17 +42,20 @@ class LevelTests(TestCase):
 
 class DifflistLevelSelectTests(TestCase):
     def test_get(self):
-        resp = self.client.get(resolve_url(f'{APP_NAME}:difflist_level_select'))
+        resp = self.client.get(resolve_url(
+            f'{APP_NAME}:difflist_level_select'))
         self.assertEqual(200, resp.status_code)
 
 
 class DifflistTests(TestCase):
     def test_get(self):
-        resp = self.client.get(resolve_url(f'{APP_NAME}:difflist', sran_level=1))
+        resp = self.client.get(resolve_url(
+            f'{APP_NAME}:difflist', sran_level=1))
         self.assertEqual(200, resp.status_code)
 
     def test_get_ng(self):
-        resp = self.client.get(resolve_url(f'{APP_NAME}:difflist', sran_level=20))
+        resp = self.client.get(resolve_url(
+            f'{APP_NAME}:difflist', sran_level=20))
         self.assertEqual(404, resp.status_code)
 
 
@@ -75,7 +78,8 @@ class EditTests(TestCase):
         return Music.objects.create(title=title, difficulty=difficulty, level=level, sran_level=sran_level)
 
     def test_get(self):
-        resp = self.client.get(resolve_url(f'{APP_NAME}:edit', music_id=self.music.id))
+        resp = self.client.get(resolve_url(
+            f'{APP_NAME}:edit', music_id=self.music.id))
         self.assertEqual(200, resp.status_code)
 
     def test_get_ng(self):
@@ -109,11 +113,13 @@ class RankingTests(TestCase):
         return CustomUser.objects.create_user(username, location=location, theme=theme)
 
     def test_get(self):
-        resp = self.client.get(resolve_url(f'{APP_NAME}:ranking', sran_level=19))
+        resp = self.client.get(resolve_url(
+            f'{APP_NAME}:ranking', sran_level=19))
         self.assertEqual(200, resp.status_code)
 
     def test_get_ng(self):
-        resp = self.client.get(resolve_url(f'{APP_NAME}:ranking', sran_level=20))
+        resp = self.client.get(resolve_url(
+            f'{APP_NAME}:ranking', sran_level=20))
         self.assertEqual(404, resp.status_code)
 
 
@@ -136,11 +142,13 @@ class RankingDetailTests(TestCase):
         return Music.objects.create(title=title, difficulty=difficulty, level=level, sran_level=sran_level)
 
     def test_get(self):
-        resp = self.client.get(resolve_url(f'{APP_NAME}:ranking_detail', music_id=self.music.id))
+        resp = self.client.get(resolve_url(
+            f'{APP_NAME}:ranking_detail', music_id=self.music.id))
         self.assertEqual(200, resp.status_code)
 
     def test_get_ng(self):
-        resp = self.client.get(resolve_url(f'{APP_NAME}:ranking_detail', music_id=0))
+        resp = self.client.get(resolve_url(
+            f'{APP_NAME}:ranking_detail', music_id=0))
         self.assertEqual(404, resp.status_code)
 
 

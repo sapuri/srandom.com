@@ -1,0 +1,34 @@
+name: terraform
+
+on:
+  push:
+    paths:
+      - 'terraform/**'
+      - '.github/workflows/terraform.yml'
+
+defaults:
+  run:
+    working-directory: terraform
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - run: terraform fmt -recursive -check
+
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+          create_credentials_file: true
+      - name: validate
+        working-directory: terraform/production
+        run: |
+          terraform init
+          terraform validate

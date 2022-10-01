@@ -1,4 +1,6 @@
 import csv
+import logging
+import os
 
 import requests
 from bs4 import BeautifulSoup
@@ -8,6 +10,8 @@ from django.core.management.base import BaseCommand
 
 class Command(BaseCommand):
     help = 'S乱難易度表から曲情報を取得し、CSVファイルに出力します。'
+
+    logger = logging.getLogger('command.scraping')
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -24,14 +28,15 @@ class Command(BaseCommand):
         url2 = 'https://popn.hyrorre.com/%E3%81%9D%E3%81%AE%E4%BB%96/s%E4%B9%B1lv0%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8'  # S乱Lv0難易度表
         file_path = f'{settings.BASE_DIR}/csv/srandom.csv'
 
+        os.makedirs(f'{settings.BASE_DIR}/csv/', exist_ok=True)
+
         csv_data = self.scrape(url1, mode=1, silent=silent)
         self.generate_csv(csv_data, file_path, append=False)
 
         csv_data = self.scrape(url2, mode=2, silent=silent)
         self.generate_csv(csv_data, file_path, append=True)
 
-    @staticmethod
-    def scrape(url: str, mode: int, silent: bool = False) -> list:
+    def scrape(self, url: str, mode: int, silent: bool = False) -> list:
         """
         難易度表から曲情報を取得
         :param url:
@@ -54,7 +59,7 @@ class Command(BaseCommand):
             # #lv4 〜 #lv1 を指定
             level_range = ['4', '3', '2強', '2弱', '1強', '1弱']
         else:
-            print(f'invalid mode: {mode}')
+            self.logger.error(f'invalid mode: {mode}')
             quit(1)
 
         for i, j in enumerate(level_range):
@@ -62,7 +67,7 @@ class Command(BaseCommand):
             h2 = soup.select(f'h2#lv{j}')[0]
             level = h2.text[1:].strip()
             if not silent:
-                print(level)
+                self.logger.info(level)
 
             if mode == 2:
                 if j == '2強' or j == '2弱':
@@ -88,7 +93,7 @@ class Command(BaseCommand):
                 music_list.append([lv, title, bpm])
 
                 if not silent:
-                    print(title)
+                    self.logger.info(title)
 
             csv_data.append([music_list])
 

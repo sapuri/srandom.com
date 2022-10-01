@@ -3,6 +3,8 @@ from django import template
 register = template.Library()
 
 # 指定された曲の平均BAD数を返す
+
+
 @register.filter
 def bad_count_avg(bad_count_list, music):
     if not bad_count_list:
@@ -22,6 +24,8 @@ def bad_count_avg(bad_count_list, music):
     return bad_count_avg
 
 # 指定された曲の順位を返す
+
+
 @register.filter
 def bad_count_rank(bad_count_list_ordered, music_id_and_myself_id):
     '''

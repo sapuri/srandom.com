@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load bootstrap3 %}
 
 {% block title %}{{ selected_user.player_name|default:selected_user.username }} - スパランドットコム{% endblock %}
@@ -7,7 +8,7 @@
 <meta property="og:title" content="{{ selected_user.player_name|default:selected_user.username }} - スパランドットコム" />
 <meta property="og:type" content="article" />
 <meta name="description" content="スパランドットコムのプロフィールページです。">
-<script src="/static/js/mypage.js?v=20180914"></script>
+<script src="{% static 'js/mypage.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -35,7 +36,7 @@
 
 {% if selected_user.cleardata_privacy == 1 or selected_user == user %}
 <br /><br />
-<a href="{% url 'users:statistics' selected_user.username %}" class="btn btn-default">{% bootstrap_icon "book" %} 統計 (Beta)</a>
+<a href="{% url 'users:statistics' selected_user.username %}" class="btn btn-default">{% bootstrap_icon "book" %} 統計</a>
 {% endif %}
 
 <h2 class="clear-data page-header">

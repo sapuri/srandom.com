@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
-{% load compress %}
 
 {% block title %}{{ selected_user.player_name|default:selected_user.username }}(統計) - スパランドットコム{% endblock %}
 
@@ -44,8 +43,7 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="page-header">{% bootstrap_icon "book" %} 統計 (Beta)</h1>
-<p><b>This page is under development.</b></p>
+<h1 class="page-header">{% bootstrap_icon "book" %} 統計</h1>
 
 <h2>
     {% if selected_user.premium %}
@@ -90,7 +88,6 @@
 <p>クリアデータは非公開に設定されています。</p>
 {% endif %}
 
-{% compress js inline %}
 <script>
 	var cal = new CalHeatMap();
     var start = new Date;
@@ -157,5 +154,4 @@
         }
     );
 </script>
-{% endcompress %}
 {% endblock %}

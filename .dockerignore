@@ -1,0 +1,6 @@
+deployments/
+docker/
+docker-compose.yml
+README.md
+scripts/
+terraform/

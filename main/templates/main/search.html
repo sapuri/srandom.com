@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load bootstrap3 %}
 
 {% block title %}{{ title }} - スパランドットコム{% endblock %}
@@ -7,7 +8,7 @@
 <meta property="og:title" content="{{ title }} - スパランドットコム" />
 <meta property="og:type" content="article" />
 <meta name="description" content="スパランドットコムの検索ページです。">
-<script src="/static/js/music_list.js?v=20161230"></script>
+<script src="{% static 'js/music_list.js' %}"></script>
 {% endblock %}
 
 {% block content %}
