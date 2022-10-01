@@ -1,7 +1,7 @@
 language: python
 cache: pip
 python:
-  - 3.9
+  - 3.10
 services:
   - mysql
 install:
@@ -18,8 +18,6 @@ before_script:
   - sudo service mysql restart
   - mysql -u root -e "CREATE DATABASE travis_ci CHARACTER SET utf8mb4"
 script:
-  - pipenv run python manage.py makemigrations main
-  - pipenv run python manage.py makemigrations users
   - pipenv run python manage.py migrate
   - pipenv run python manage.py test
 env:
