@@ -24,7 +24,7 @@ resource "google_cloud_scheduler_job" "export2csv" {
   description      = "Cloud Run job: export2csv"
   schedule         = "20 0 * * *" # At 0:20
   time_zone        = "Asia/Tokyo"
-  attempt_deadline = "1200s" # 20m
+  attempt_deadline = "1800s" # 30m
 
   retry_config {
     retry_count = 1
