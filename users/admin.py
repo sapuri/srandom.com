@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import *
+
+from users.models import Location, Theme, CustomUser
 
 
 class LocationAdmin(admin.ModelAdmin):

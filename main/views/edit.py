@@ -3,6 +3,7 @@ from datetime import datetime
 import pytz
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from twitter import Twitter, OAuth
 
@@ -12,11 +13,9 @@ from srandom import settings
 
 
 @login_required
-def edit(request, music_id):
-    """
-    指定された曲の記録を編集
-    @param music_id: 曲ID
-    """
+def edit(request: HttpRequest, music_id: int) -> HttpResponse:
+    """ 指定された曲の記録を編集 """
+
     # 曲を取得
     music = get_object_or_404(Music, pk=music_id)
 
@@ -38,7 +37,7 @@ def edit(request, music_id):
                 # メダルが存在すれば呼び出して更新
                 medal = Medal.objects.get(music=music_id, user=myself)
                 medal_form = MedalForm(request.POST, instance=medal)
-            except:
+            except Exception:
                 # メダルが存在しなければ新規追加
                 medal_form = MedalForm(request.POST)
 
@@ -56,7 +55,7 @@ def edit(request, music_id):
                 # BAD数が存在すれば呼び出して更新
                 bad_count = Bad_Count.objects.get(music=music_id, user=myself)
                 bad_count_form = Bad_CountForm(request.POST, instance=bad_count)
-            except:
+            except Exception:
                 # BAD数が存在しなければ新規追加
                 bad_count_form = Bad_CountForm(request.POST)
 
@@ -89,7 +88,7 @@ def edit(request, music_id):
                     extra_option.user = myself  # ユーザー
                     extra_option.updated_at = now_datetime  # 現在日時
                     extra_option.save()  # 保存
-            except:
+            except Exception:
                 # エクストラオプションが存在しなければ新規追加
                 extra_option_form = Extra_OptionForm(request.POST)
 
@@ -119,7 +118,7 @@ def edit(request, music_id):
                         # リダイレクト先にメッセージを表示
                         msg = '更新内容をツイートしました！'
                         messages.success(request, msg)
-                    except:
+                    except Exception:
                         # リダイレクト先にメッセージを表示
                         msg = '更新内容をツイートできませんでした'
                         messages.error(request, msg)
@@ -171,7 +170,7 @@ def edit(request, music_id):
             # メダルが存在すれば既存のデータを初期値に設定
             medal = Medal.objects.get(music=music_id, user=myself)
             medal_form = MedalForm(instance=medal)
-        except:
+        except Exception:
             # メダルが存在しなければ初期値を未プレイに設定
             medal_form = MedalForm(initial={
                 'medal': 12  # 未プレイ
@@ -181,7 +180,7 @@ def edit(request, music_id):
             # BAD数が存在すれば既存のデータを初期値に設定
             bad_count = Bad_Count.objects.get(music=music_id, user=myself)
             bad_count_form = Bad_CountForm(instance=bad_count)
-        except:
+        except Exception:
             # BAD数が存在しなければ初期値を設定しない
             bad_count_form = Bad_CountForm()
 
@@ -189,7 +188,7 @@ def edit(request, music_id):
             # エクストラオプションが存在すれば既存のデータを初期値に設定
             extra_option = Extra_Option.objects.get(music=music_id, user=myself)
             extra_option_form = Extra_OptionForm(instance=extra_option)
-        except:
+        except Exception:
             # エクストラオプションが存在しなければ初期値を設定しない
             extra_option_form = Extra_OptionForm()
 

@@ -1,22 +1,20 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render
 
 from main.models import Music, Medal, Bad_Count, Extra_Option
 from users.models import CustomUser
 
 
-def ranking_detail(request, music_id):
-    """
-    ランキング: 詳細
-    @param music_id: 曲ID
-    """
+def ranking_detail(request: HttpRequest, music_id: int) -> HttpResponse:
+    """ ランキング: 詳細 """
 
-    def bad_count_rank(bad_count_list_ordered: list, user: CustomUser):
+    def bad_count_rank(bad_count_list_ordered: list[Bad_Count], user: CustomUser) -> int | None:
         """
         指定されたユーザーの順位を返す
         @param bad_count_list_ordered: 曲で絞込済みのBAD数リスト(昇順)
         @param user: 指定されたユーザー
-        @return int|rank: 順位
+        @return rank: 順位
         """
         if not bad_count_list_ordered:
             return None
@@ -25,6 +23,7 @@ def ranking_detail(request, music_id):
         bad_count_now = -1  # 現在のBAD数
         rank = -1  # ランク
         found = False  # BAD数を登録済であればTrueを返す
+        tmp_rank = 0
 
         for bad_count in bad_count_list_ordered:
             bad_count_before = bad_count_now

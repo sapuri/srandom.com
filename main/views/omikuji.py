@@ -2,6 +2,7 @@ from random import choice
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from twitter import Twitter, OAuth
 
@@ -11,11 +12,12 @@ from srandom import settings
 
 
 @login_required
-def omikuji(request):
+def omikuji(request: HttpRequest) -> HttpResponse:
     """
     スパランおみくじ
     指定されたS乱レベルの範囲の曲からランダムで選曲
     """
+
     myself = request.user
     sran_level_form = Sran_LevelForm()
 
@@ -70,7 +72,7 @@ def omikuji(request):
                 # メッセージを表示
                 msg = 'おみくじの結果をツイートしました！'
                 messages.success(request, msg)
-            except:
+            except Exception:
                 # メッセージを表示
                 msg = 'おみくじの結果をツイートできませんでした'
                 messages.error(request, msg)
@@ -78,15 +80,15 @@ def omikuji(request):
     try:
         try:
             medal = Medal.objects.get(user=myself, music=music)
-        except:
+        except Exception:
             medal = None
         try:
             bad_count = Bad_Count.objects.get(user=myself, music=music)
-        except:
+        except Exception:
             bad_count = None
         try:
             extra_option = Extra_Option.objects.get(user=myself, music=music)
-        except:
+        except Exception:
             extra_option = None
         context = {
             'sran_level_form': sran_level_form,
@@ -96,7 +98,7 @@ def omikuji(request):
             'extra_option': extra_option
         }
         return render(request, 'main/omikuji.html', context)
-    except:
+    except Exception:
         context = {
             'sran_level_form': sran_level_form
         }

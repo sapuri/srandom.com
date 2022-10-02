@@ -1,17 +1,23 @@
 from django import template
 
-register = template.Library()
+from main.models import Music, Bad_Count
 
-# 指定された曲の平均BAD数を返す
+register = template.Library()
 
 
 @register.filter
-def bad_count_avg(bad_count_list, music):
+def bad_count_avg(bad_count_list: list[Bad_Count], music: Music) -> int | None:
+    """
+    指定された曲の平均BAD数を返す
+    :param bad_count_list:
+    :param music:
+    :return: 平均BAD数
+    """
     if not bad_count_list:
         return None
 
-    bad_count_sum = 0   # BAD数の合計
-    bad_count_num = 0   # BAD数の個数
+    bad_count_sum = 0  # BAD数の合計
+    bad_count_num = 0  # BAD数の個数
 
     for bad_count in bad_count_list:
         if bad_count.music.id == music.id:
@@ -19,20 +25,17 @@ def bad_count_avg(bad_count_list, music):
             bad_count_num += 1
 
     # BAD数の平均を計算 (小数点以下四捨五入)
-    bad_count_avg = round(bad_count_sum / bad_count_num)
-
-    return bad_count_avg
-
-# 指定された曲の順位を返す
+    return round(bad_count_sum / bad_count_num)
 
 
 @register.filter
-def bad_count_rank(bad_count_list_ordered, music_id_and_myself_id):
-    '''
+def bad_count_rank(bad_count_list_ordered: list[Bad_Count], music_id_and_myself_id: str) -> str:
+    """
     指定された曲の順位を返す
-    @param bad_count_list_ordered: 昇順で整列済のBAD数リスト
-    @param music_id_and_myself_id: 曲IDと自ユーザーIDをコンマで区切った文字列
-    '''
+    :param bad_count_list_ordered:
+    :param music_id_and_myself_id:
+    :return: 順位
+    """
     if not bad_count_list_ordered:
         return '-'
 
@@ -41,10 +44,11 @@ def bad_count_rank(bad_count_list_ordered, music_id_and_myself_id):
     music_id = int(music_id_and_myself_id[0])
     myself_id = int(music_id_and_myself_id[1])
 
-    bad_count_num = 0   # BAD数の個数
+    bad_count_num = 0  # BAD数の個数
     bad_count_now = -1  # 現在のBAD数
-    myrank = -1         # 自ランク
-    found = False       # BAD数を登録済であればTrueを返す
+    myrank = -1  # 自ランク
+    found = False  # BAD数を登録済であればTrueを返す
+    tmp_rank = 0
 
     for bad_count in bad_count_list_ordered:
         if bad_count.music.id == music_id:
@@ -75,6 +79,6 @@ def bad_count_rank(bad_count_list_ordered, music_id_and_myself_id):
     if found:
         return '%d / %d' % (myrank, bad_count_num)
     elif bad_count_num != 0:
-        return '- / %d' % (bad_count_num)
+        return '- / %d' % bad_count_num
     else:
         return '- / -'

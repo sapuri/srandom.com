@@ -1,13 +1,14 @@
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from main.forms import SearchForm
 from main.models import Music
 
 
-def search(request):
+def search(request: HttpRequest) -> HttpResponse:
     """ 検索結果 """
 
-    def search_items(q=None):
+    def search_items(q: str = None) -> list[Music]:
         filter_params = {}
         if q:
             # 大文字小文字区別無しの部分一致
