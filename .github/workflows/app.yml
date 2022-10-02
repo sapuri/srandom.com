@@ -51,7 +51,6 @@ jobs:
           --health-retries 5
 
     env:
-      SECRET_KEY: mj8f0l0)noi_7#l(+t9f8az72$)v+icvf6^87v6847!osel6+d
       ALLOWED_HOSTS: 127.0.0.1
       DATABASE_ENGINE: django.db.backends.mysql
       DATABASE_NAME: ci
