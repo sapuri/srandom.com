@@ -1,13 +1,11 @@
 # srandom.com
 A clear status management site for super-random enthusiasts of pop'n music
 
-[![Build Status](https://travis-ci.com/sapuri/srandom.com.svg?token=xwpmsyc4SnBSSQnifEya&branch=master)](https://travis-ci.com/sapuri/srandom.com)
-
 ## Installation
 ### Requirements
-- [Python](https://www.python.org/) 3.9 >=
-- [Django](https://www.djangoproject.com/) 3.0 >=
-- [MySQL](https://www.mysql.com/) 5.6 >=
+- [Python](https://www.python.org/)
+- [MySQL](https://www.mysql.com/)
+- [pipenv](https://github.com/pypa/pipenv)
 - [direnv](https://github.com/direnv/direnv#install) (optional)
 
 ### Create development environment
@@ -19,6 +17,11 @@ pipenv install
 ```shell
 cp .env.sample .env
 vi .env # edit it
+```
+
+### Start DB and app
+```
+pipenv run docker_up
 ```
 
 ### Run test
