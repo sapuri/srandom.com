@@ -91,24 +91,24 @@ WSGI_APPLICATION = 'srandom.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': env('DATABASE_ENGINE'),
-        'NAME': env('DATABASE_NAME'),
-        'USER': env('DATABASE_USER'),
-        'PASSWORD': env('DATABASE_PASSWORD'),
-        'HOST': env('DATABASE_HOST'),
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'ssl': {
-                # ref. https://planetscale.com/docs/concepts/secure-connections#ca-root-configuration
-                'ca': env('DATABASE_SSL_CA'),
-            }
-        },
+if env.str('DATABASE_SSL_CA', '') != '':
+    DATABASES = {
+        'default': {
+            'ENGINE': env('DATABASE_ENGINE'),
+            'NAME': env('DATABASE_NAME'),
+            'USER': env('DATABASE_USER'),
+            'PASSWORD': env('DATABASE_PASSWORD'),
+            'HOST': env('DATABASE_HOST'),
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+                'ssl': {
+                    # ref. https://planetscale.com/docs/concepts/secure-connections#ca-root-configuration
+                    'ca': env('DATABASE_SSL_CA'),
+                }
+            },
+        }
     }
-}
-
-if env('DATABASE_SSL_CA') == '':
+else:
     DATABASES = {
         'default': {
             'ENGINE': env('DATABASE_ENGINE'),
@@ -206,31 +206,13 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-SOCIAL_AUTH_TWITTER_KEY = env('SOCIAL_AUTH_TWITTER_KEY')
-SOCIAL_AUTH_TWITTER_SECRET = env('SOCIAL_AUTH_TWITTER_SECRET')
+SOCIAL_AUTH_TWITTER_KEY = env.str('SOCIAL_AUTH_TWITTER_KEY', '')
+SOCIAL_AUTH_TWITTER_SECRET = env.str('SOCIAL_AUTH_TWITTER_SECRET', '')
 
 
 # django-maintenance-mode
 MAINTENANCE_MODE_STATE_FILE_PATH = 'srandom/maintenance_mode_state.txt'
 MAINTENANCE_MODE_IGNORE_SUPERUSER = True
-
-
-if not DEBUG:
-    # Travis CI
-    if 'TRAVIS' in os.environ:
-        SECRET_KEY = 'mj8f0l0)noi_7#l(+t9f8az72$)v+icvf6^87v6847!osel6+d'
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.mysql',
-                'NAME': 'travis_ci',
-                'USER': 'root',
-                'PASSWORD': '',
-                'HOST': '',
-                'OPTIONS': {
-                    'charset': 'utf8mb4',
-                },
-            }
-        }
 
 LOGGING = {
     'version': 1,
