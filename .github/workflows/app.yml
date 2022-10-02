@@ -97,7 +97,7 @@ jobs:
 
   deploy:
     if: github.ref == 'refs/heads/master'
-    needs: [test]
+    needs: [lint, test]
     runs-on: ubuntu-latest
 
     env:
