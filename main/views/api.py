@@ -36,20 +36,20 @@ def get_clear_status(request, music_id):
         try:
             bad_count = Bad_Count.objects.get(music=music_id, user=user)
             bad_count = bad_count.bad_count
-        except:
+        except Exception:
             bad_count = None
 
         # メダルを取得
         try:
             medal = Medal.objects.get(music=music_id, user=user)
             medal = medal.medal
-        except:
+        except Exception:
             medal = None
 
         # エクストラオプションを取得
         try:
             extra_option = Extra_Option.objects.get(music=music_id, user=user)
-        except:
+        except Exception:
             extra_option = None
 
         if medal:
@@ -104,7 +104,7 @@ def get_bad_count(request, music_id):
         try:
             bad_count = Bad_Count.objects.get(music=music_id, user=user)
             bad_count = bad_count.bad_count
-        except:
+        except Exception:
             bad_count = None
 
         context = {
@@ -141,7 +141,7 @@ def get_medal(request, music_id):
         try:
             medal = Medal.objects.get(music=music_id, user=user)
             medal = medal.medal
-        except:
+        except Exception:
             medal = None
 
         context = {
@@ -177,7 +177,7 @@ def get_latest_updated_at(request, music_id):
 
         try:
             medal = Medal.objects.get(music=music_id, user=user)
-        except:
+        except Exception:
             medal = None
 
         if medal:
@@ -256,7 +256,7 @@ def get_myrank(request, music_id):
         bad_count_num = 0  # BAD数の個数
         bad_count_now = -1  # 現在のBAD数
         myrank = 0  # 自ランク
-        found = False  # BAD数を登録済であればTrueを返す
+        tmp_rank = 0
 
         for bad_count in bad_count_list:
             bad_count_before = bad_count_now
@@ -266,7 +266,6 @@ def get_myrank(request, music_id):
             if bad_count_now == bad_count_before:
                 # 指定されたユーザーの記録が見つかれば myrank にランクを格納
                 if bad_count.user.id == user.id:
-                    found = True
                     myrank = tmp_rank
 
                 bad_count_num += 1
@@ -280,7 +279,6 @@ def get_myrank(request, music_id):
 
                 # 自分の記録が見つかれば myrank にランクを格納
                 if bad_count.user.id == user.id:
-                    found = True
                     myrank = bad_count_num
 
         context = {

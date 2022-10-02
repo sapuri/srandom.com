@@ -40,7 +40,7 @@ def get_percentage_of_clear(request, user_id):
                     medal = Medal.objects.get(user=user, music=music)
                     if medal.medal <= 7:
                         clear_num[sran_level - 1] = clear_num[sran_level - 1] + 1
-                except:
+                except Exception:
                     pass
 
             # 各レベルのクリア率を計算

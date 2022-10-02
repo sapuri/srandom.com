@@ -1,25 +1,19 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import Http404
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render
 
 from main.models import Music, Medal, Bad_Count, Extra_Option
 from users.models import CustomUser
 
 
-def cleardata(request, username, sran_level):
-    """
-    クリア状況
-    @param username: ユーザー名
-    @param sran_level: S乱レベル
-    """
+def cleardata(request: HttpRequest, username: str, sran_level: int) -> HttpResponse:
+    """ クリア状況 """
+
     # ユーザーを取得
     selected_user = get_object_or_404(CustomUser, username=username, is_active=True)
 
     # 最大S乱レベル
     max_s_lv = 19
-
-    # S乱レベルを数値に変換
-    sran_level = int(sran_level)
 
     # S乱レベルが不正なら404エラー
     if sran_level <= 0 or sran_level > max_s_lv:
@@ -30,9 +24,6 @@ def cleardata(request, username, sran_level):
 
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level')
-
-    # 取得曲数を取得
-    music_list_count = len(music_list)
 
     # ページング
     paginator = Paginator(music_list, 25)
@@ -56,7 +47,7 @@ def cleardata(request, username, sran_level):
         'selected_user': selected_user,
         'sran_level': sran_level,
         'music_list': music_list,
-        'music_list_count': music_list_count,
+        'music_list_count': len(music_list),
         'medal_list': medal_list,
         'bad_count_list': bad_count_list,
         'extra_option_list': extra_option_list

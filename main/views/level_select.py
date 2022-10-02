@@ -1,10 +1,10 @@
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 
-def level_select(request):
-    """
-    公式難易度表: レベル選択
-    """
+def level_select(request: HttpRequest) -> HttpResponse:
+    """ 公式難易度表: レベル選択 """
+
     # 最大レベル
     max_lv = 50
 

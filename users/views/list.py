@@ -1,14 +1,15 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from users.models import CustomUser
 
 
-def list_users(request):
+def list_users(request: HttpRequest) -> HttpResponse:
     """ ユーザーリスト """
+
     # 有効なアカウントを取得
-    users = CustomUser.objects.filter(
-        is_active=True).exclude(pk=1).order_by('id')
+    users = CustomUser.objects.filter(is_active=True).exclude(pk=1).order_by('id')
 
     # ページング
     paginator = Paginator(users, 50)

@@ -1,12 +1,12 @@
 from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 
 @login_required
-def ranking_level_select(request):
-    """
-    ランキング: S乱レベル選択
-    """
+def ranking_level_select(request: HttpRequest) -> HttpResponse:
+    """ ランキング: S乱レベル選択 """
+
     # 最大S乱レベル
     max_s_lv = 19
 

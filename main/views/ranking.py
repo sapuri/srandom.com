@@ -1,22 +1,17 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import Http404
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from main.models import Music
 
 
 @login_required
-def ranking(request, sran_level):
-    """
-    ランキング
-    @param sran_level: S乱レベル
-    """
+def ranking(request: HttpRequest, sran_level: int) -> HttpResponse:
+    """ ランキング """
+
     # 最高S乱レベル
     max_s_lv = 19
-
-    # S乱レベルを数値に変換
-    sran_level = int(sran_level)
 
     # S乱レベルが不正なら404エラー
     if sran_level <= 0 or sran_level > max_s_lv:
@@ -26,9 +21,6 @@ def ranking(request, sran_level):
 
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
-
-    # 取得曲数を取得
-    music_list_count = len(music_list)
 
     # ページング
     paginator = Paginator(music_list, 25)
@@ -46,7 +38,7 @@ def ranking(request, sran_level):
     context = {
         'sran_level': sran_level,
         'music_list': music_list,
-        'music_list_count': music_list_count
+        'music_list_count': len(music_list)
     }
 
     return render(request, 'main/ranking.html', context)

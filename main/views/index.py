@@ -1,11 +1,13 @@
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from main.forms import SearchForm
 from main.models import Medal, Music
 
 
-def index(request):
+def index(request: HttpRequest) -> HttpResponse:
     """ トップページ """
+
     medal_num = Medal.objects.all().count()
     recent_medal = Medal.objects.all().order_by('-updated_at')[:10]
     recent_music_id_list = list(recent_medal.values_list('music', flat=True))

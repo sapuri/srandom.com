@@ -1,16 +1,18 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpRequest
 from google.cloud import storage
 
 
 @login_required
-def download(request, file_type):
+def download(request: HttpRequest, file_type: str) -> HttpResponse:
     """
     ファイルダウンロード
-    @param {string} file_type ダウンロードするファイルの種類
+    :param request:
+    :param file_type: ダウンロードするファイルの種類
     """
+
     if file_type == 'csv':
         if request.user.premium:
             env = getattr(settings, 'ENV', None)

@@ -1,20 +1,15 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import Http404
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from main.models import Music
 
 
-def level(request, level):
-    """
-    難易度表
-    @param level: レベル
-    """
+def level(request: HttpRequest, level: int) -> HttpResponse:
+    """ 難易度表 """
+
     # 最大レベル
     max_lv = 50
-
-    # レベルを数値に変換
-    level = int(level)
 
     # レベルが不正なら404エラー
     if level <= 0 or level > max_lv:
@@ -25,9 +20,6 @@ def level(request, level):
 
     # 対象レベルの曲を取得
     music_list = Music.objects.filter(level=level_id).order_by('-sran_level', 'title')
-
-    # 取得曲数を取得
-    music_list_count = len(music_list)
 
     # ページング
     paginator = Paginator(music_list, 25)
@@ -45,7 +37,7 @@ def level(request, level):
     context = {
         'level': level,
         'music_list': music_list,
-        'music_list_count': music_list_count
+        'music_list_count': len(music_list)
     }
 
     return render(request, 'main/level/level.html', context)

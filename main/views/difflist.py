@@ -1,15 +1,13 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import Http404
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from main.models import Music
 
 
-def difflist(request, sran_level):
-    """
-    難易度表
-    @param sran_level: S乱レベル
-    """
+def difflist(request: HttpRequest, sran_level: int) -> HttpResponse:
+    """ 難易度表 """
+
     # 最大S乱レベル
     max_s_lv = 19
 

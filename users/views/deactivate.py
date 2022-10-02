@@ -1,14 +1,14 @@
 from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 
 from main.models import Medal, Bad_Count, Extra_Option
 
 
 @login_required
-def deactivate(request):
-    """
-    アカウント削除
-    """
+def deactivate(request: HttpRequest) -> HttpResponse:
+    """ アカウント削除 """
+
     # 自ユーザーを取得
     myself = request.user
 

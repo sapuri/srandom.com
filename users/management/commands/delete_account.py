@@ -41,9 +41,9 @@ class Command(BaseCommand):
             sys.exit()
 
         # 全クリアデータを削除
-        medal_list = Medal.objects.filter(user=user).delete()
-        bad_count_list = Bad_Count.objects.filter(user=user).delete()
-        extra_option_list = Extra_Option.objects.filter(user=user).delete()
+        Medal.objects.filter(user=user).delete()
+        Bad_Count.objects.filter(user=user).delete()
+        Extra_Option.objects.filter(user=user).delete()
 
         # アカウントを無効化
         user.is_active = False
