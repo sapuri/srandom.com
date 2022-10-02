@@ -4,7 +4,7 @@ from django.forms.models import ModelChoiceField
 from django.forms.widgets import Select, RadioSelect, Textarea
 from django.core.validators import RegexValidator
 
-from .models import *
+from users.models import Location, CustomUser, Theme
 
 
 class CustomUserForm(forms.ModelForm):

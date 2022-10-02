@@ -43,8 +43,7 @@ class Sran_LevelForm(forms.ModelForm):
 
 
 class MedalForm(forms.ModelForm):
-    medal = ChoiceField(label='クリアメダル', widget=Select,
-                        choices=MEDAL_CHOICES, required=True)
+    medal = ChoiceField(label='クリアメダル', widget=Select, choices=MEDAL_CHOICES, required=True)
 
     class Meta:
         model = Medal
@@ -52,8 +51,7 @@ class MedalForm(forms.ModelForm):
 
 
 class Bad_CountForm(forms.ModelForm):
-    bad_count = IntegerField(label='BAD数', min_value=0,
-                             max_value=200, required=False)
+    bad_count = IntegerField(label='BAD数', min_value=0, max_value=200, required=False)
 
     class Meta:
         model = Bad_Count
@@ -69,6 +67,5 @@ class Extra_OptionForm(forms.ModelForm):
 
 
 class SearchForm(forms.Form):
-    ''' 検索フォーム '''
-    q = forms.CharField(max_length=100, widget=forms.TextInput(
-        attrs={"placeholder": "曲名で検索"}), required=False)
+    """ 検索フォーム """
+    q = forms.CharField(max_length=100, widget=forms.TextInput(attrs={"placeholder": "曲名で検索"}), required=False)

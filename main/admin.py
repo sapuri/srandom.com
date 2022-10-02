@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import *
+
+from main.models import Difficulty, Level, Sran_Level, Music, Medal, Bad_Count, Extra_Option, News, Activity
 
 
 class DifficultyAdmin(admin.ModelAdmin):

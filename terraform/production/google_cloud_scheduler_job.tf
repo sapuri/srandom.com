@@ -1,6 +1,6 @@
 resource "google_cloud_scheduler_job" "update-music" {
   name             = "update-music"
-  description      = "Cloud Run job: update-music"
+  description      = "Cloud Run Job: update-music"
   schedule         = "5 0 * * *" # At 0:05
   time_zone        = "Asia/Tokyo"
   attempt_deadline = "600s" # 10m
@@ -21,7 +21,7 @@ resource "google_cloud_scheduler_job" "update-music" {
 
 resource "google_cloud_scheduler_job" "export2csv" {
   name             = "export2csv"
-  description      = "Cloud Run job: export2csv"
+  description      = "Cloud Run Job: export2csv"
   schedule         = "20 0 * * *" # At 0:20
   time_zone        = "Asia/Tokyo"
   attempt_deadline = "1800s" # 30m
