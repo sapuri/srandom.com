@@ -14,6 +14,8 @@ import os
 
 import environ
 
+from django.core.management.utils import get_random_secret_key
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -27,7 +29,7 @@ ENV = env  # for import from other files
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env.str('SECRET_KEY', get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', False)
@@ -172,12 +174,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 if not DEBUG:
     # django-storages
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-    GS_BUCKET_NAME = 'srandom-static'
+    GS_BUCKET_NAME = 'static.srandom.com'
     GS_DEFAULT_ACL = None
     GS_QUERYSTRING_AUTH = False
+    GS_CUSTOM_ENDPOINT = "https://static.srandom.com"
 
     STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-    STATIC_URL = 'https://storage.googleapis.com/srandom-static/'
+    STATIC_URL = 'https://static.srandom.com/'
 
 # メッセージ設定
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
