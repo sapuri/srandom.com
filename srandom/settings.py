@@ -174,12 +174,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 if not DEBUG:
     # django-storages
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-    GS_BUCKET_NAME = 'srandom-static'
+    GS_BUCKET_NAME = 'static.srandom.com'
     GS_DEFAULT_ACL = None
     GS_QUERYSTRING_AUTH = False
+    GS_CUSTOM_ENDPOINT = "https://static.srandom.com"
 
     STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-    STATIC_URL = 'https://storage.googleapis.com/srandom-static/'
+    STATIC_URL = 'https://static.srandom.com/'
 
 # メッセージ設定
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
