@@ -47,7 +47,7 @@ function getMedal(music_id) {
     })
     .then(
         function(response) {
-            if (response.medal && response.medal != 12) {
+            if (response.medal && response.medal !== 12) {
                 // 未プレイ以外ならメダルを描画
                 const medal = response.medal;
                 $(selector+' .loading').remove();
