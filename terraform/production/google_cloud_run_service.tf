@@ -10,7 +10,7 @@ resource "google_cloud_run_service" "app" {
         image = "asia-northeast1-docker.pkg.dev/srandom/app/app"
 
         resources {
-          limits = { "memory" : "512Mi", "cpu" : "2000m" }
+          limits = { "memory" : "512Mi", "cpu" : "1000m" }
         }
       }
 
@@ -19,7 +19,7 @@ resource "google_cloud_run_service" "app" {
 
     metadata {
       annotations = {
-        "autoscaling.knative.dev/maxScale" = "2"
+        "autoscaling.knative.dev/maxScale" = "3"
       }
     }
   }
