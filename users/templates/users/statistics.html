@@ -56,13 +56,13 @@
 <p>都道府県: {{ selected_user.location|default:'------' }}</p>
 <p>コメント:<br>{{ selected_user.profile|default:'------' }}</p>
 <p>登録日時: {{ selected_user.date_joined|date:"Y/n/d G:i" }}</p>
-{% ifequal selected_user user %}
+{% if selected_user == user %}
 <p>最終ログイン日時: {{ selected_user.last_login|date:"Y/n/d G:i" }}</p>
-{% endifequal %}
+{% endif %}
 
-{% ifequal selected_user user %}
+{% if selected_user == user %}
 <a href="{% url 'users:settings' %}" class="btn btn-default">{% bootstrap_icon "pencil" %} 編集する</a>
-{% endifequal %}
+{% endif %}
 
 <a href="https://twitter.com/intent/tweet?text={{ selected_user.player_name|default:selected_user.username }}さんのプロフィールページです。&url={{ request.build_absolute_uri }}&hashtags=スパランドットコム" class="btn btn-info"><i class="fa fa-twitter" aria-hidden="true"></i> ツイートする</a>
 
@@ -74,10 +74,10 @@
     {% endif %}
 </h2>
 {% if selected_user.cleardata_privacy == 1 or selected_user == user %}
-<center style="margin-bottom:30px">
+<div style="margin-bottom:30px; text-align: center;">
     <p><b>{{ activity_count }} activities in total</b></p>
     <div id="activityMap"></div>
-</center>
+</div>
 
 <div id="clear-rate-chart">
     <div class="loading"></div>
@@ -89,10 +89,10 @@
 {% endif %}
 
 <script>
-	var cal = new CalHeatMap();
-    var start = new Date;
-    var end = new Date;
-    var range = 12;
+	const cal = new CalHeatMap();
+    let start = new Date;
+    let end = new Date;
+    const range = 12;
     start = start.setMonth(start.getMonth() - (range - 1));
     end = end.setMonth(end.getMonth());
 	cal.init({
@@ -109,20 +109,19 @@
     });
 </script>
 <script>
-    var selector = "#clear-rate-chart";
-    var ctx = document.getElementById("clearRate");
+    const selector = "#clear-rate-chart";
+    const ctx = document.getElementById("clearRate");
     $.ajax({
         url: "{% url 'users:get_clear_rate' %}?user_id="+{{ selected_user.id }},
         type: "GET",
-        timeout: 15000
+        timeout: 20000
     })
     .then(
         function (response) {
             hideLoadingImage(selector);
-            var data = response;
-            var clearRate = new Chart(ctx, {
+            new Chart(ctx, {
                 type: "horizontalBar",
-                data: data,
+                data: response,
                 options: {
                     scales: {
                         xAxes: [{
@@ -130,8 +129,8 @@
                             ticks: {
                                 min: 0,
                                 max: 100,
-                                callback: function(value) {
-                                    return value + "%";
+                                callback: function(v) {
+                                    return v;
                                 }
                             },
                         }],
@@ -143,7 +142,7 @@
                     },
                     title: {
                         display: true,
-                        text: "各メダルの割合"
+                        text: "各メダルの割合 (%)"
                     }
                 }
             });
