@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.http import HttpResponse, Http404, HttpRequest
@@ -76,10 +77,8 @@ def get_activity_map(request):
     start = int(request.GET['start'])
     end = int(request.GET['stop'])
 
-    start_datetime = datetime.fromtimestamp(start / 1000.0)
-    end_datetime = datetime.fromtimestamp(end / 1000.0)
-    print('start_datetime:', start_datetime)
-    print('end_datetime:', end_datetime)
+    start_datetime = datetime.fromtimestamp(start / 1000.0, tz=ZoneInfo('Asia/Tokyo'))
+    end_datetime = datetime.fromtimestamp(end / 1000.0, tz=ZoneInfo('Asia/Tokyo'))
 
     activities = Activity.objects.filter(user=user_id, updated_at__range=(start_datetime, end_datetime))
     result = {}

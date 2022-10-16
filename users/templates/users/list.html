@@ -24,7 +24,7 @@
         </thead>
         <tbody>
             {% for selected_user in users %}
-            <tr{% ifequal selected_user.username user.username %} id="myself"{% endifequal %}>
+            <tr{% if selected_user.username == user.username %} id="myself"{% endif %}>
                 <td class="no">{{ forloop.counter0 | add:users.start_index }}</td>
                 <td class="username"><a href="{% url 'users:mypage' selected_user.username %}">{{ selected_user.username }}</a>{% if selected_user.premium %} <span class="premium">★</span>{% endif %}</td>
                 <td class="player_name">{{ selected_user.player_name|default:'-' }}</td>
