@@ -24,13 +24,13 @@
 <p>都道府県: {{ selected_user.location|default:'------' }}</p>
 <p>コメント:<br>{{ selected_user.profile|default:'------' }}</p>
 <p>登録日時: {{ selected_user.date_joined|date:"Y/n/d G:i" }}</p>
-{% ifequal selected_user user %}
+{% if selected_user == user %}
 <p>最終ログイン日時: {{ selected_user.last_login|date:"Y/n/d G:i" }}</p>
-{% endifequal %}
+{% endif %}
 
-{% ifequal selected_user user %}
+{% if selected_user == user %}
 <a href="{% url 'users:settings' %}" class="btn btn-default">{% bootstrap_icon "pencil" %} 編集する</a>
-{% endifequal %}
+{% endif %}
 
 <a href="https://twitter.com/intent/tweet?text={{ selected_user.player_name|default:selected_user.username }}さんのプロフィールページです。&url={{ request.build_absolute_uri }}&hashtags=スパランドットコム" class="btn btn-info"><i class="fa fa-twitter" aria-hidden="true"></i> ツイートする</a>
 

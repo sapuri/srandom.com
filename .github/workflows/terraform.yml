@@ -13,6 +13,8 @@ defaults:
 jobs:
   format:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
@@ -20,13 +22,17 @@ jobs:
 
   validate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
-      - uses: 'google-github-actions/auth@v0'
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0
         with:
-          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
-          create_credentials_file: true
+          workload_identity_provider: projects/682889726379/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+          service_account: github@srandom.iam.gserviceaccount.com
       - name: validate
         working-directory: terraform/production
         run: |

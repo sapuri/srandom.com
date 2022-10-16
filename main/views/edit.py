@@ -1,6 +1,6 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
-import pytz
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
@@ -30,7 +30,7 @@ def edit(request: HttpRequest, music_id: int) -> HttpResponse:
         if 'save' in request.POST:
             # 記録を保存
             # 日本の日時を取得
-            now_datetime = datetime.now(pytz.timezone('Asia/Tokyo'))
+            now_datetime = datetime.now(ZoneInfo('Asia/Tokyo'))
 
             # クリアメダルを登録
             try:
