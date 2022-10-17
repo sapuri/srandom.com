@@ -3,6 +3,7 @@ from django.conf.urls import include
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path
 from django.contrib import admin
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', include('main.urls')),
@@ -10,6 +11,7 @@ urlpatterns = [
     path('auth/', include(('django.contrib.auth.urls', 'auth'))),
     path('social/', include(('social_django.urls', 'social'))),
     path('users/', include('users.urls')),
+    path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
 ]
 
 if settings.DEBUG:
