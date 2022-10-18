@@ -36,6 +36,9 @@ DEBUG = env.bool('DEBUG', False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
+# https://docs.djangoproject.com/en/4.0/ref/settings/#csrf-trusted-origins
+CSRF_TRUSTED_ORIGINS = ["https://srandom.com"]
+
 # Application definition
 
 INSTALLED_APPS = [
