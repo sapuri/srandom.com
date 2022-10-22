@@ -15,22 +15,12 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
+          cache: pipenv
 
       - name: Install pipenv
-        run: |
-          python -m pip install -U pip
-          python -m pip install pipenv
-
-      - uses: actions/cache@v3
-        id: pipenv-cache
-        with:
-          path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-dev-${{ hashFiles('**/Pipfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pipenv-dev-${{ hashFiles('**/Pipfile.lock') }}
+        run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
 
       - name: Install dependencies
-        if: steps.pipenv-cache.outputs.cache-hit != 'true'
         run: pipenv sync --dev
 
       - name: Lint
@@ -70,22 +60,12 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
+          cache: pipenv
 
       - name: Install pipenv
-        run: |
-          python -m pip install -U pip
-          python -m pip install pipenv
-
-      - uses: actions/cache@v3
-        id: pipenv-cache
-        with:
-          path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
+        run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
 
       - name: Install dependencies
-        if: steps.pipenv-cache.outputs.cache-hit != 'true'
         run: pipenv sync
 
       - name: Migration
