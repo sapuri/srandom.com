@@ -1,6 +1,7 @@
 from django.urls import path
+from django.views.generic import TemplateView
 
-from .views import api, difflist, difflist_level_select, edit, index, level, level_select, news, omikuji, premium, ranking, ranking_detail, ranking_level_select, search
+from .views import api, difflist, difflist_level_select, edit, index, level, level_select, news, omikuji, ranking, ranking_detail, ranking_level_select, search
 
 app_name = 'main'
 urlpatterns = [
@@ -16,7 +17,7 @@ urlpatterns = [
     path('ranking/<int:sran_level>/', ranking.ranking, name='ranking'),
     path('ranking/detail/<int:music_id>/', ranking_detail.ranking_detail, name='ranking_detail'),
     path('omikuji/', omikuji.omikuji, name='omikuji'),
-    path('premium/', premium.premium, name='premium'),
+    path('premium/', TemplateView.as_view(template_name="main/premium.html"), name='premium'),
     path('api/get_clear_status/<int:music_id>/', api.get_clear_status, name='get_clear_status'),
     path('api/get_bad_count/<int:music_id>/', api.get_bad_count, name='get_bad_count'),
     path('api/get_medal/<int:music_id>/', api.get_medal, name='get_medal'),
