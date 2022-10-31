@@ -53,7 +53,7 @@ django-storages = {extras = ["google"], version = "==1.13.1"}
 slack-sdk = "==3.19.2"
 
 [dev-packages]
-autopep8 = "==1.7.1"
+autopep8 = "==2.0.0"
 flake8 = "==5.0.4"
 
 [scripts]
