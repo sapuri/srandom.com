@@ -120,7 +120,7 @@ jobs:
           docker push ${{ env.IMAGE_CMD_EXPORT2CSV }}
 
       - name: Deploy to Cloud Run
-        uses: google-github-actions/deploy-cloudrun@main
+        uses: google-github-actions/deploy-cloudrun@v1
         with:
           service: ${{ env.SERVICE }}
           image: ${{ env.IMAGE_APP }}
