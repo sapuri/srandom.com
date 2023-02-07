@@ -11,6 +11,17 @@ class IndexTests(TestCase):
         resp = self.client.get(resolve_url(f'{APP_NAME}:index'))
         self.assertEqual(200, resp.status_code)
 
+    def test_get_authenticated_user(self):
+        self.client.force_login(self.create_user())
+        resp = self.client.get(resolve_url(f'{APP_NAME}:index'))
+        self.assertEqual(200, resp.status_code)
+
+    @staticmethod
+    def create_user(username: str = 'test', location: str = 'test', theme: str = 'test') -> object:
+        location = Location.objects.create(location=location)
+        theme = Theme.objects.create(theme=theme)
+        return CustomUser.objects.create_user(username, location=location, theme=theme)
+
 
 class NewsTests(TestCase):
     def test_get(self):
