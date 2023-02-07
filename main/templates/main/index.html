@@ -17,7 +17,6 @@
     {% endif %}
     <p><a href="{% url 'main:difflist_level_select' %}">難易度表ページ</a>でクリア状況を記録できます！</p>
     <p><a href="{% url 'main:ranking_level_select' %}">ランキングページ</a>で各曲ごとのBAD数ランキングを閲覧できます！</p>
-    <p><a href="{% url 'users:settings' %}">設定ページ</a>でテーマを変更できるようになりました！</p>
 {% else %}
     <p>スパランドットコムをご利用頂くにはログインが必要です。</p>
     <p>Twitter アカウントをお持ちであればすぐにログインできます。</p>
@@ -30,6 +29,24 @@
         {{ search_form.q }}
         <i class="glyphicon glyphicon-search form-control-feedback"></i>
     </form>
+</div>
+
+<h2 class="page-header danger">ログイン方法に関する重要なお知らせ</h2>
+<div class="text-box">
+    <p>(2023/02/07 更新)</p>
+    <p><a href="https://twitter.com/TwitterDev/status/1621026986784337922" target="_blank" rel="noopener">Twitter APIの仕様変更</a>に伴い、今後Twitterによるログイン機能を廃止する可能性があります。</p>
+    {% if user.is_authenticated %}
+        <p>下のボタンからGoogleにログインしていただくと現在ログイン中のアカウントと関連付けされ、今後Googleアカウントによるログイン機能が提供された際にそのアカウントでログインできるようになります。</p>
+
+        {% if is_signed_in_with_google %}
+        <p style="color: green">{% bootstrap_icon "ok" %} Googleアカウントと関連付けられています。</p>
+        <p>別のGoogleアカウントと関連付ける場合は再度下のボタンからGoogleにログインしてください。</p>
+        {% endif %}
+
+        <p><a href="{% url 'social:begin' 'google-oauth2' %}"><img src="{% static 'img/google_signin_light.png' %}" alt="Sign in with Google" width="191" height="46"></a></p>
+    {% else %}
+        <p>ログイン後にGoogleアカウントとの関連付けを行うと、今後Googleアカウントによるログイン機能が提供された際に現在使用しているアカウントでログインできるようになります。</p>
+    {% endif %}
 </div>
 
 <h2 class="page-header">このサイトについて</h2>
