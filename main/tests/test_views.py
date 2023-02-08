@@ -2,8 +2,8 @@ from django.shortcuts import resolve_url
 from django.test import TestCase
 
 from main import APP_NAME
-from main.models import Difficulty, Level, Sran_Level, Music
-from users.models import Location, Theme, CustomUser
+from main.tests.utils import create_music
+from users.tests.utils import create_user
 
 
 class IndexTests(TestCase):
@@ -12,15 +12,9 @@ class IndexTests(TestCase):
         self.assertEqual(200, resp.status_code)
 
     def test_get_authenticated_user(self):
-        self.client.force_login(self.create_user())
+        self.client.force_login(create_user())
         resp = self.client.get(resolve_url(f'{APP_NAME}:index'))
         self.assertEqual(200, resp.status_code)
-
-    @staticmethod
-    def create_user(username: str = 'test', location: str = 'test', theme: str = 'test') -> object:
-        location = Location.objects.create(location=location)
-        theme = Theme.objects.create(theme=theme)
-        return CustomUser.objects.create_user(username, location=location, theme=theme)
 
 
 class NewsTests(TestCase):
@@ -69,21 +63,8 @@ class DifflistTests(TestCase):
 
 class EditTests(TestCase):
     def setUp(self):
-        self.client.force_login(self.create_user())
-        self.music = self.create_music()
-
-    @staticmethod
-    def create_user(username: str = 'test', location: str = 'test', theme: str = 'test') -> object:
-        location = Location.objects.create(location=location)
-        theme = Theme.objects.create(theme=theme)
-        return CustomUser.objects.create_user(username, location=location, theme=theme)
-
-    @staticmethod
-    def create_music(title: str = 'test', difficulty: str = 'EXTRA', level: int = 50, sran_level: int = 19) -> object:
-        difficulty = Difficulty.objects.create(difficulty=difficulty)
-        level = Level.objects.create(level=level)
-        sran_level = Sran_Level.objects.create(level=sran_level)
-        return Music.objects.create(title=title, difficulty=difficulty, level=level, sran_level=sran_level)
+        self.client.force_login(create_user())
+        self.music = create_music()
 
     def test_get(self):
         resp = self.client.get(resolve_url(f'{APP_NAME}:edit', music_id=self.music.id))
@@ -96,13 +77,7 @@ class EditTests(TestCase):
 
 class RankingLevelSelectTests(TestCase):
     def setUp(self):
-        self.client.force_login(self.create_user())
-
-    @staticmethod
-    def create_user(username: str = 'test', location: str = 'test', theme: str = 'test') -> object:
-        location = Location.objects.create(location=location)
-        theme = Theme.objects.create(theme=theme)
-        return CustomUser.objects.create_user(username, location=location, theme=theme)
+        self.client.force_login(create_user())
 
     def test_get(self):
         resp = self.client.get(resolve_url(f'{APP_NAME}:ranking_level_select'))
@@ -111,13 +86,7 @@ class RankingLevelSelectTests(TestCase):
 
 class RankingTests(TestCase):
     def setUp(self):
-        self.client.force_login(self.create_user())
-
-    @staticmethod
-    def create_user(username: str = 'test', location: str = 'test', theme: str = 'test') -> object:
-        location = Location.objects.create(location=location)
-        theme = Theme.objects.create(theme=theme)
-        return CustomUser.objects.create_user(username, location=location, theme=theme)
+        self.client.force_login(create_user())
 
     def test_get(self):
         resp = self.client.get(resolve_url(f'{APP_NAME}:ranking', sran_level=19))
@@ -130,21 +99,8 @@ class RankingTests(TestCase):
 
 class RankingDetailTests(TestCase):
     def setUp(self):
-        self.client.force_login(self.create_user())
-        self.music = self.create_music()
-
-    @staticmethod
-    def create_user(username: str = 'test', location: str = 'test', theme: str = 'test') -> object:
-        location = Location.objects.create(location=location)
-        theme = Theme.objects.create(theme=theme)
-        return CustomUser.objects.create_user(username, location=location, theme=theme)
-
-    @staticmethod
-    def create_music(title: str = 'test', difficulty: str = 'EXTRA', level: int = 50, sran_level: int = 19) -> object:
-        difficulty = Difficulty.objects.create(difficulty=difficulty)
-        level = Level.objects.create(level=level)
-        sran_level = Sran_Level.objects.create(level=sran_level)
-        return Music.objects.create(title=title, difficulty=difficulty, level=level, sran_level=sran_level)
+        self.client.force_login(create_user())
+        self.music = create_music()
 
     def test_get(self):
         resp = self.client.get(resolve_url(f'{APP_NAME}:ranking_detail', music_id=self.music.id))
@@ -157,13 +113,7 @@ class RankingDetailTests(TestCase):
 
 class OmikujiTests(TestCase):
     def setUp(self):
-        self.client.force_login(self.create_user())
-
-    @staticmethod
-    def create_user(username: str = 'test', location: str = 'test', theme: str = 'test') -> object:
-        location = Location.objects.create(location=location)
-        theme = Theme.objects.create(theme=theme)
-        return CustomUser.objects.create_user(username, location=location, theme=theme)
+        self.client.force_login(create_user())
 
     def test_get(self):
         resp = self.client.get(resolve_url(f'{APP_NAME}:omikuji'))
