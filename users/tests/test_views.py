@@ -2,7 +2,7 @@ from django.shortcuts import resolve_url
 from django.test import TestCase
 
 from users import APP_NAME
-from users.models import Location, Theme, CustomUser
+from users.tests.utils import create_user
 
 
 class ListTests(TestCase):
@@ -13,13 +13,7 @@ class ListTests(TestCase):
 
 class MypageTests(TestCase):
     def setUp(self):
-        self.user = self.create_user()
-
-    @staticmethod
-    def create_user(username: str = 'test', location: str = 'test', theme: str = 'test') -> object:
-        location = Location.objects.create(location=location)
-        theme = Theme.objects.create(theme=theme)
-        return CustomUser.objects.create_user(username, location=location, theme=theme)
+        self.user = create_user()
 
     def test_get(self):
         resp = self.client.get(resolve_url(f'{APP_NAME}:mypage', username=self.user.username))
@@ -28,13 +22,7 @@ class MypageTests(TestCase):
 
 class StatisticsTests(TestCase):
     def setUp(self):
-        self.user = self.create_user()
-
-    @staticmethod
-    def create_user(username: str = 'test', location: str = 'test', theme: str = 'test') -> object:
-        location = Location.objects.create(location=location)
-        theme = Theme.objects.create(theme=theme)
-        return CustomUser.objects.create_user(username, location=location, theme=theme)
+        self.user = create_user()
 
     def test_get(self):
         resp = self.client.get(resolve_url(f'{APP_NAME}:statistics', username=self.user.username))
@@ -43,13 +31,7 @@ class StatisticsTests(TestCase):
 
 class SettingsTests(TestCase):
     def setUp(self):
-        self.client.force_login(self.create_user())
-
-    @staticmethod
-    def create_user(username: str = 'test', location: str = 'test', theme: str = 'test') -> object:
-        location = Location.objects.create(location=location)
-        theme = Theme.objects.create(theme=theme)
-        return CustomUser.objects.create_user(username, location=location, theme=theme)
+        self.client.force_login(create_user())
 
     def test_get(self):
         resp = self.client.get(resolve_url(f'{APP_NAME}:settings'))
@@ -58,13 +40,7 @@ class SettingsTests(TestCase):
 
 class CleardataTests(TestCase):
     def setUp(self):
-        self.user = self.create_user()
-
-    @staticmethod
-    def create_user(username: str = 'test', location: str = 'test', theme: str = 'test') -> object:
-        location = Location.objects.create(location=location)
-        theme = Theme.objects.create(theme=theme)
-        return CustomUser.objects.create_user(username, location=location, theme=theme)
+        self.user = create_user()
 
     def test_get(self):
         resp = self.client.get(resolve_url(f'{APP_NAME}:cleardata', username=self.user.username, sran_level=19))
@@ -73,13 +49,7 @@ class CleardataTests(TestCase):
 
 class DeactivateTests(TestCase):
     def setUp(self):
-        self.client.force_login(self.create_user())
-
-    @staticmethod
-    def create_user(username: str = 'test', location: str = 'test', theme: str = 'test') -> object:
-        location = Location.objects.create(location=location)
-        theme = Theme.objects.create(theme=theme)
-        return CustomUser.objects.create_user(username, location=location, theme=theme)
+        self.client.force_login(create_user())
 
     def test_get(self):
         resp = self.client.get(resolve_url(f'{APP_NAME}:deactivate'))
@@ -87,21 +57,15 @@ class DeactivateTests(TestCase):
 
 
 class DownloadTests(TestCase):
-    @staticmethod
-    def create_user(username: str = 'test', location: str = 'test', theme: str = 'test', premium: bool = False) -> object:
-        location = Location.objects.create(location=location)
-        theme = Theme.objects.create(theme=theme)
-        return CustomUser.objects.create_user(username, location=location, theme=theme, premium=premium)
-
     # TODO: fix
     # def test_get(self):
-    #     user = self.create_user(premium=True)
+    #     user = create_user(premium=True)
     #     self.client.force_login(user)
     #     resp = self.client.get(resolve_url(f'{APP_NAME}:download', file_type='csv'))
     #     self.assertEqual(404, resp.status_code)
 
     def test_get_ng(self):
-        user = self.create_user()
+        user = create_user()
         self.client.force_login(user)
         resp = self.client.get(resolve_url(f'{APP_NAME}:download', file_type='csv'))
         self.assertEqual(403, resp.status_code)
