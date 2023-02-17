@@ -65,4 +65,4 @@ docker_up = "docker-compose up -d --build"
 docker_down = "docker-compose down"
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"
