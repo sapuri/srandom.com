@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7f2b4f9b84638dd8ad8a5b2e5fed8bf80981cb1411ba92c299d154de299cf2ae"
+            "sha256": "51bde9b47e4acb13b4da77a8f43d784de79f3d63e9415c6ac6e5bec905a32d1b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -358,11 +358,11 @@
         },
         "google-auth": {
             "hashes": [
-                "sha256:5045648c821fb72384cdc0e82cc326df195f113a33049d9b62b74589243d2acc",
-                "sha256:ed7057a101af1146f0554a769930ac9de506aeca4fd5af6543ebe791851a9fbd"
+                "sha256:5fd170986bce6bfd7bb5c845c4b8362edb1e0cba901e062196e83f8bb5d5d32c",
+                "sha256:75d76ea857df65938e1f71dcbcd7d0cd48e3f80b34b8870ba229c9292081f7ef"
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5'",
-            "version": "==2.16.0"
+            "version": "==2.16.1"
         },
         "google-cloud-core": {
             "hashes": [
@@ -852,11 +852,11 @@
         },
         "zipp": {
             "hashes": [
-                "sha256:23f70e964bc11a34cef175bc90ba2914e1e4545ea1e3e2f67c079671883f9cb6",
-                "sha256:e8b2a36ea17df80ffe9e2c4fda3f693c3dad6df1697d3cd3af232db680950b0b"
+                "sha256:188834565033387710d046e3fe96acfc9b5e86cbca7f39ff69cf21a4128198b7",
+                "sha256:9e5421e176ef5ab4c0ad896624e87a7b2f07aca746c9b2aa305952800cb8eecb"
             ],
             "index": "pypi",
-            "version": "==3.13.0"
+            "version": "==3.14.0"
         }
     },
     "develop": {
@@ -899,14 +899,6 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==3.0.1"
-        },
-        "tomli": {
-            "hashes": [
-                "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
-                "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
-            ],
-            "markers": "python_version < '3.11'",
-            "version": "==2.0.1"
         }
     }
 }
