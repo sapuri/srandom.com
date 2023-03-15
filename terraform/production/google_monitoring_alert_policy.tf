@@ -31,7 +31,7 @@ resource "google_monitoring_alert_policy" "cloud_run_app_error_count" {
   conditions {
     display_name = "logging/user/cloud-run-app-error [COUNT]"
     condition_threshold {
-      threshold_value = 1
+      threshold_value = 5
       duration        = "0s"
       comparison      = "COMPARISON_GT"
       trigger {
