@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9fedc23fa21e85f4e2caf60c925480c4ac5c3d50dcdee3e5e83ad32fa1d156ad"
+            "sha256": "82d8b62b56c92867ac9b8bbfb6a57051f16eddf64715182cc39e971a24cf4fee"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -769,11 +769,11 @@
         },
         "social-auth-core": {
             "hashes": [
-                "sha256:1e3440d104f743b02dfe258c9d4dba5b4065abf24b2f7eb362b47054d21797df",
-                "sha256:4686f0e43cf12954216875a32e944847bb1dc69e7cd9573d16a9003bb05ca477"
+                "sha256:359f6be5bb2d4caef6500eb6e1b40821a40dde9add8d339d539b1adbba2c9bf7",
+                "sha256:89536f218fa1a769caeaa56ef90f965ea50a81b9a7e3e5a2c5a61b832df11bde"
             ],
             "index": "pypi",
-            "version": "==4.3.0"
+            "version": "==4.4.0"
         },
         "soupsieve": {
             "hashes": [
