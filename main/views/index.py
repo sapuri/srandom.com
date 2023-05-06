@@ -17,17 +17,18 @@ def index(request: HttpRequest) -> HttpResponse:
         recent_music.append(Music.objects.get(pk=recent_music_id))
     search_form = SearchForm(request.GET)
 
-    is_signed_in_with_google = False
+    user_google_ids = []
     user = request.user
     if user.is_authenticated:
         socials = UserSocialAuth.objects.filter(user=user, provider="google-oauth2")
-        if len(socials) != 0:
-            is_signed_in_with_google = True
+        for social in socials:
+            user_google_ids.append(social.uid)
 
     context = {
         'medal_num': medal_num,
         'recent_music': recent_music,
         'search_form': search_form,
-        'is_signed_in_with_google': is_signed_in_with_google
+        'is_signed_in_with_google': bool(user_google_ids),
+        'user_google_ids': user_google_ids,
     }
     return render(request, 'main/index.html', context)

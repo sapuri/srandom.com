@@ -39,7 +39,14 @@
         <p>下のボタンからGoogleにログインしていただくと現在ログイン中のアカウントと関連付けされ、今後Googleアカウントによるログイン機能が提供された際にそのアカウントでログインできるようになります。</p>
 
         {% if is_signed_in_with_google %}
-        <p style="color: green">{% bootstrap_icon "ok" %} Googleアカウントと関連付けられています。</p>
+        <div style="color: green">
+            <p>{% bootstrap_icon "ok" %} Googleアカウントと関連付けられています。</p>
+            <ul style="list-style-type: disc">
+                {% for google_id in user_google_ids %}
+                <li>{{ google_id }}</li>
+                {% endfor %}
+            </ul>
+        </div>
         <p>別のGoogleアカウントと関連付ける場合は再度下のボタンからGoogleにログインしてください。</p>
         {% endif %}
 
