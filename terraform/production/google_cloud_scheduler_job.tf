@@ -3,7 +3,7 @@ resource "google_cloud_scheduler_job" "update-music" {
   description      = "Cloud Run Job: update-music"
   schedule         = "5 0 * * *" # At 0:05
   time_zone        = "Asia/Tokyo"
-  attempt_deadline = "600s" # 10m
+  attempt_deadline = "1200s" # 20m
 
   retry_config {
     retry_count = 1
