@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 appdirs = "==1.4.4"
-asgiref = "==3.7.1"
+asgiref = "==3.7.2"
 asn1crypto = "==1.5.1"
 attrs = "==23.1.0"
 beautifulsoup4 = "==4.12.2"
