@@ -23,7 +23,7 @@ def cleardata(request: HttpRequest, username: str, sran_level: int) -> HttpRespo
     sran_level_id = sran_level
 
     # 対象レベルの曲を取得
-    music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level')
+    music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
 
     # ページング
     paginator = Paginator(music_list, 25)
