@@ -1,6 +1,6 @@
 FROM python:3.11-slim as builder
 
-RUN apt-get update && apt-get -y install --no-install-recommends gcc libmariadb-dev
+RUN apt-get update && apt-get -y install --no-install-recommends gcc libmariadb-dev pkg-config
 
 WORKDIR /app
 COPY Pipfile Pipfile.lock ./
