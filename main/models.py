@@ -80,7 +80,7 @@ class Music(models.Model):
 
 class Medal(models.Model):
     medal = models.IntegerField('クリアメダル')
-    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.PROTECT)
+    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
 
@@ -136,7 +136,7 @@ class Medal(models.Model):
 
 class Bad_Count(models.Model):
     bad_count = models.PositiveIntegerField('BAD数')
-    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.PROTECT)
+    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
 
@@ -163,7 +163,7 @@ class Bad_Count(models.Model):
 
 class Extra_Option(models.Model):
     hard = models.BooleanField('ハード')
-    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.PROTECT)
+    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
 
@@ -195,7 +195,7 @@ class News(models.Model):
         ('削除', '削除'),
     )
 
-    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.PROTECT)
+    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.CASCADE)
     kind = models.CharField('種類', max_length=10, choices=KIND_CHOICES)
     created_at = models.DateField('作成日', default=timezone.now)
     status = models.BooleanField('状態', default=True)
@@ -210,7 +210,7 @@ class News(models.Model):
 
 class Activity(models.Model):
     """ 更新履歴 """
-    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.PROTECT)
+    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
     status = models.BooleanField('状態', default=True)
