@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a69c23218072060989976017194db5489fcfe9b2f18adb97906944ec24922812"
+            "sha256": "a54f8276ad1d7e2b13f65d5970d16ae5fc487c024d27db630d5043e442ad1042"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -228,7 +228,7 @@
                 "sha256:f779d3ad205f108d14e99bb3859aa7dd8e9c68874617c72354d7ecaec2a054ac",
                 "sha256:f87f746ee241d30d6ed93969de31e5ffd09a2961a051e60ae6bddde9ec3583aa"
             ],
-            "markers": "python_version >= '3.7'",
+            "markers": "python_full_version >= '3.7.0'",
             "version": "==3.2.0"
         },
         "click": {
@@ -310,11 +310,11 @@
         },
         "django-environ": {
             "hashes": [
-                "sha256:3b8a0f7f02e6c2999776123f7b5afca4eda4b2b3d8bb5fc3805b2cf476c50018",
-                "sha256:f50dde64c024dfac76279dfd7dade8da994e376d38c3374623ce99490f1534dd"
+                "sha256:510f8c9c1d0a38b0815f91504270c29440a0cf44fab07f55942fa8d31bbb9be6",
+                "sha256:b3559a91439c9d774a9e0c1ced872364772c612cdf6dc919506a2b13f7a77225"
             ],
             "index": "pypi",
-            "version": "==0.11.1"
+            "version": "==0.10.0"
         },
         "django-maintenance-mode": {
             "hashes": [
@@ -348,7 +348,7 @@
                 "sha256:164cba9af4e6e4e40c3a4f90a1a6c12ee56f14c0b4868d1ca91b32826ab334ce",
                 "sha256:d61d1b40897407b574da67da1a833bdc10d5a11642566e506565d1b1a46ba873"
             ],
-            "markers": "python_full_version >= '3.6.0'",
+            "markers": "python_version >= '3.6'",
             "version": "==2.22.0"
         },
         "google-cloud-core": {
@@ -734,7 +734,7 @@
                 "sha256:90260d9058e514786967344d0ef75fa8727eed8a7d2e43ce9f4bcf1b536174f7",
                 "sha256:e38464a49c6c85d7f1351b0126661487a7e0a14a50f1675ec50eb34d4f20ef21"
             ],
-            "markers": "python_version < '4' and python_full_version >= '3.6.0'",
+            "markers": "python_version >= '3.6' and python_version < '4'",
             "version": "==4.9"
         },
         "six": {
