@@ -1,10 +1,12 @@
 import csv
 import logging
+import os
+
 from slack_sdk.webhook import WebhookClient
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.db import DataError
+from django.db import DataError, transaction
 
 from main.models import Music, Difficulty, Level, Sran_Level
 
@@ -15,37 +17,23 @@ class Command(BaseCommand):
     logger = logging.getLogger('command.update_music')
 
     def handle(self, *args, **options):
-        env = getattr(settings, 'ENV', None)
-        if env is None:
-            raise Exception('failed to read env')
-
         file_path = f'{settings.BASE_DIR}/csv/srandom.csv'
         max_lv = 19
 
-        music_list = []
         try:
-            music_list = self.parse_csv(file_path)
+            with transaction.atomic():
+                music_list = self.parse_csv(file_path)
+                update_msgs = self.update_db(music_list, max_lv)
+                deleted_msgs = self.detect_deleted_songs(music_list)
+                if update_msgs:
+                    self.notify_slack(f'更新が{len(update_msgs)}件ありました！\n```' + '\n'.join(update_msgs) + '```')
+                if deleted_msgs:
+                    self.notify_slack(f'{len(deleted_msgs)}件の削除曲を検出しました\n```' + '\n'.join(deleted_msgs) + '```')
         except Exception as e:
-            self.logger.error(f'failed to parse CSV: {e}')
+            self.logger.error(f'an error occurred: {e}')
+            return
 
-        update_msg_list = []
-        try:
-            update_msg_list = self.update_db(music_list, max_lv)
-        except Exception as e:
-            self.logger.error(f'failed to update music record: {e}')
-
-        if len(update_msg_list) > 0:
-            text = f'更新が {len(update_msg_list)}件 ありました！\n```'
-            for msg in update_msg_list:
-                text += f'{msg}\n'
-            text += '```'
-
-            webhook = WebhookClient(env('SLACK_WEBHOOK_URL'))
-            resp = webhook.send(text=text)
-            if resp.status_code != 200:
-                self.logger.error("failed to notify Slack")
-
-        self.logger.info("finished")
+        self.logger.info("finished updating music records.")
 
     @staticmethod
     def parse_csv(file_path: str) -> list:
@@ -69,10 +57,10 @@ class Command(BaseCommand):
         """
         :param music_list:
         :param max_lv:
-        :return: update_msg_list
+        :return: update_msgs
         """
         sran_level = max_lv
-        update_msg_list = []
+        update_msgs = []
 
         for row in music_list:
             if len(row) == 1:
@@ -105,7 +93,7 @@ class Command(BaseCommand):
                 raise DataError
 
             if created:
-                update_msg_list.append(f'#{music.id}: {music.title}({music.difficulty}) を追加しました。')
+                update_msgs.append(f'#{music.id}: {music.title}({music.difficulty}) を追加しました。')
                 continue
 
             has_changed = False
@@ -121,9 +109,40 @@ class Command(BaseCommand):
 
             if has_changed:
                 music.save(update_fields=['level', 'sran_level', 'bpm'])
-                update_msg_list.append(f'#{music.id}: {music.title}({music.difficulty}) を S乱レベルID: {music.sran_level} レベル: {music.level} BPM: {music.bpm} に更新しました。')
+                update_msgs.append(
+                    f'#{music.id}: {music.title}({music.difficulty}) を S乱レベルID: {music.sran_level} レベル: {music.level} BPM: {music.bpm} に更新しました。')
 
-        return update_msg_list
+        return update_msgs
+
+    def detect_deleted_songs(self, music_list: list) -> list:
+        """
+        データベースに存在するがCSVファイルには存在しない曲を検出
+        :param music_list:
+        :return: deleted_msgs
+        """
+        csv_titles = {self.split_difficulty(row[1])[0] for row in music_list if len(row) > 1}
+        db_titles = set(Music.objects.values_list('title', flat=True))
+
+        deleted_from_csv = db_titles - csv_titles
+        if not deleted_from_csv:
+            return []
+
+        deleted_msgs = []
+        for title in deleted_from_csv:
+            music = Music.objects.get(title=title)
+            deleted_msgs.append(f'#{music.id}: {music.title}({music.difficulty})')
+
+        return deleted_msgs
+
+    def notify_slack(self, text: str):
+        webhook_url = os.getenv('SLACK_WEBHOOK_URL')
+        if not webhook_url:
+            self.logger.error("SLACK_WEBHOOK_URL is not set")
+            return
+
+        resp = WebhookClient(webhook_url).send(text=text)
+        if resp.status_code != 200:
+            self.logger.error("failed to notify Slack: " + resp.body)
 
     @staticmethod
     def split_difficulty(title: str) -> tuple:
