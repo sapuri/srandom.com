@@ -17,7 +17,7 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v2
+      - uses: hashicorp/setup-terraform@v3
       - run: terraform fmt -recursive -check
 
   validate:
@@ -27,7 +27,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v2
+      - uses: hashicorp/setup-terraform@v3
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
