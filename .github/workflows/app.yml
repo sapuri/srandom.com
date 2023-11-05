@@ -9,7 +9,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -54,7 +54,7 @@ jobs:
       DATABASE_HOST: 127.0.0.1
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -97,7 +97,7 @@ jobs:
       IMAGE_CMD_EXPORT2CSV: asia-northeast1-docker.pkg.dev/srandom/cmd/export2csv:${{ github.sha }}
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
