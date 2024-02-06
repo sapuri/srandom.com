@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a54f8276ad1d7e2b13f65d5970d16ae5fc487c024d27db630d5043e442ad1042"
+            "sha256": "8a33d7f83b611da081ec0df632d9f98f0d6504bdf493cd27a77bdcdc15cc3080"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -50,11 +50,12 @@
         },
         "beautifulsoup4": {
             "hashes": [
-                "sha256:492bbc69dca35d12daac71c4db1bfff0c876c00ef4a2ffacce226d4638eb72da",
-                "sha256:bd2520ca0d9d7d12694a53d44ac482d181b4ec1888909b035a3dbf40d0f57d4a"
+                "sha256:74e3d1928edc070d21748185c46e3fb33490f22f52a3addee9aee0f4f7781051",
+                "sha256:b80878c9f40111313e55da8ba20bdba06d8fa3969fc68304167741bbf9e082ed"
             ],
             "index": "pypi",
-            "version": "==4.12.2"
+            "markers": "python_full_version >= '3.6.0'",
+            "version": "==4.12.3"
         },
         "cachetools": {
             "hashes": [
@@ -775,6 +776,7 @@
                 "sha256:89d12b2d5dfcd2c9e8c22326da9d9aa9cb3dfab0a83a024f05704076ee8d35ea"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.7'",
             "version": "==2.4.1"
         },
         "sqlparse": {
