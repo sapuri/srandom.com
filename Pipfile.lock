@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a54f8276ad1d7e2b13f65d5970d16ae5fc487c024d27db630d5043e442ad1042"
+            "sha256": "245841a03c1517d6511d839f1083faf4ace3ea1a82b51e9b1d15360b4f632dcc"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -747,11 +747,12 @@
         },
         "slack-sdk": {
             "hashes": [
-                "sha256:20829bdc1a423ec93dac903470975ebf3bc76fd3fd91a4dadc0eeffc940ecb0c",
-                "sha256:de3c07b92479940b61cd68c566f49fbc9974c8f38f661d26244078f3903bb9cc"
+                "sha256:a10e8ee69ca17d274989d0c2bbecb875f19898da3052d8d57de0898a00b1ab52",
+                "sha256:bcdac5e688fa50e9357ecd00b803b6a8bad766aa614d35d8dc0636f40adc48bf"
             ],
             "index": "pypi",
-            "version": "==3.21.3"
+            "markers": "python_version >= '3.6'",
+            "version": "==3.26.2"
         },
         "social-auth-app-django": {
             "hashes": [
