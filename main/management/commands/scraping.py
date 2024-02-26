@@ -24,8 +24,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         silent = options['silent']
 
-        url1 = 'https://popn.hyrorre.com/%E3%81%9D%E3%81%AE%E4%BB%96/s%E4%B9%B1%E3%82%AF%E3%83%AA%E3%82%A2%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8'  # S乱クリア難易度表
-        url2 = 'https://popn.hyrorre.com/%E3%81%9D%E3%81%AE%E4%BB%96/s%E4%B9%B1lv0%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8'  # S乱Lv0難易度表
+        url1 = 'https://popn.wiki/%E3%81%9D%E3%81%AE%E4%BB%96/s%E4%B9%B1%E3%82%AF%E3%83%AA%E3%82%A2%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8'  # S乱クリア難易度表
+        url2 = 'https://popn.wiki/%E3%81%9D%E3%81%AE%E4%BB%96/s%E4%B9%B1lv0%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8'  # S乱Lv0難易度表
         file_path = f'{settings.BASE_DIR}/csv/srandom.csv'
 
         os.makedirs(f'{settings.BASE_DIR}/csv/', exist_ok=True)
