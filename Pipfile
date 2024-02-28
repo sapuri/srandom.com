@@ -54,7 +54,7 @@ slack-sdk = "==3.27.0"
 
 [dev-packages]
 autopep8 = "==2.0.4"
-flake8 = "==6.1.0"
+flake8 = "==7.0.0"
 
 [scripts]
 test = "python manage.py test"
