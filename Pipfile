@@ -50,7 +50,7 @@ uvicorn = "==0.27.1"
 django-environ = "==0.10.0"
 google-cloud-storage = "==2.14.0"
 django-storages = {extras = ["google"], version = "==1.14.2"}
-slack-sdk = "==3.27.0"
+slack-sdk = "==3.27.1"
 
 [dev-packages]
 autopep8 = "==2.0.4"
