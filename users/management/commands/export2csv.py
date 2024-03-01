@@ -2,14 +2,17 @@ import concurrent.futures
 import csv
 import logging
 import os
+from zoneinfo import ZoneInfo
 
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
+from django.db import connections
+
 from google.cloud import storage
 from google.cloud.storage import Bucket
 
-from main.models import Bad_Count, Medal, Extra_Option, Music
+from main.models import Bad_Count, Extra_Option, Medal, Music
+
 from users.models import CustomUser
 
 
@@ -30,18 +33,8 @@ class Command(BaseCommand):
 
         os.makedirs(f'{settings.BASE_DIR}/csv/export/', exist_ok=True)
 
-        username = ''
-
-        if username:
-            self.logger.info('ユーザー名が指定されました')
-            selected_users = CustomUser.objects.filter(username=username)
-        else:
-            # プレミアムユーザーを取得
-            selected_users = CustomUser.objects.filter(is_active=True, premium=True)
-            self.logger.info(f'active premium user: {selected_users.count()} users')
-
         futures = []
-        for selected_user in selected_users:
+        for selected_user in CustomUser.objects.filter(is_active=True, premium=True):
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures.append(executor.submit(self.invoke, selected_user, bucket))
 
@@ -53,92 +46,68 @@ class Command(BaseCommand):
     def invoke(self, user: CustomUser, bucket: Bucket):
         self.logger.info(f'{user.username}" のクリアデータを読み込んでいます...')
 
-        # CSV書き込み用データ (2次元配列)
+        bad_counts = {(bc.music_id, bc.user_id): bc for bc in Bad_Count.objects.filter(user=user)}
+        medals = {(m.music_id, m.user_id): m for m in Medal.objects.filter(user=user)}
+        extra_options = {(eo.music_id, eo.user_id): eo for eo in Extra_Option.objects.filter(user=user)}
+
+        csv_data = self.generate_csv_data(user, bad_counts, medals, extra_options)
+
+        self.write_to_csv_and_upload(user.username, csv_data, bucket)
+        self.logger.info(f'"{user.username}" のクリアデータを出力しました: {user.username}.csv')
+
+        connections.close_all()
+
+    def generate_csv_data(self, user: CustomUser, bad_counts: dict, medals: dict, extra_options: dict) -> list:
         csv_data = [['S乱Lv', 'Lv', '曲名', '難易度', 'BPM', 'メダル', 'ハード', 'BAD数', '更新日時']]
 
-        max_s_lv = 19
-        s_lv_range = range(max_s_lv, 0, -1)
-        for s_lv in s_lv_range:
-            sran_level_id = s_lv
-            music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
+        for s_lv in range(19, 0, -1):
+            music_list = Music.objects.filter(sran_level=s_lv).order_by('level', 'title')
             for music in music_list:
-                try:
-                    bad_count = Bad_Count.objects.get(music=music, user=user)
-                except ObjectDoesNotExist:
-                    bad_count = ''
-                try:
-                    medal = Medal.objects.get(music=music, user=user)
-                except ObjectDoesNotExist:
-                    medal = ''
-                try:
-                    extra_option = Extra_Option.objects.get(music=music, user=user)
-                    if extra_option.hard:
-                        hard = '○'
-                    else:
-                        hard = ''
-                except ObjectDoesNotExist:
-                    hard = ''
-                updated_at = self.get_latest_updated_at(music.id, user.id)
+                key = (music.id, user.id)
+                bad_count = bad_counts.get(key)
+                medal = medals.get(key)
+                extra_option = extra_options.get(key)
 
-                row = [music.sran_level, music.level, music.title, music.difficulty, music.bpm, medal, hard, bad_count, updated_at]
+                row = [
+                    s_lv,
+                    music.level,
+                    music.title,
+                    music.difficulty,
+                    music.bpm,
+                    medal if medal else '',
+                    '○' if extra_option and extra_option.hard else '',
+                    bad_count if bad_count else '',
+                    self.get_latest_updated_at(bad_count, medal, extra_option)
+                ]
                 csv_data.append(row)
-            if s_lv != 1:
-                csv_data.append(['', '', '', '', '', '', '', '', ''])
 
-        # CSVファイルに書き込み
-        file_path = f'{settings.BASE_DIR}/csv/export/{user.username}.csv'
-        with open(file_path, 'w') as f:
+        return csv_data
+
+    @staticmethod
+    def write_to_csv_and_upload(username: str, csv_data: list, bucket: Bucket):
+        file_path = f'{settings.BASE_DIR}/csv/export/{username}.csv'
+        with open(file_path, 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerows(csv_data)
 
-        blob = bucket.blob(f'csv/export/{user.username}.csv')
+        blob = bucket.blob(f'csv/export/{username}.csv')
         blob.upload_from_filename(file_path)
 
-        self.logger.info(f'"{user.username}" のクリアデータを出力しました: {user.username}.csv')
-
     @staticmethod
-    def get_latest_updated_at(music_id: int, user_id: int) -> str:
-        """
-        :param music_id: 曲ID
-        :param user_id: ユーザーID
-        :return: 最新の更新日時
-        """
-        try:
-            bad_count = Bad_Count.objects.get(music=music_id, user=user_id)
-        except ObjectDoesNotExist:
-            bad_count = None
-        try:
-            medal = Medal.objects.get(music=music_id, user=user_id)
-        except ObjectDoesNotExist:
-            medal = None
-        try:
-            extra_option = Extra_Option.objects.get(music=music_id, user=user_id)
-        except ObjectDoesNotExist:
-            extra_option = None
+    def get_latest_updated_at(bad_count: Bad_Count, medal: Medal, extra_option: Extra_Option) -> str:
+        dates = []
 
-        # 最新の更新日時を取得
-        if bad_count and medal and extra_option:
-            latest = max(bad_count.updated_at, medal.updated_at, extra_option.updated_at)
-        elif bad_count and medal:
-            latest = max(bad_count.updated_at, medal.updated_at)
-        elif medal and extra_option:
-            latest = max(medal.updated_at, extra_option.updated_at)
-        elif bad_count:
-            latest = bad_count.updated_at
-        elif medal:
-            latest = medal.updated_at
-        elif extra_option:
-            latest = extra_option.updated_at
-        else:
-            latest = None
+        if bad_count is not None:
+            dates.append(bad_count.updated_at)
 
-        if latest:
-            # 時間調整
-            latest_hour = latest.hour + 9  # UTC+9
-            latest_day = latest.day
-            if latest_hour > 24:
-                latest_day += 1
-                latest_hour -= 24
-            return "%d/%d/%02d %d:%02d" % (latest.year, latest.month, latest_day, latest_hour, latest.minute)
+        if medal is not None:
+            dates.append(medal.updated_at)
+
+        if extra_option is not None:
+            dates.append(extra_option.updated_at)
+
+        if dates:
+            latest_date_jst = max(dates).astimezone(ZoneInfo('Asia/Tokyo'))
+            return latest_date_jst.strftime('%Y/%m/%d %H:%M')
 
         return ''
