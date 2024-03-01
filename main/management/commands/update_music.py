@@ -2,13 +2,13 @@ import csv
 import logging
 import os
 
-from slack_sdk.webhook import WebhookClient
-
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.db import DataError, transaction
+from django.db import transaction
 
-from main.models import Music, Difficulty, Level, Sran_Level
+from main.models import Difficulty, Level, Music, Sran_Level
+
+from slack_sdk.webhook import WebhookClient
 
 
 class Command(BaseCommand):
@@ -16,13 +16,26 @@ class Command(BaseCommand):
 
     logger = logging.getLogger('command.update_music')
 
+    def __init__(self):
+        super(Command, self).__init__()
+        self.difficulties = {}
+        self.levels = {}
+        self.sran_levels = {}
+        self.existing_musics = {}
+
     def handle(self, *args, **options):
         file_path = f'{settings.BASE_DIR}/csv/srandom.csv'
         max_lv = 19
 
-        try:
-            music_list = self.parse_csv(file_path)
+        music_list = self.parse_csv(file_path)
 
+        self.difficulties = {difficulty.difficulty: difficulty for difficulty in Difficulty.objects.all()}
+        self.levels = {level.level: level for level in Level.objects.all()}
+        self.sran_levels = {sran_level.level: sran_level for sran_level in Sran_Level.objects.all()}
+        self.existing_musics = {(music.title, music.difficulty.difficulty): music for music in
+                                Music.objects.select_related('difficulty')}
+
+        try:
             with transaction.atomic():
                 update_msgs = self.update_db(music_list, max_lv)
                 deleted_msgs = self.detect_deleted_songs(music_list)
@@ -56,63 +69,59 @@ class Command(BaseCommand):
         return music_list
 
     def update_db(self, music_list: list, max_lv: int) -> list:
-        """
-        :param music_list:
-        :param max_lv:
-        :return: update_msgs
-        """
         sran_level = max_lv
         update_msgs = []
+        new_musics = []
+        updated_musics = []
 
         for row in music_list:
             if len(row) == 1:
                 sran_level -= 1
                 continue
 
-            level = int(row[0])
-            title = row[1]
-            bpm = row[2]
-
-            title, difficulty = self.split_difficulty(title)
-            if not difficulty:
+            level, title, bpm = int(row[0]), row[1], row[2]
+            title, difficulty_key = self.split_difficulty(title)
+            if difficulty_key not in self.difficulties:
                 self.logger.warning(f'[skip] undefined difficulty: {title}')
                 continue
 
-            try:
-                music, created = Music.objects.get_or_create(
-                    title=title,
-                    difficulty=Difficulty.objects.get(difficulty=difficulty),
-                    defaults={
-                        'title': title,
-                        'difficulty': Difficulty.objects.get(difficulty=difficulty),
-                        'level': Level.objects.get(level=level),
-                        'sran_level': Sran_Level.objects.get(level=sran_level),
-                        'bpm': bpm
-                    }
-                )
-            except DataError:
-                self.logger.error(f'Music.objects.get_or_create failed with DataError: {music}')
-                raise DataError
+            difficulty_obj = self.difficulties[difficulty_key]
+            level_obj = self.levels.get(level)
+            sran_level_obj = self.sran_levels.get(sran_level)
 
-            if created:
-                update_msgs.append(f'#{music.id}: {music.title}({music.difficulty}) を追加しました。')
+            if not level_obj or not sran_level_obj:
+                self.logger.error(f'Level or Sran_Level not found: {level}, {sran_level}')
                 continue
 
-            has_changed = False
-            if music.level.level != level:
-                music.level = Level.objects.get(level=level)
-                has_changed = True
-            if music.sran_level.level != sran_level:
-                music.sran_level = Sran_Level.objects.get(level=sran_level)
-                has_changed = True
-            if music.bpm != bpm:
-                music.bpm = bpm
-                has_changed = True
+            music_key = (title, difficulty_key)
 
-            if has_changed:
-                music.save(update_fields=['level', 'sran_level', 'bpm'])
-                update_msgs.append(
-                    f'#{music.id}: {music.title}({music.difficulty}) を S乱レベルID: {music.sran_level} レベル: {music.level} BPM: {music.bpm} に更新しました。')
+            if music_key in self.existing_musics:
+                music = self.existing_musics[music_key]
+                has_changed = False
+                if music.level != level_obj or music.sran_level != sran_level_obj or music.bpm != bpm:
+                    music.level = level_obj
+                    music.sran_level = sran_level_obj
+                    music.bpm = bpm
+                    has_changed = True
+
+                if has_changed:
+                    updated_musics.append(music)
+                    update_msgs.append(f'#{music.id}: {music.title}({music.difficulty}) を更新しました。')
+            else:
+                new_music = Music(
+                    title=title,
+                    difficulty=difficulty_obj,
+                    level=level_obj,
+                    sran_level=sran_level_obj,
+                    bpm=bpm
+                )
+                new_musics.append(new_music)
+                update_msgs.append(f'{new_music.title}({new_music.difficulty}) を追加しました。')
+
+        if new_musics:
+            Music.objects.bulk_create(new_musics)
+        if updated_musics:
+            Music.objects.bulk_update(updated_musics, ['level', 'sran_level', 'bpm'])
 
         return update_msgs
 
@@ -122,16 +131,13 @@ class Command(BaseCommand):
         :param music_list:
         :return: deleted_msgs
         """
-        csv_titles = {self.split_difficulty(row[1])[0] for row in music_list if len(row) > 1}
-        db_titles = set(Music.objects.values_list('title', flat=True))
-
-        deleted_from_csv = db_titles - csv_titles
-        if not deleted_from_csv:
-            return []
+        csv_titles_difficulties = {(self.split_difficulty(row[1])[0], self.split_difficulty(row[1])[1]) for row in
+                                   music_list if len(row) > 1}
+        deleted_musics = set(self.existing_musics.keys()) - csv_titles_difficulties
 
         deleted_msgs = []
-        for title in deleted_from_csv:
-            music = Music.objects.get(title=title)
+        for title, difficulty in deleted_musics:
+            music = self.existing_musics[(title, difficulty)]
             deleted_msgs.append(f'#{music.id}: {music.title}({music.difficulty})')
 
         return deleted_msgs
