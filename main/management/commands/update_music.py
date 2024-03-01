@@ -21,17 +21,19 @@ class Command(BaseCommand):
         max_lv = 19
 
         try:
+            music_list = self.parse_csv(file_path)
+
             with transaction.atomic():
-                music_list = self.parse_csv(file_path)
                 update_msgs = self.update_db(music_list, max_lv)
                 deleted_msgs = self.detect_deleted_songs(music_list)
-                if update_msgs:
-                    self.notify_slack(f'更新が{len(update_msgs)}件ありました！\n```' + '\n'.join(update_msgs) + '```')
-                if deleted_msgs:
-                    self.notify_slack(f'{len(deleted_msgs)}件の削除曲を検出しました\n```' + '\n'.join(deleted_msgs) + '```')
+
+            if update_msgs:
+                self.notify_slack(f'更新が{len(update_msgs)}件ありました！\n```' + '\n'.join(update_msgs) + '```')
+            if deleted_msgs:
+                self.notify_slack(f'{len(deleted_msgs)}件の削除曲を検出しました\n```' + '\n'.join(deleted_msgs) + '```')
         except Exception as e:
             self.logger.error(f'an error occurred: {e}')
-            return
+            quit(1)
 
         self.logger.info("finished updating music records.")
 
