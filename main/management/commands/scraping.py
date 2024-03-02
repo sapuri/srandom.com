@@ -2,10 +2,12 @@ import csv
 import logging
 import os
 
-import requests
 from bs4 import BeautifulSoup
+
 from django.conf import settings
 from django.core.management.base import BaseCommand
+
+import requests
 
 
 class Command(BaseCommand):
