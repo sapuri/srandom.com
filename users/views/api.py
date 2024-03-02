@@ -2,74 +2,60 @@ import json
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
-from django.http import HttpResponse, Http404, HttpRequest
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_GET
 
-from main.models import Music, Medal, Activity, Extra_Option
+from main.models import Activity, Extra_Option, Medal, Music
+
 from users.models import CustomUser
 
 
-def get_percentage_of_clear(request, user_id):
-    """
-    指定されたユーザーの各レベルのクリア率を返す
-    @param {int} user_id ユーザーID
-    @return {json} 各レベルのクリア率
-    """
-    if is_xml_http_request(request):
-        # ユーザーを取得
-        user = get_object_or_404(CustomUser, pk=user_id)
+@require_GET
+def get_percentage_of_clear(request: HttpRequest, user_id: int) -> JsonResponse:
+    if not is_xml_http_request(request):
+        return JsonResponse({'error': 'Invalid access'}, status=400)
 
-        # 権限を確認
-        if user != request.user:
-            if not user.is_active or user.cleardata_privacy == 2:
-                raise PermissionDenied
+    user = get_object_or_404(CustomUser, pk=user_id)
 
-        max_s_lv = 19
-        s_lv_range = range(max_s_lv, 0, -1)
+    if user != request.user and (not user.is_active or user.cleardata_privacy == 2):
+        raise PermissionDenied
 
-        music_num = [0] * max_s_lv
-        clear_num = [0] * max_s_lv
-        percentage_of_clear = [0] * max_s_lv
+    max_s_lv = 19
+    music_num = [0] * max_s_lv
+    clear_num = [0] * max_s_lv
+    percentage_of_clear = [0] * max_s_lv
 
-        for sran_level in s_lv_range:
-            sran_level_id = sran_level
-            music_list = Music.objects.filter(sran_level=sran_level_id)
-            music_num[sran_level - 1] = len(music_list)
-            for music in music_list:
-                try:
-                    medal = Medal.objects.get(user=user, music=music)
-                    if medal.medal <= 7:
-                        clear_num[sran_level - 1] = clear_num[sran_level - 1] + 1
-                except Exception:
-                    pass
+    for s_lv in range(1, max_s_lv + 1):
+        i = s_lv - 1
+        music_list = Music.objects.filter(sran_level=s_lv)
+        music_num[i] = music_list.count()
 
-            # 各レベルのクリア率を計算
-            percentage_of_clear[sran_level - 1] = clear_num[sran_level - 1] * 100 / music_num[sran_level - 1]
-            # 小数点以下四捨五入
-            percentage_of_clear[sran_level - 1] = round(percentage_of_clear[sran_level - 1])
+        medals = Medal.objects.filter(user=user, music__in=music_list, medal__lte=7)
+        clear_num[i] = medals.count()
 
-        context = {
-            'percentage_of_clear': percentage_of_clear,
-            'music_num': music_num,
-            'clear_num': clear_num
-        }
+        # クリア率を計算
+        if music_num[i] > 0:
+            percentage_of_clear[i] = round((clear_num[i] / music_num[i]) * 100)
 
-        json_str = json.dumps(context, ensure_ascii=False)
-        return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
-    else:
-        return HttpResponse('invalid access')
+    context = {
+        'percentage_of_clear': percentage_of_clear,
+        'music_num': music_num,
+        'clear_num': clear_num
+    }
+
+    return JsonResponse(context)
 
 
-def get_activity_map(request):
-    # パラメータチェック
+@require_GET
+def get_activity_map(request: HttpRequest) -> HttpResponse:
     if ('user_id' not in request.GET) or ('start' not in request.GET) or ('stop' not in request.GET):
         raise Http404()
 
     user_id = request.GET['user_id']
     user = get_object_or_404(CustomUser, pk=user_id)
 
-    # 権限を確認
     if user != request.user:
         if not user.is_active or user.cleardata_privacy == 2:
             raise PermissionDenied
@@ -93,8 +79,11 @@ def get_activity_map(request):
     return HttpResponse(json_str, content_type='application/json; charset=UTF-8')
 
 
-def get_clear_rate(request):
-    # パラメータチェック
+@require_GET
+def get_clear_rate(request: HttpRequest) -> HttpResponse:
+    if not is_xml_http_request(request):
+        return JsonResponse({'error': 'Invalid access'}, status=400)
+
     if 'user_id' not in request.GET:
         raise Http404()
 
@@ -166,49 +155,51 @@ def get_clear_rate(request):
         'failed': [0] * max_s_lv
     }
     for s_lv in s_lv_range:
+        i = s_lv - 1
         music_list = Music.objects.filter(sran_level=s_lv)
-        music_num[s_lv - 1] = len(music_list)
+        music_num[i] = len(music_list)
         for music in music_list:
             try:
                 medal = Medal.objects.get(user=user, music=music)
                 if medal.medal == 1:
-                    medal_num['perfect'][s_lv - 1] += 1
+                    medal_num['perfect'][i] += 1
                 elif 2 <= medal.medal <= 4:
-                    medal_num['fullcombo'][s_lv - 1] += 1
+                    medal_num['fullcombo'][i] += 1
                 elif 5 <= medal.medal <= 7:
                     try:
                         extra_option = Extra_Option.objects.get(user=user, music=music)
                         if extra_option.hard:
-                            medal_num['hard'][s_lv - 1] += 1
+                            medal_num['hard'][i] += 1
                         else:
-                            medal_num['clear'][s_lv - 1] += 1
+                            medal_num['clear'][i] += 1
                     except ObjectDoesNotExist:
-                        medal_num['clear'][s_lv - 1] += 1
+                        medal_num['clear'][i] += 1
                 elif medal.medal == 11:
-                    medal_num['easy'][s_lv - 1] += 1
+                    medal_num['easy'][i] += 1
                 elif 8 <= medal.medal <= 10:
-                    medal_num['failed'][s_lv - 1] += 1
+                    medal_num['failed'][i] += 1
                 else:
-                    medal_num['no-play'][s_lv - 1] += 1
+                    medal_num['no-play'][i] += 1
             except ObjectDoesNotExist:
-                medal_num['no-play'][s_lv - 1] += 1
+                medal_num['no-play'][i] += 1
 
         # 各レベルのメダルの割合を計算
-        percentage_of_medals['perfect'][s_lv - 1] = round(medal_num['perfect'][s_lv - 1] * 100 / music_num[s_lv - 1])
-        percentage_of_medals['fullcombo'][s_lv - 1] = round(medal_num['fullcombo'][s_lv - 1] * 100 / music_num[s_lv - 1])
-        percentage_of_medals['hard'][s_lv - 1] = round(medal_num['hard'][s_lv - 1] * 100 / music_num[s_lv - 1])
-        percentage_of_medals['clear'][s_lv - 1] = round(medal_num['clear'][s_lv - 1] * 100 / music_num[s_lv - 1])
-        percentage_of_medals['easy'][s_lv - 1] = round(medal_num['easy'][s_lv - 1] * 100 / music_num[s_lv - 1])
-        percentage_of_medals['failed'][s_lv - 1] = round(medal_num['failed'][s_lv - 1] * 100 / music_num[s_lv - 1])
+        percentage_of_medals['perfect'][i] = round(medal_num['perfect'][i] * 100 / music_num[i])
+        percentage_of_medals['fullcombo'][i] = round(
+            medal_num['fullcombo'][i] * 100 / music_num[i])
+        percentage_of_medals['hard'][i] = round(medal_num['hard'][i] * 100 / music_num[i])
+        percentage_of_medals['clear'][i] = round(medal_num['clear'][i] * 100 / music_num[i])
+        percentage_of_medals['easy'][i] = round(medal_num['easy'][i] * 100 / music_num[i])
+        percentage_of_medals['failed'][i] = round(medal_num['failed'][i] * 100 / music_num[i])
 
         chart_data['clearRate']['labels'].append("Lv" + str(s_lv))
 
-        chart_data['clearRate']['datasets'][0]['data'].append(percentage_of_medals['perfect'][s_lv - 1])
-        chart_data['clearRate']['datasets'][1]['data'].append(percentage_of_medals['fullcombo'][s_lv - 1])
-        chart_data['clearRate']['datasets'][2]['data'].append(percentage_of_medals['hard'][s_lv - 1])
-        chart_data['clearRate']['datasets'][3]['data'].append(percentage_of_medals['clear'][s_lv - 1])
-        chart_data['clearRate']['datasets'][4]['data'].append(percentage_of_medals['easy'][s_lv - 1])
-        chart_data['clearRate']['datasets'][5]['data'].append(percentage_of_medals['failed'][s_lv - 1])
+        chart_data['clearRate']['datasets'][0]['data'].append(percentage_of_medals['perfect'][i])
+        chart_data['clearRate']['datasets'][1]['data'].append(percentage_of_medals['fullcombo'][i])
+        chart_data['clearRate']['datasets'][2]['data'].append(percentage_of_medals['hard'][i])
+        chart_data['clearRate']['datasets'][3]['data'].append(percentage_of_medals['clear'][i])
+        chart_data['clearRate']['datasets'][4]['data'].append(percentage_of_medals['easy'][i])
+        chart_data['clearRate']['datasets'][5]['data'].append(percentage_of_medals['failed'][i])
 
         chart_data['clearRate']['datasets'][0]['backgroundColor'].append('#4a4a4a')
         chart_data['clearRate']['datasets'][1]['backgroundColor'].append('rgb(153, 207, 229)')
