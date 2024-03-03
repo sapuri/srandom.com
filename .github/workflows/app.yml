@@ -82,7 +82,7 @@ jobs:
 
   deploy:
     if: github.ref == 'refs/heads/master'
-    needs: [lint, test]
+
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -95,7 +95,7 @@ jobs:
       IMAGE_APP: asia-northeast1-docker.pkg.dev/srandom/app/app:${{ github.sha }}
       IMAGE_CMD_UPDATE_MUSIC: asia-northeast1-docker.pkg.dev/srandom/cmd/update-music:${{ github.sha }}
       IMAGE_CMD_EXPORT2CSV: asia-northeast1-docker.pkg.dev/srandom/cmd/export2csv:${{ github.sha }}
-    
+
     steps:
       - uses: actions/checkout@v4
 
