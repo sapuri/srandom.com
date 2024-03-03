@@ -47,7 +47,7 @@
             <td class="title"><a href="{% url 'main:edit' music.id %}">{{ music.title }}</a></td>
             <td class="difficulty">{{ music.difficulty.difficulty_short }}</td>
             <td class="bpm">{{ music.bpm|default:'-' }}</td>
-            <td id="bad_count_avg"></td>
+            <td id="bad_count_avg">{{ bad_count_avg|default:'-' }}</td>
         </tr>
     </tbody>
 </table>
@@ -134,5 +134,4 @@
 
 <script src="{% static 'js/ranking_detail.js' %}"></script>
 <script>$(function() { getMedalCount({{ music.id }}); });</script>
-<script>$(function() { getBadCountAvg({{ music.id }}); });</script>
 {% endblock %}
