@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from main.models import Sran_Level, Music
+from main.models import Music, Sran_Level
 
 
 class Command(BaseCommand):
