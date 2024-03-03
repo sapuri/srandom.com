@@ -99,23 +99,7 @@
     </thead>
     <tbody>
         {% for result in results %}
-            {% if result.medal.medal == 1 and result.bad_count.bad_count == 0 %}
-            <tr class="perfect">
-            {% elif result.bad_count.bad_count == 0 %}
-            <tr class="fullcombo">
-            {% elif result.extra_option.hard %}
-            <tr class="hard-cleared">
-            {% else %}
-                {% if result.medal.medal == 7 or result.medal.medal == 6 or result.medal.medal == 5 %}
-                <tr class="cleared">
-                {% elif result.medal.medal == 10 or result.medal.medal == 9 or result.medal.medal == 8 %}
-                <tr class="failed">
-                {% elif result.medal.medal == 11 %}
-                <tr class="easy-cleared">
-                {% else %}
-                <tr class="no-play">
-                {% endif %}
-            {% endif %}
+            <tr class="{{ result.status }}">
                 <td class="rank">
                     {% if result.user == user %}
                     <b>{{ result.rank|default:'-' }}</b>

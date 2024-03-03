@@ -27,24 +27,12 @@ def get_clear_status(request: HttpRequest, music_id: int) -> JsonResponse:
         raise PermissionDenied
 
     bad_count = Bad_Count.objects.filter(music_id=music_id, user_id=user_id).first()
-    medal_obj = Medal.objects.filter(music_id=music_id, user_id=user_id).first()
-    medal = medal_obj.medal if medal_obj else None
-    extra_option_exists = Extra_Option.objects.filter(music_id=music_id, user_id=user_id, hard=True).exists()
+    medal = Medal.objects.filter(music_id=music_id, user_id=user_id).first()
+    extra_option = Extra_Option.objects.filter(music_id=music_id, user_id=user_id, hard=True).first()
 
-    clear_status = 'no-play'
-    if medal is not None:
-        if medal == 1 and bad_count == 0:
-            clear_status = 'perfect'
-        elif medal in [2, 3, 4] and bad_count == 0:
-            clear_status = 'fullcombo'
-        elif 1 <= medal <= 7 and extra_option_exists:
-            clear_status = 'hard-cleared'
-        elif medal in [5, 6, 7]:
-            clear_status = 'cleared'
-        elif medal in [8, 9, 10]:
-            clear_status = 'failed'
-        elif medal == 11:
-            clear_status = 'easy-cleared'
+    clear_status = Medal.ClearStatus.NO_PLAY.value
+    if medal:
+        clear_status = medal.get_clear_status(bad_count=bad_count, extra_option=extra_option).value
 
     return JsonResponse({'clear_status': clear_status})
 

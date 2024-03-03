@@ -1,6 +1,7 @@
+from datetime import datetime, timedelta
+
 from django.db import models
 from django.utils import timezone
-from datetime import datetime, timedelta
 
 from users.models import CustomUser
 
@@ -31,7 +32,6 @@ class Difficulty(models.Model):
 class Level(models.Model):
     level = models.IntegerField('レベル')
 
-    # 整数型で返す
     def int(self):
         return self.level
 
@@ -79,16 +79,40 @@ class Music(models.Model):
 
 
 class Medal(models.Model):
+    class ClearStatus(models.TextChoices):
+        NO_PLAY = 'no-play', 'No Play'
+        PERFECT = 'perfect', 'Perfect'
+        FULL_COMBO = 'fullcombo', 'Full Combo'
+        HARD_CLEARED = 'hard-cleared', 'Hard Cleared'
+        CLEARED = 'cleared', 'Cleared'
+        FAILED = 'failed', 'Failed'
+        EASY_CLEARED = 'easy-cleared', 'Easy Cleared'
+
     medal = models.IntegerField('クリアメダル')
     music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
 
-    # int型で返す
+    def get_clear_status(self, bad_count: 'Bad_Count', extra_option: 'Extra_Option') -> ClearStatus:
+        if self.medal == 1 and bad_count.bad_count == 0:
+            return self.ClearStatus.PERFECT
+        elif 2 <= self.medal <= 4 and bad_count.bad_count == 0:
+            return self.ClearStatus.FULL_COMBO
+        elif 5 <= self.medal <= 7:
+            if extra_option and extra_option.is_hard():
+                return self.ClearStatus.HARD_CLEARED
+            else:
+                return self.ClearStatus.CLEARED
+        elif 8 <= self.medal <= 10:
+            return self.ClearStatus.FAILED
+        elif self.medal == 11:
+            return self.ClearStatus.EASY_CLEARED
+        else:
+            return self.ClearStatus.NO_PLAY
+
     def int(self):
         return self.medal
 
-    # 文字列で返す
     def output_str(self) -> str:
         if self.medal == 1:
             return '金'
@@ -117,7 +141,6 @@ class Medal(models.Model):
         else:
             return ''
 
-    # 更新日時をJSTで返す
     def updated_at_jst(self):
         return self.updated_at + timedelta(hours=9)
 
@@ -140,14 +163,12 @@ class Bad_Count(models.Model):
     user = models.ForeignKey(CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
 
-    # 整数型で返す
     def int(self):
         return self.bad_count
 
     def __str__(self):
         return str(self.bad_count)
 
-    # 更新日時をJSTで返す
     def updated_at_jst(self):
         return self.updated_at + timedelta(hours=9)
 
@@ -167,13 +188,11 @@ class Extra_Option(models.Model):
     user = models.ForeignKey(CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
 
-    # ハードしているかを判定
     def is_hard(self) -> bool:
         if self.hard:
             return True
         return False
 
-    # 更新日時をJSTで返す
     def updated_at_jst(self):
         return self.updated_at + timedelta(hours=9)
 
