@@ -15,8 +15,8 @@
 <h1 class="page-header">{% bootstrap_icon "star-empty" %} クリア状況</h1>
 <h2>{% bootstrap_icon "user" %} {{ selected_user.player_name|default:selected_user.username }}</h2>
 {% if selected_user == user or selected_user.cleardata_privacy == 1 %}
-<h3 id="lv{{ sran_level }}" class="level-folder">Lv{{ sran_level }}</h3>
-<p style="text-align:right"><span style="font-weight:bold">{{ music_list_count }}</span> 件中 <span style="font-weight:bold">{{ music_list.start_index }} - {{ music_list.end_index }}</span> 件目</p>
+<h3 id="lv{{ sran_level }}" class="level-folder {{ folder_status }}">Lv{{ sran_level }}</h3>
+<p style="text-align:right"><span style="font-weight:bold">{{ music_count }}</span> 件中 <span style="font-weight:bold">{{ music_list.start_index }} - {{ music_list.end_index }}</span> 件目</p>
 
 <div id="lv{{ sran_level }}-table">
     <table class="music-list table table-condensed">
@@ -78,8 +78,6 @@
         {% endif %}
     </ul>
 </div>
-
-<script>$(function() { getFolderLamp({{ sran_level }}, true, {{ selected_user.id }}); });</script>
 {% else %}
 <p>クリアデータは非公開に設定されています。</p>
 {% endif %}
