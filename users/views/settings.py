@@ -1,10 +1,11 @@
-import zenhan
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from users.forms import CustomUserForm, PrivacyForm, ThemeForm
+
+import zenhan
 
 
 @login_required

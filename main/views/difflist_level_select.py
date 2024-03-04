@@ -1,13 +1,13 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
+from main.models import Sran_Level
+
 
 def difflist_level_select(request: HttpRequest) -> HttpResponse:
     """ 難易度表: S乱レベル選択 """
 
-    max_s_lv = 19
-
-    s_lv_range = range(max_s_lv, 0, -1)
+    s_lv_range = range(Sran_Level.MAX, Sran_Level.MIN - 1, -1)
 
     context = {
         's_lv_range': s_lv_range

@@ -2,19 +2,17 @@ from django.core.paginator import Paginator
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 
-from main.models import Medal, Music
+from main.models import Level, Medal, Music
 from main.services import get_folder_status
 
 
 def level(request: HttpRequest, level: int) -> HttpResponse:
     """ 難易度表 """
 
-    max_lv = 50
-
-    if level <= 0 or level > max_lv:
+    if level <= 0 or level > Level.MAX:
         raise Http404
 
-    level_id = max_lv - level + 1
+    level_id = Level.MAX - level + 1
 
     music_query = Music.objects.filter(level=level_id).order_by('-sran_level', 'title')
     music_count = music_query.count()

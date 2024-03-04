@@ -25,7 +25,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file_path = f'{settings.BASE_DIR}/csv/srandom.csv'
-        max_lv = 19
 
         music_list = self.parse_csv(file_path)
 
@@ -37,7 +36,7 @@ class Command(BaseCommand):
 
         try:
             with transaction.atomic():
-                update_msgs = self.update_db(music_list, max_lv)
+                update_msgs = self.update_db(music_list, Sran_Level.MAX)
                 deleted_msgs = self.detect_deleted_songs(music_list)
 
             if update_msgs:

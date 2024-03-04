@@ -30,6 +30,9 @@ class Difficulty(models.Model):
 
 
 class Level(models.Model):
+    MAX = 50
+    MIN = 38
+
     level = models.IntegerField('レベル')
 
     def int(self):
@@ -44,6 +47,9 @@ class Level(models.Model):
 
 
 class Sran_Level(models.Model):
+    MAX = 19
+    MIN = 1
+
     level = models.IntegerField('S乱レベル')
 
     # 整数型で返す

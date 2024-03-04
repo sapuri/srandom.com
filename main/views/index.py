@@ -1,10 +1,10 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
-from social_django.models import UserSocialAuth
-
 from main.forms import SearchForm
 from main.models import Medal, Music
+
+from social_django.models import UserSocialAuth
 
 
 def index(request: HttpRequest) -> HttpResponse:

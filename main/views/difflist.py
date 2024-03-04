@@ -2,17 +2,16 @@ from django.core.paginator import Paginator
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 
-from main.models import Medal, Music
+from main.models import Medal, Music, Sran_Level
 from main.services import get_folder_status
 
 
 def difflist(request: HttpRequest, sran_level: int) -> HttpResponse:
     """ 難易度表 """
 
-    max_s_lv = 19
     sran_level = int(sran_level)
 
-    if sran_level <= 0 or sran_level > max_s_lv:
+    if sran_level <= 0 or sran_level > Sran_Level.MAX:
         raise Http404
 
     music_query = Music.objects.filter(sran_level=sran_level).order_by('level', 'title')
