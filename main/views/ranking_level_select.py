@@ -7,7 +7,6 @@ from django.shortcuts import render
 def ranking_level_select(request: HttpRequest) -> HttpResponse:
     """ ランキング: S乱レベル選択 """
 
-    # 最大S乱レベル
     max_s_lv = 19
 
     s_lv_range = range(max_s_lv, 0, -1)

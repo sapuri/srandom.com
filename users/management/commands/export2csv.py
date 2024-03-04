@@ -57,7 +57,9 @@ class Command(BaseCommand):
 
         connections.close_all()
 
-    def generate_csv_data(self, user: CustomUser, bad_counts: dict, medals: dict, extra_options: dict) -> list:
+    def generate_csv_data(self, user: CustomUser, bad_counts: dict[tuple[int, int], Bad_Count],
+                          medals: dict[tuple[int, int], Medal],
+                          extra_options: dict[tuple[int, int], Extra_Option]) -> list:
         csv_data = [['S乱Lv', 'Lv', '曲名', '難易度', 'BPM', 'メダル', 'ハード', 'BAD数', '更新日時']]
 
         for s_lv in range(19, 0, -1):
