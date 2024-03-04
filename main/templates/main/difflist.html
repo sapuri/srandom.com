@@ -30,8 +30,8 @@
 
 <p><a href="{% url 'main:difflist_level_select' %}">{% bootstrap_icon "arrow-left" %} レベル選択へ戻る</a></p>
 
-<h3 id="lv{{ sran_level }}" class="level-folder">Lv{{ sran_level }}</h3>
-<p style="text-align:right"><span style="font-weight:bold">{{ music_list_count }}</span> 件中 <span style="font-weight:bold">{{ music_list.start_index }} - {{ music_list.end_index }}</span> 件目</p>
+<h3 id="lv{{ sran_level }}" class="level-folder {{ folder_status }}">Lv{{ sran_level }}</h3>
+<p style="text-align:right"><span style="font-weight:bold">{{ music_count }}</span> 件中 <span style="font-weight:bold">{{ music_list.start_index }} - {{ music_list.end_index }}</span> 件目</p>
 
 <div id="lv{{ sran_level }}-table">
     <table class="music-list table table-condensed">
@@ -95,6 +95,4 @@
 </div>
 
 <p class="pagetop"><a href="#top">{% bootstrap_icon "menu-up" %}</a></p>
-
-<script>$(function() { getFolderLamp({{ sran_level }}, true); });</script>
 {% endblock %}

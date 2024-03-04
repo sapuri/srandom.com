@@ -1,44 +1,38 @@
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import Paginator
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 
-from main.models import Music
+from main.models import Music, Medal
+from main.services import get_folder_status
 
 
 @login_required
 def ranking(request: HttpRequest, sran_level: int) -> HttpResponse:
     """ ランキング """
 
-    # 最高S乱レベル
     max_s_lv = 19
 
     # S乱レベルが不正なら404エラー
     if sran_level <= 0 or sran_level > max_s_lv:
         raise Http404
 
-    sran_level_id = sran_level
+    music_query = Music.objects.filter(sran_level=sran_level).order_by('level', 'title')
+    music_count = music_query.count()
 
-    # 対象レベルの曲を取得
-    music_list = Music.objects.filter(sran_level=sran_level_id).order_by('level', 'title')
+    folder_status = Medal.ClearStatus.NO_PLAY
+    if request.user.is_authenticated:
+        folder_status = get_folder_status(request.user, music_query)
 
-    # ページング
-    paginator = Paginator(music_list, 25)
+    paginator = Paginator(music_query, 25)
     page = request.GET.get('page')
-
-    try:
-        music_list = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        music_list = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        music_list = paginator.page(paginator.num_pages)
+    music_list = paginator.get_page(page)
 
     context = {
         'sran_level': sran_level,
         'music_list': music_list,
-        'music_list_count': len(music_list)
+        'music_count': music_count,
+        'folder_status': folder_status.value,
     }
 
     return render(request, 'main/ranking.html', context)

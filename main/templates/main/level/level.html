@@ -24,8 +24,8 @@
 
 <p><a href="{% url 'main:level_select' %}">{% bootstrap_icon "arrow-left" %} レベル選択へ戻る</a></p>
 
-<h3 id="lv{{ level }}" class="level-folder">Lv{{ level }}</h3>
-<p style="text-align:right"><span style="font-weight:bold">{{ music_list_count }}</span> 件中 <span style="font-weight:bold">{{ music_list.start_index }} - {{ music_list.end_index }}</span> 件目</p>
+<h3 id="lv{{ level }}" class="level-folder {{ folder_status }}">Lv{{ level }}</h3>
+<p style="text-align:right"><span style="font-weight:bold">{{ music_count }}</span> 件中 <span style="font-weight:bold">{{ music_list.start_index }} - {{ music_list.end_index }}</span> 件目</p>
 
 <div id="lv{{ level }}-table">
     <table class="music-list table table-condensed">
@@ -89,6 +89,4 @@
 </div>
 
 <p class="pagetop"><a href="#top">{% bootstrap_icon "menu-up" %}</a></p>
-
-<script>$(function() { getFolderLamp({{ level }}, false); });</script>
 {% endblock %}

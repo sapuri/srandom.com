@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_GET
 
 from main.models import Bad_Count, Extra_Option, Medal, Music
+from main.services import get_folder_status
 
 from users.models import CustomUser
 
@@ -217,40 +218,9 @@ def get_folder_lamp(request: HttpRequest, level: int) -> JsonResponse:
     level = int(level)
     music_query = Music.objects.filter(sran_level=level) if is_srandom else Music.objects.filter(level=50 - level + 1)
 
-    medals = Medal.objects.filter(music__in=music_query, user=user)
-    extra_options = Extra_Option.objects.filter(music__in=music_query, user=user, hard=True).values_list('music_id',
-                                                                                                         flat=True)
+    folder_status = get_folder_status(user, music_query)
 
-    medal_max = 0
-    easy_flg = False
-    hard_flg = True if medals.exists() else False
-
-    for music in music_query:
-        medal = next((m for m in medals if m.music_id == music.id), None)
-        if not medal or medal.medal == 12:
-            return JsonResponse({'folder_lamp': 'no-play'})
-        if medal.medal == 11:
-            easy_flg = True
-        if 5 <= medal.medal <= 7 and music.id not in extra_options:
-            hard_flg = False
-        medal_max = max(medal_max, medal.medal if medal else 0)
-
-    if easy_flg and medal_max < 8:
-        folder_lamp = 'easy-cleared'
-    elif easy_flg:
-        folder_lamp = 'failed'
-    elif medal_max == 1:
-        folder_lamp = 'perfect'
-    elif 2 <= medal_max <= 4:
-        folder_lamp = 'fullcombo'
-    elif 5 <= medal_max <= 7:
-        folder_lamp = 'hard-cleared' if hard_flg else 'cleared'
-    elif 8 <= medal_max <= 10:
-        folder_lamp = 'failed'
-    else:
-        folder_lamp = 'no-play'
-
-    return JsonResponse({'folder_lamp': folder_lamp})
+    return JsonResponse({'folder_lamp': folder_status.value})
 
 
 def is_xml_http_request(req: HttpRequest) -> bool:
