@@ -2,7 +2,8 @@ from django.core.paginator import Paginator
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render
 
-from main.models import Bad_Count, Extra_Option, Medal, Music, Sran_Level
+from main.models import Music, Sran_Level
+from main.services import get_folder_status
 
 from users.models import CustomUser
 
@@ -22,18 +23,11 @@ def cleardata(request: HttpRequest, username: str, sran_level: int) -> HttpRespo
     page = request.GET.get('page')
     music_list = paginator.get_page(page)
 
-    # ユーザーごとにデータを取得
-    medal_list = Medal.objects.filter(user=selected_user)
-    bad_count_list = Bad_Count.objects.filter(user=selected_user)
-    extra_option_list = Extra_Option.objects.filter(user=selected_user)
-
     context = {
         'selected_user': selected_user,
         'sran_level': sran_level,
         'music_list': music_list,
-        'music_list_count': music_count,
-        'medal_list': medal_list,
-        'bad_count_list': bad_count_list,
-        'extra_option_list': extra_option_list
+        'music_count': music_count,
+        'folder_status': get_folder_status(selected_user, music_query).value,
     }
     return render(request, 'users/cleardata.html', context)
