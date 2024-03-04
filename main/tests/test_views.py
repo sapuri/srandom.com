@@ -3,6 +3,7 @@ from django.test import TestCase
 
 from main import APP_NAME
 from main.tests.utils import create_music
+
 from users.tests.utils import create_user
 
 

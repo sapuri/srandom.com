@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 
-from main.models import Medal, Bad_Count, Extra_Option
+from main.models import Bad_Count, Extra_Option, Medal
 
 
 @login_required

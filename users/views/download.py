@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse, Http404, HttpRequest
+from django.http import Http404, HttpRequest, HttpResponse
+
 from google.cloud import storage
 
 

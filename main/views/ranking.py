@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 
-from main.models import Music, Medal
+from main.models import Medal, Music, Sran_Level
 from main.services import get_folder_status
 
 
@@ -11,10 +11,7 @@ from main.services import get_folder_status
 def ranking(request: HttpRequest, sran_level: int) -> HttpResponse:
     """ ランキング """
 
-    max_s_lv = 19
-
-    # S乱レベルが不正なら404エラー
-    if sran_level <= 0 or sran_level > max_s_lv:
+    if sran_level <= 0 or sran_level > Sran_Level.MAX:
         raise Http404
 
     music_query = Music.objects.filter(sran_level=sran_level).order_by('level', 'title')

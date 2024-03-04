@@ -7,7 +7,7 @@ from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_GET
 
-from main.models import Activity, Extra_Option, Medal, Music
+from main.models import Activity, Extra_Option, Medal, Music, Sran_Level
 
 from users.models import CustomUser
 
@@ -22,7 +22,7 @@ def get_percentage_of_clear(request: HttpRequest, user_id: int) -> JsonResponse:
     if user != request.user and (not user.is_active or user.cleardata_privacy == 2):
         raise PermissionDenied
 
-    max_s_lv = 19
+    max_s_lv = Sran_Level.MAX
     music_num = [0] * max_s_lv
     clear_num = [0] * max_s_lv
     percentage_of_clear = [0] * max_s_lv
@@ -90,8 +90,8 @@ def get_clear_rate(request: HttpRequest) -> HttpResponse:
     user_id = request.GET['user_id']
     user = get_object_or_404(CustomUser, pk=user_id)
 
-    max_s_lv = 19
-    s_lv_range = range(max_s_lv, 0, -1)
+    max_s_lv = Sran_Level.MAX
+    s_lv_range = range(max_s_lv, Sran_Level.MIN - 1, -1)
 
     chart_data = {
         'clearRate': {
