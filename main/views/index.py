@@ -10,20 +10,18 @@ from social_django.models import UserSocialAuth
 def index(request: HttpRequest) -> HttpResponse:
     """ トップページ """
 
-    medal_num = Medal.objects.all().count()
-    recent_medal = Medal.objects.all().order_by('-updated_at')[:10]
-    recent_music_id_list = list(recent_medal.values_list('music', flat=True))
-    recent_music = []
-    for recent_music_id in recent_music_id_list:
-        recent_music.append(Music.objects.get(pk=recent_music_id))
+    medal_num = Medal.objects.count()
+    recent_medals = Medal.objects.order_by('-updated_at')[:10]
+
+    recent_music_ids = list(recent_medals.values_list('music', flat=True))
+    recent_music = Music.objects.filter(id__in=recent_music_ids)
+
     search_form = SearchForm(request.GET)
 
     user_google_ids = []
-    user = request.user
-    if user.is_authenticated:
-        socials = UserSocialAuth.objects.filter(user=user, provider="google-oauth2")
-        for social in socials:
-            user_google_ids.append(social.uid)
+    if request.user.is_authenticated:
+        user_google_ids = UserSocialAuth.objects.filter(user=request.user, provider="google-oauth2").values_list('uid',
+                                                                                                                 flat=True)
 
     context = {
         'medal_num': medal_num,
