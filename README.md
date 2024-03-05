@@ -1,5 +1,5 @@
 # srandom.com
-A clear status management site for super-random enthusiasts of pop'n music
+A site for the management of clear statuses for super-random enthusiasts of pop'n music.
 
 ## Installation
 ### Requirements
@@ -8,68 +8,66 @@ A clear status management site for super-random enthusiasts of pop'n music
 - [pipenv](https://github.com/pypa/pipenv)
 - [direnv](https://github.com/direnv/direnv#install) (optional)
 
-### Create development environment
+### Setup the development environment
 ```
 pipenv install
 ```
 
-### Set environment variables
+### Configure environment variables
 ```shell
 cp .env.sample .env
 vi .env # edit it
 ```
 
-### Start DB and app
+### Start the database and application
 ```
 pipenv run docker_up
 ```
 
-### Run test
+### Run tests
 ```
 pipenv run test
 ```
 
 ## Commands
-A list of commands that use Django's command functions.
+Below is a list of Django's custom commands.
 
 ### Scraping
-Obtain music information from the S-Random Difficulty Table and output it to a CSV file.
+Fetch music information from the S-Random Difficulty Table and export it to a CSV file.
 
 ```
 python manage.py scraping [--silent]
 ```
 
 ### Update music information
-Read music information from CSV file and update database.
+Import music information from a CSV file and update the database accordingly.
 
 ```
 python manage.py update_music
 ```
 
 ### Data migration
-All the clear data of the migration source user is migrated to the migration destination user.
+Migrate all clear data from one user (source) to another user (destination).
 
-The clear data of the migration source user cannot be restored.
+Note: Clear data from the source user cannot be recovered after migration.
 
 ```
 python manage.py data_migration <migration source username> <migration destination username>
 ```
 
 ### CSV export
-Output clear data of premium users as CSV files.
+Export clear data for premium users to CSV files.
 
-Output to `csv/export/<username>.csv`.
-
-Usually run as cron.
+Files are saved in `csv/export/<username>.csv`.
 
 ```
 python manage.py export2csv
 ```
 
 ### Delete user account
-Disable the specified user account and delete the clear data completely.
+Deactivate a specific user account and permanently delete its clear data.
 
-Clear data cannot be restored.
+Note: Once deleted, clear data cannot be recovered.
 
 ```
 python manage.py delete_account <username>
