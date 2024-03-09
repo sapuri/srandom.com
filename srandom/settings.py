@@ -96,39 +96,18 @@ WSGI_APPLICATION = 'srandom.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-if env.str('DATABASE_SSL_CA', '') != '':
-    DATABASES = {
-        'default': {
-            'ENGINE': env('DATABASE_ENGINE'),
-            'NAME': env('DATABASE_NAME'),
-            'USER': env('DATABASE_USER'),
-            'PASSWORD': env('DATABASE_PASSWORD'),
-            'HOST': env('DATABASE_HOST'),
-            'OPTIONS': {
-                'charset': 'utf8mb4',
-                'ssl': {
-                    # ref. https://planetscale.com/docs/concepts/secure-connections#ca-root-configuration
-                    'ca': env('DATABASE_SSL_CA'),
-                }
-            },
+DATABASES = {
+    'default': {
+        'ENGINE': env('DATABASE_ENGINE'),
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'HOST': env('DATABASE_HOST'),
+        'TEST': {
+            'NAME': 'test_srandom'
         }
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': env('DATABASE_ENGINE'),
-            'NAME': env('DATABASE_NAME'),
-            'USER': env('DATABASE_USER'),
-            'PASSWORD': env('DATABASE_PASSWORD'),
-            'HOST': env('DATABASE_HOST'),
-            'OPTIONS': {
-                'charset': 'utf8mb4',
-            },
-            'TEST': {
-                'NAME': 'test_srandom'
-            }
-        }
-    }
+}
 
 # https://docs.djangoproject.com/en/3.2/releases/3.2/#customizing-type-of-auto-created-primary-keys
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

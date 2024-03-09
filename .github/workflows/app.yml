@@ -29,27 +29,23 @@ jobs:
   test:
     runs-on: ubuntu-latest
     services:
-      mysql:
-        image: mysql:8.0
+      postgres:
+        image: postgres:15-alpine
         ports:
-          - 3306:3306
+          - 5432:5432
         env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: ci
-        options: >-
-          --health-cmd "mysqladmin ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: ci
     permissions:
       contents: read
       id-token: write
 
     env:
       ALLOWED_HOSTS: 127.0.0.1
-      DATABASE_ENGINE: django.db.backends.mysql
+      DATABASE_ENGINE: django.db.backends.postgresql
       DATABASE_NAME: ci
-      DATABASE_USER: root
+      DATABASE_USER: test
       DATABASE_PASSWORD: password
       DATABASE_HOST: 127.0.0.1
 
