@@ -20,4 +20,4 @@ EXPOSE 8000
 
 ENV PORT 8000
 
-CMD .venv/bin/python main.py
+CMD .venv/bin/python manage.py migrate && .venv/bin/python main.py
