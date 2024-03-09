@@ -1,18 +1,15 @@
 version: "3"
 services:
-  mysql:
-    image: mysql:8.0
-    platform: linux/x86_64
+  postgres:
+    image: postgres:15-alpine
     ports:
-      - "3306:3306"
+      - "5432:5432"
     restart: always
     volumes:
-      - mysql_data:/var/lib/mysql
+      - db_data:/var/lib/postgresql/data
     environment:
-      MYSQL_DATABASE: srandom
-      MYSQL_USER: srandom
-      MYSQL_PASSWORD: srandom
-      MYSQL_ROOT_PASSWORD: root
+      POSTGRES_USER: srandom
+      POSTGRES_PASSWORD: srandom
   app:
     build:
       context: .
@@ -20,7 +17,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - mysql
+      - postgres
 volumes:
-  mysql_data:
-    name: srandom_db_data
+  db_data:
+    name: srandom_postgres_data

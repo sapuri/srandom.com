@@ -4,7 +4,6 @@ A site for the management of clear statuses for super-random enthusiasts of pop'
 ## Installation
 ### Requirements
 - [Python](https://www.python.org/)
-- [MySQL](https://www.mysql.com/)
 - [pipenv](https://github.com/pypa/pipenv)
 - [direnv](https://github.com/direnv/direnv#install) (optional)
 
