@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 
 from django.db import models
-from django.utils import timezone
 
 from users.models import CustomUser
 
@@ -210,27 +209,6 @@ class Extra_Option(models.Model):
             models.Index(fields=['updated_at'], name='eo_by_updated_at'),
             models.Index(fields=['user', 'updated_at'], name='eo_by_user_and_updated_at'),
         ]
-
-
-class News(models.Model):
-    KIND_CHOICES = (
-        ('新規', '新規'),
-        ('レベル更新', 'レベル更新'),
-        ('S乱レベル更新', 'S乱レベル更新'),
-        ('削除', '削除'),
-    )
-
-    music = models.ForeignKey(Music, verbose_name='曲', on_delete=models.CASCADE)
-    kind = models.CharField('種類', max_length=10, choices=KIND_CHOICES)
-    created_at = models.DateField('作成日', default=timezone.now)
-    status = models.BooleanField('状態', default=True)
-
-    def __str__(self):
-        return '%s - %s' % (self.music, self.kind)
-
-    class Meta:
-        verbose_name = 'News'
-        verbose_name_plural = 'News'
 
 
 class Activity(models.Model):
