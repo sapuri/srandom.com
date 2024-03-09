@@ -18,12 +18,6 @@ class IndexTests(TestCase):
         self.assertEqual(200, resp.status_code)
 
 
-class NewsTests(TestCase):
-    def test_get(self):
-        resp = self.client.get(resolve_url(f'{APP_NAME}:news'))
-        self.assertEqual(200, resp.status_code)
-
-
 class SearchTests(TestCase):
     def test_get(self):
         resp = self.client.get(resolve_url(f'{APP_NAME}:search'))

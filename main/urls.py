@@ -1,12 +1,12 @@
 from django.urls import path
 from django.views.generic import TemplateView
 
-from .views import api, difflist, difflist_level_select, edit, index, level, level_select, news, omikuji, ranking, ranking_detail, ranking_level_select, search
+from .views import api, difflist, difflist_level_select, edit, index, level, level_select, omikuji, ranking, \
+    ranking_detail, ranking_level_select, search
 
 app_name = 'main'
 urlpatterns = [
     path('', index.index, name='index'),
-    path('news/', news.news, name='news'),
     path('search/', search.search, name='search'),
     path('level/', level_select.level_select, name='level_select'),
     path('level/<int:level>/', level.level, name='level'),

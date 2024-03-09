@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from main.models import Difficulty, Level, Sran_Level, Music, Medal, Bad_Count, Extra_Option, News, Activity
+from main.models import Activity, Bad_Count, Difficulty, Extra_Option, Level, Medal, Music, Sran_Level
 
 
 class DifficultyAdmin(admin.ModelAdmin):
@@ -42,12 +42,6 @@ class Extra_OptionAdmin(admin.ModelAdmin):
     ordering = ('-id',)
 
 
-class NewsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'music', 'kind', 'created_at', 'status')
-    list_filter = ('kind', 'status')
-    ordering = ('-id',)
-
-
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('id', 'music', 'user', 'updated_at', 'status')
     list_filter = ('user', 'status')
@@ -61,5 +55,4 @@ admin.site.register(Music, MusicAdmin)
 admin.site.register(Medal, MedalAdmin)
 admin.site.register(Bad_Count, Bad_CountAdmin)
 admin.site.register(Extra_Option, Extra_OptionAdmin)
-admin.site.register(News, NewsAdmin)
 admin.site.register(Activity, ActivityAdmin)
