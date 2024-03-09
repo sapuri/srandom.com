@@ -8,6 +8,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('', include('main.urls')),
     path('mastermind/', admin.site.urls),
+    path('maintenance-mode/', include('maintenance_mode.urls')),
     path('auth/', include(('django.contrib.auth.urls', 'auth'))),
     path('social/', include(('social_django.urls', 'social'))),
     path('users/', include('users.urls')),
