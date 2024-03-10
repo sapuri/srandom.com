@@ -47,7 +47,7 @@
                 {{ data.bad_count|default:'-' }}
                 {% endif %}
             </td>
-            <td class="updated_at">{{ data.updated_at|default:'-'|date:'Y/m/d H:i' }}</td>
+            <td class="updated_at">{{ data.updated_at|date:"Y/n/d G:i"|default:'-' }}</td>
         </tr>
         {% endfor %}
         </tbody>
