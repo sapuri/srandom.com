@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from django.db import models
 
@@ -20,7 +20,7 @@ class Difficulty(models.Model):
         else:
             return 'undefined'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.difficulty_short()
 
     class Meta:
@@ -34,10 +34,7 @@ class Level(models.Model):
 
     level = models.IntegerField('レベル')
 
-    def int(self):
-        return self.level
-
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.level)
 
     class Meta:
@@ -51,11 +48,7 @@ class Sran_Level(models.Model):
 
     level = models.IntegerField('S乱レベル')
 
-    # 整数型で返す
-    def int(self):
-        return self.level
-
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.level)
 
     class Meta:
@@ -70,8 +63,8 @@ class Music(models.Model):
     sran_level = models.ForeignKey(Sran_Level, verbose_name='S乱レベル', on_delete=models.PROTECT)
     bpm = models.CharField('BPM', max_length=15, null=True, blank=True)
 
-    def __str__(self):
-        return self.title
+    def __str__(self) -> str:
+        return str(self.title)
 
     class Meta:
         verbose_name = '曲'
@@ -115,10 +108,7 @@ class Medal(models.Model):
         else:
             return self.ClearStatus.NO_PLAY
 
-    def int(self):
-        return self.medal
-
-    def output_str(self) -> str:
+    def __str__(self) -> str:
         if self.medal == 1:
             return '金'
         elif self.medal == 2:
@@ -146,12 +136,6 @@ class Medal(models.Model):
         else:
             return ''
 
-    def updated_at_jst(self):
-        return self.updated_at + timedelta(hours=9)
-
-    def __str__(self):
-        return self.output_str()
-
     class Meta:
         verbose_name = 'クリアメダル'
         verbose_name_plural = 'クリアメダル'
@@ -168,14 +152,8 @@ class Bad_Count(models.Model):
     user = models.ForeignKey(CustomUser, verbose_name='ユーザー', on_delete=models.PROTECT)
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
 
-    def int(self):
-        return self.bad_count
-
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.bad_count)
-
-    def updated_at_jst(self):
-        return self.updated_at + timedelta(hours=9)
 
     class Meta:
         verbose_name = 'BAD数'
@@ -198,9 +176,6 @@ class Extra_Option(models.Model):
             return True
         return False
 
-    def updated_at_jst(self):
-        return self.updated_at + timedelta(hours=9)
-
     class Meta:
         verbose_name = 'Extra Option'
         verbose_name_plural = 'Extra Option'
@@ -218,7 +193,7 @@ class Activity(models.Model):
     updated_at = models.DateTimeField('更新日時', default=datetime.now)
     status = models.BooleanField('状態', default=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return '%s - %s' % (self.music, self.user)
 
     class Meta:
