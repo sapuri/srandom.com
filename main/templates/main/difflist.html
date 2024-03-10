@@ -55,20 +55,8 @@
                 -
                 {% endif %}
             </td>
-            <td class="bad_count">
-                {% if data.bad_count %}
-                {{ data.bad_count }}
-                {% else %}
-                -
-                {% endif %}
-            </td>
-            <td class="updated_at">
-                {% if data.updated_at %}
-                {{ data.updated_at|date:'Y/m/d H:i' }}
-                {% else %}
-                -
-                {% endif %}
-            </td>
+            <td class="bad_count">{{ data.bad_count|default:'-' }}</td>
+            <td class="updated_at">{{ data.updated_at|default:'-'|date:'Y/m/d H:i' }}</td>
         </tr>
         {% endfor %}
         </tbody>
