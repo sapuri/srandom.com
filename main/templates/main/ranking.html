@@ -8,7 +8,6 @@
 <meta property="og:title" content="ランキング(Lv{{ sran_level }}) - スパランドットコム" />
 <meta property="og:type" content="article" />
 <meta name="description" content="スパランドットコムのランキングページです。(Lv{{ sran_level }})">
-<script src="{% static 'js/music_list.js' %}"></script>
 <script src="{% static 'js/ranking.js' %}"></script>
 {% endblock %}
 
@@ -30,22 +29,17 @@
             <th>順位</th>
         </thead>
         <tbody>
-            {% for music in music_list %}
-            <tr id="music-{{ music.id }}">
-                <script>$(function() { getClearStatus({{ music.id }}); });</script>
-                <td class="level">{{ music.level }}</td>
-                <td class="title"><a href="{% url 'main:ranking_detail' music.id %}">{{ music.title }} ({{ music.difficulty }})</a></td>
-                <td class="bad_count">
-                    <script>$(function() { getBadCount({{ music.id }}); });</script>
-                </td>
-                <td class="bad_count_avg">
-                    <script>$(function() { getBadCountAvg({{ music.id }}); });</script>
-                </td>
-                <td class="rank">
-                    <script>$(function() { getMyRank({{ music.id }}); });</script>
-                </td>
-            </tr>
-            {% endfor %}
+        {% for data in music_list %}
+        <tr id="music-{{ data.id }}" class="{{ data.clear_status }}">
+            <td class="level">{{ data.level }}</td>
+            <td class="title"><a href="{% url 'main:ranking_detail' data.id %}">{{ data.title }} ({{ data.difficulty }})</a></td>
+            <td class="bad_count">{{ data.bad_count|default:'-' }}</td>
+            <td class="bad_count_avg">{{ data.bad_count_avg|default:'-' }}</td>
+            <td class="rank">
+                <script>$(function() { getMyRank({{ data.id }}); });</script>
+            </td>
+        </tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>
