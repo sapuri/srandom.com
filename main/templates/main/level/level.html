@@ -8,7 +8,6 @@
 <meta property="og:title" content="公式難易度表(Lv{{ level }}) - スパランドットコム" />
 <meta property="og:type" content="article" />
 <meta name="description" content="スパランドットコムの公式難易度表ページです。(Lv{{ level }})">
-<script src="{% static 'js/music_list.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -38,24 +37,22 @@
             <th>更新日時</th>
         </thead>
         <tbody>
-            {% for music in music_list %}
-            <tr id="music-{{ music.id }}">
-                <script>$(function() { getClearStatus({{ music.id }}); });</script>
-                <td class="sran_level">{{ music.sran_level }}</td>
-                <td class="title"><a href="{% url 'main:edit' music.id %}">{{ music.title }} ({{ music.difficulty }})</a></td>
-                <td class="bpm">{{ music.bpm|default:'-' }}</td>
-                <td class="medal">
-                    <img>
-                    <script>$(function() { getMedal({{ music.id }}); });</script>
-                </td>
-                <td class="bad_count">
-                    <script>$(function() { getBadCount({{ music.id }}); });</script>
-                </td>
-                <td class="updated_at">
-                    <script>$(function() { getLatestUpdatedAt({{ music.id }}); });</script>
-                </td>
-            </tr>
-            {% endfor %}
+        {% for data in music_list %}
+        <tr id="music-{{ data.id }}" class="{{ data.clear_status }}">
+            <td class="sran_level">{{ data.sran_level }}</td>
+            <td class="title"><a href="{% url 'main:edit' data.id %}">{{ data.title }} ({{ data.difficulty }})</a></td>
+            <td class="bpm">{{ data.bpm|default:'-' }}</td>
+            <td class="medal">
+                {% if data.medal and data.medal != 12 %}
+                <img src="{% static '' %}img/medal/{{ data.medal }}.png" width="18" height="18">
+                {% else %}
+                -
+                {% endif %}
+            </td>
+            <td class="bad_count">{{ data.bad_count|default:'-' }}</td>
+            <td class="updated_at">{{ data.updated_at|default:'-'|date:'Y/m/d H:i' }}</td>
+        </tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>
