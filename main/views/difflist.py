@@ -60,8 +60,8 @@ def difflist(request: HttpRequest, sran_level: int) -> HttpResponse:
             'title': music.title,
             'difficulty': music.difficulty.difficulty_short(),
             'bpm': music.bpm,
-            'medal': medal.int() if medal else None,
-            'bad_count': bad_count.int() if bad_count else None,
+            'medal': medal.medal if medal else None,
+            'bad_count': bad_count.bad_count if bad_count else None,
             'clear_status': clear_status,
             'updated_at': updated_at,
         })

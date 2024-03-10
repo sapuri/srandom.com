@@ -59,7 +59,7 @@ def ranking(request: HttpRequest, sran_level: int) -> HttpResponse:
             'level': music.level.level,
             'title': music.title,
             'difficulty': music.difficulty.difficulty_short(),
-            'bad_count': bad_count.int() if bad_count else None,
+            'bad_count': bad_count.bad_count if bad_count else None,
             'bad_count_avg': bad_count_avg,
             'clear_status': clear_status,
         })

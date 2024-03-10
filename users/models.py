@@ -5,8 +5,8 @@ from django.db import models
 class Location(models.Model):
     location = models.CharField('都道府県', max_length=10)
 
-    def __str__(self):
-        return self.location
+    def __str__(self) -> str:
+        return str(self.location)
 
     class Meta:
         verbose_name = '都道府県'
@@ -16,8 +16,8 @@ class Location(models.Model):
 class Theme(models.Model):
     theme = models.CharField('テーマ', max_length=255)
 
-    def __str__(self):
-        return self.theme
+    def __str__(self) -> str:
+        return str(self.theme)
 
     class Meta:
         verbose_name = 'テーマ'
