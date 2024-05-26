@@ -36,8 +36,15 @@ class Command(BaseCommand):
 
         try:
             with transaction.atomic():
-                update_msgs = self.update_db(music_list, Sran_Level.MAX)
-                deleted_msgs = self.detect_deleted_songs(music_list)
+                try:
+                    update_msgs = self.update_db(music_list, Sran_Level.MAX)
+                except Exception as e:
+                    raise Exception(f'failed to update music records: {e}')
+
+                try:
+                    deleted_msgs = self.detect_deleted_songs(music_list)
+                except Exception as e:
+                    raise Exception(f'failed to detect deleted songs: {e}')
 
             if update_msgs:
                 self.notify_slack(f'更新が{len(update_msgs)}件ありました！\n```' + '\n'.join(update_msgs) + '```')
@@ -118,9 +125,15 @@ class Command(BaseCommand):
                 update_msgs.append(f'{new_music.title}({new_music.difficulty}) を追加しました。')
 
         if new_musics:
-            Music.objects.bulk_create(new_musics)
+            try:
+                Music.objects.bulk_create(new_musics)
+            except Exception as e:
+                raise Exception(f'failed to bulk_create new musics: {e}')
         if updated_musics:
-            Music.objects.bulk_update(updated_musics, ['level', 'sran_level', 'bpm'])
+            try:
+                Music.objects.bulk_update(updated_musics, ['level', 'sran_level', 'bpm'])
+            except Exception as e:
+                raise Exception(f'failed to bulk_update updated musics: {e}')
 
         return update_msgs
 

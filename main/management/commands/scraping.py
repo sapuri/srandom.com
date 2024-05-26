@@ -26,10 +26,20 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         silent = options['silent']
 
-        url1 = 'https://popn.wiki/%E3%81%9D%E3%81%AE%E4%BB%96/s%E4%B9%B1%E3%82%AF%E3%83%AA%E3%82%A2%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8'  # S乱クリア難易度表
-        url2 = 'https://popn.wiki/%E3%81%9D%E3%81%AE%E4%BB%96/s%E4%B9%B1lv0%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8'  # S乱Lv0難易度表
-        file_path = f'{settings.BASE_DIR}/csv/srandom.csv'
+        # S乱クリア難易度表1 (Lv11-19)
+        url1 = 'https://popn.wiki/%E3%81%9D%E3%81%AE%E4%BB%96/s%E4%B9%B1%E3%82%AF%E3%83%AA%E3%82%A2%E9%9B%A3%E6%98%93' \
+               '%E5%BA%A6%E8%A1%A8/s%E4%B9%B1%E3%82%AF%E3%83%AA%E3%82%A2%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A81'
+        # S乱クリア難易度表2 (Lv5-10)
+        url2 = 'https://popn.wiki/%E3%81%9D%E3%81%AE%E4%BB%96/s%E4%B9%B1%E3%82%AF%E3%83%AA%E3%82%A2%E9%9B%A3%E6%98%93' \
+               '%E5%BA%A6%E8%A1%A8/s%E4%B9%B1%E3%82%AF%E3%83%AA%E3%82%A2%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A82'
+        # S乱クリア難易度表3 (Lv2弱-4)
+        url3 = 'https://popn.wiki/%E3%81%9D%E3%81%AE%E4%BB%96/s%E4%B9%B1%E3%82%AF%E3%83%AA%E3%82%A2%E9%9B%A3%E6%98%93' \
+               '%E5%BA%A6%E8%A1%A8/s%E4%B9%B1%E3%82%AF%E3%83%AA%E3%82%A2%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A83'
+        # S乱クリア難易度表4 (Lv1弱-1強)
+        url4 = 'https://popn.wiki/%E3%81%9D%E3%81%AE%E4%BB%96/s%E4%B9%B1%E3%82%AF%E3%83%AA%E3%82%A2%E9%9B%A3%E6%98%93' \
+               '%E5%BA%A6%E8%A1%A8/s%E4%B9%B1%E3%82%AF%E3%83%AA%E3%82%A2%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A84'
 
+        file_path = f'{settings.BASE_DIR}/csv/srandom.csv'
         os.makedirs(f'{settings.BASE_DIR}/csv/', exist_ok=True)
 
         csv_data = self.scrape(url1, mode=1, silent=silent)
@@ -38,11 +48,18 @@ class Command(BaseCommand):
         csv_data = self.scrape(url2, mode=2, silent=silent)
         self.generate_csv(csv_data, file_path, append=True)
 
+        csv_data = self.scrape(url3, mode=3, silent=silent)
+        self.generate_csv(csv_data, file_path, append=True)
+
+        csv_data = self.scrape(url4, mode=4, silent=silent)
+        self.generate_csv(csv_data, file_path, append=True)
+
     def scrape(self, url: str, mode: int, silent: bool = False) -> list:
         """
         難易度表から曲情報を取得
         :param url:
         :param mode: 1=Lv5〜Lv19, 2=Lv4〜Lv1
+        :param mode: 1=Lv11〜Lv19, 2=Lv5〜Lv10, 3=Lv2弱〜4, 4=Lv1弱〜Lv1強
         :param silent: True=エラー以外の表示をオフ
         :return: csv data
         """
@@ -53,13 +70,17 @@ class Command(BaseCommand):
 
         level_range = []
         if mode == 1:
-            # Lv19〜Lv5を取得
-            # #lv19 〜 #lv5 を指定
-            level_range = range(19, 4, -1)
+            # Lv19〜Lv11を取得
+            level_range = range(19, 10, -1)
         elif mode == 2:
-            # Lv4〜Lv1を取得
-            # #lv4 〜 #lv1 を指定
-            level_range = ['4', '3', '2強', '2弱', '1強', '1弱']
+            # Lv10〜Lv5を取得
+            level_range = range(10, 4, -1)
+        elif mode == 3:
+            # Lv2弱〜Lv4を取得
+            level_range = ['4', '3', '2強', '2弱']
+        elif mode == 4:
+            # Lv1弱〜Lv1強を取得
+            level_range = ['1強', '1弱']
         else:
             self.logger.error(f'invalid mode: {mode}')
             quit(1)
@@ -71,13 +92,12 @@ class Command(BaseCommand):
             if not silent:
                 self.logger.info(level)
 
-            if mode == 2:
-                if j == '2強' or j == '2弱':
-                    level = 'Lv2'
-                elif j == '1強' or j == '1弱':
-                    level = 'Lv1'
+            if j == '2強' or j == '2弱':
+                level = 'Lv2'
+            elif j == '1強' or j == '1弱':
+                level = 'Lv1'
 
-            if mode == 2 and (j == '2弱' or j == '1弱'):
+            if j == '2弱' or j == '1弱':
                 music_list = []
             else:
                 music_list = [[level]]
