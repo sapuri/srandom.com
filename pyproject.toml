@@ -1,0 +1,32 @@
+[project]
+name = "srandom"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "django>=4.2,<5",
+    "beautifulsoup4>=4.12",
+    "django-bootstrap3>=24.2",
+    "django-debug-toolbar>=4.3",
+    "django-environ>=0.10",
+    "django-maintenance-mode>=0.21",
+    "django-storages[google]>=1.14",
+    "google-cloud-storage>=2.16",
+    "lxml>=5.2",
+    "psycopg[binary]>=3.1",
+    "requests>=2.32",
+    "slack-sdk>=3.27",
+    "social-auth-app-django==5.4.0",
+    "social-auth-core==4.5.3",
+    "twitter>=1.19",
+    "uvicorn>=0.29",
+    "zenhan>=0.5",
+]
+
+[dependency-groups]
+dev = [
+    "autopep8>=2.1",
+    "flake8>=7.0",
+]
+
+[tool.uv]
+required-version = "~=0.11.0"
