@@ -29,7 +29,9 @@ ENV = env  # for import from other files
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY', get_random_secret_key())
+# django-environ resolves defaults starting with "$" as proxies to other
+# variables, so a random key starting with "$" causes infinite recursion
+SECRET_KEY = env.str('SECRET_KEY', default=None) or get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', False)
