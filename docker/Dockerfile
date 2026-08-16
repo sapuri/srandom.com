@@ -10,6 +10,8 @@ RUN uv sync --frozen --no-dev
 
 FROM python:3.11-slim AS runner
 
+ENV PATH="/app/.venv/bin:$PATH"
+
 WORKDIR /app
 COPY --from=builder /app /app
 COPY . /app
@@ -18,4 +20,4 @@ EXPOSE 8000
 
 ENV PORT=8000
 
-CMD .venv/bin/python manage.py migrate && .venv/bin/python main.py
+CMD python manage.py migrate && python main.py
