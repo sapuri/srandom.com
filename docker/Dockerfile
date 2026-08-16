@@ -20,4 +20,5 @@ EXPOSE 8000
 
 ENV PORT=8000
 
-CMD python manage.py migrate && python main.py
+# exec makes python PID 1 so it receives SIGTERM for graceful shutdown
+CMD ["/bin/sh", "-c", "python manage.py migrate && exec python main.py"]
