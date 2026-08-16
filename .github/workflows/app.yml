@@ -80,9 +80,7 @@ jobs:
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
       SERVICE: app
       REGION: asia-northeast1
-      IMAGE_APP: asia-northeast1-docker.pkg.dev/srandom/app/app:${{ github.sha }}
-      IMAGE_CMD_UPDATE_MUSIC: asia-northeast1-docker.pkg.dev/srandom/cmd/update-music:${{ github.sha }}
-      IMAGE_CMD_EXPORT2CSV: asia-northeast1-docker.pkg.dev/srandom/cmd/export2csv:${{ github.sha }}
+      IMAGE: asia-northeast1-docker.pkg.dev/srandom/app/app:${{ github.sha }}
 
     steps:
       - uses: actions/checkout@v7
@@ -96,24 +94,28 @@ jobs:
       - name: Configure auth
         run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
 
-      - name: Build and push containers
+      - name: Build and push container
         run: |
           ./scripts/decrypt-env.sh production
-          docker build . -f docker/Dockerfile -t ${{ env.IMAGE_APP }}
-          docker build . -f docker/Dockerfile_update_music -t ${{ env.IMAGE_CMD_UPDATE_MUSIC }}
-          docker build . -f docker/Dockerfile_export2csv -t ${{ env.IMAGE_CMD_EXPORT2CSV }}
-          docker push ${{ env.IMAGE_APP }}
-          docker push ${{ env.IMAGE_CMD_UPDATE_MUSIC }}
-          docker push ${{ env.IMAGE_CMD_EXPORT2CSV }}
+          docker build . -f docker/Dockerfile -t ${{ env.IMAGE }}
+          docker push ${{ env.IMAGE }}
+
+      - name: Update Cloud Run Jobs
+        run: |
+          gcloud run jobs update update-music \
+            --image ${{ env.IMAGE }} \
+            --region ${{ env.REGION }} \
+            --command /bin/sh \
+            --args "-c,python manage.py scraping --silent && python manage.py update_music"
+          gcloud run jobs update export2csv \
+            --image ${{ env.IMAGE }} \
+            --region ${{ env.REGION }} \
+            --command /bin/sh \
+            --args "-c,python manage.py export2csv"
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v3
         with:
           service: ${{ env.SERVICE }}
-          image: ${{ env.IMAGE_APP }}
+          image: ${{ env.IMAGE }}
           region: ${{ env.REGION }}
-
-      - name: Update Cloud Run Jobs
-        run: |
-          gcloud beta run jobs update update-music --image ${{ env.IMAGE_CMD_UPDATE_MUSIC }} --region asia-northeast1
-          gcloud beta run jobs update export2csv --image ${{ env.IMAGE_CMD_EXPORT2CSV }} --region asia-northeast1
