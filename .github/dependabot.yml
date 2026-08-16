@@ -13,6 +13,10 @@ updates:
         update-types:
           - "minor"
           - "patch"
+        # keep strictly pinned packages out of the group so their
+        # pin bumps are reviewed in individual PRs
+        exclude-patterns:
+          - "social-auth-*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
