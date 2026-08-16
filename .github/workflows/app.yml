@@ -11,20 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
         with:
-          python-version: "3.11"
-          cache: pipenv
-
-      - name: Install pipenv
-        run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
+          version: "0.11.x"
 
       - name: Install dependencies
-        run: pipenv sync --dev
+        run: uv sync --frozen
 
       - name: Lint
-        run: pipenv run lint
+        run: make lint
 
   test:
     runs-on: ubuntu-latest
@@ -52,20 +48,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
         with:
-          python-version: "3.11"
-          cache: pipenv
-
-      - name: Install pipenv
-        run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
+          version: "0.11.x"
 
       - name: Install dependencies
-        run: pipenv sync
+        run: uv sync --frozen
 
       - name: Migration
-        run: pipenv run python manage.py migrate
+        run: uv run python manage.py migrate
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -74,7 +66,7 @@ jobs:
           service_account: github@srandom.iam.gserviceaccount.com
 
       - name: Test
-        run: pipenv run test
+        run: make test
 
   deploy:
     if: github.ref == 'refs/heads/master'

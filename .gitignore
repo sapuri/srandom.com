@@ -16,3 +16,6 @@ staticfiles/
 
 csv/
 django_psdb_engine/
+
+# python
+.venv/

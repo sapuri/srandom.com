@@ -4,3 +4,6 @@ docker-compose.yml
 README.md
 scripts/
 terraform/
+.venv/
+.git/
+.github/
