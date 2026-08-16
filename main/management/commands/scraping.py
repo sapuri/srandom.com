@@ -85,7 +85,7 @@ class Command(BaseCommand):
             self.logger.error(f'invalid mode: {mode}')
             quit(1)
 
-        for i, j in enumerate(level_range):
+        for j in level_range:
             # Lv表記を取得
             h2 = soup.select(f'h2#lv{j}')[0]
             level = h2.text[1:].strip()
@@ -103,12 +103,18 @@ class Command(BaseCommand):
                 music_list = [[level]]
 
             # table の tr を走査
-            table = h2.next_sibling.next_sibling.table.children
-            for i, tr in enumerate(table):
-                if i < 4 or tr == '\n':
+            table = h2.find_next('table')
+            for tr in table.find_all('tr'):
+                td_list = tr.find_all('td')
+                # ヘッダ行や「詳細ページ」行はスキップ
+                if len(td_list) < 3:
+                    continue
+                if td_list[1].a is None:
+                    # 曲名セルに文字があるのにリンクがない行はwiki側の記法崩れの可能性がある
+                    if td_list[1].text.strip():
+                        self.logger.warning(f'[skip] row without title link: {tr.get_text(" ", strip=True)[:50]}')
                     continue
 
-                td_list = tr.find_all('td')
                 lv = td_list[0].text.strip()
                 title = td_list[1].a.text.strip()
                 bpm = td_list[2].text.strip()
