@@ -7,7 +7,7 @@ serve:
 	uv run python main.py
 
 format:
-	uv run autopep8 -ivr .
+	uv run autopep8 -ivr --exclude .venv .
 
 lint:
 	uv run flake8 --show-source .

@@ -3,7 +3,7 @@ A site for the management of clear statuses for super-random enthusiasts of pop'
 
 ## Installation
 ### Requirements
-- [uv](https://github.com/astral-sh/uv)
+- [uv](https://github.com/astral-sh/uv) (Python is installed automatically by uv)
 - [direnv](https://github.com/direnv/direnv#install) (optional)
 
 ### Setup the development environment
@@ -34,14 +34,14 @@ Below is a list of Django's custom commands.
 Fetch music information from the S-Random Difficulty Table and export it to a CSV file.
 
 ```
-python manage.py scraping [--silent]
+uv run python manage.py scraping [--silent]
 ```
 
 ### Update music information
 Import music information from a CSV file and update the database accordingly.
 
 ```
-python manage.py update_music
+uv run python manage.py update_music
 ```
 
 ### Data migration
@@ -50,7 +50,7 @@ Migrate all clear data from one user (source) to another user (destination).
 Note: Clear data from the source user cannot be recovered after migration.
 
 ```
-python manage.py data_migration <migration source username> <migration destination username>
+uv run python manage.py data_migration <migration source username> <migration destination username>
 ```
 
 ### CSV export
@@ -59,7 +59,7 @@ Export clear data for premium users to CSV files.
 Files are saved in `csv/export/<username>.csv`.
 
 ```
-python manage.py export2csv
+uv run python manage.py export2csv
 ```
 
 ### Delete user account
@@ -68,5 +68,5 @@ Deactivate a specific user account and permanently delete its clear data.
 Note: Once deleted, clear data cannot be recovered.
 
 ```
-python manage.py delete_account <username>
+uv run python manage.py delete_account <username>
 ```
