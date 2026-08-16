@@ -103,6 +103,11 @@ DATABASES = {
         'USER': env('DATABASE_USER'),
         'PASSWORD': env('DATABASE_PASSWORD'),
         'HOST': env('DATABASE_HOST'),
+        'PORT': env('DATABASE_PORT', default='5432'),
+        # Server-side cursors are unsupported by Supabase's transaction mode
+        # pooler (production, DATABASE_PORT=6543). Disabled in all
+        # environments so dev/CI behave the same as production.
+        'DISABLE_SERVER_SIDE_CURSORS': True,
         'TEST': {
             'NAME': 'test_srandom'
         }
