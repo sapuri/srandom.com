@@ -23,6 +23,10 @@ class SearchTests(TestCase):
         resp = self.client.get(resolve_url(f'{APP_NAME}:search'))
         self.assertEqual(200, resp.status_code)
 
+    def test_get_with_too_long_query(self):
+        resp = self.client.get(resolve_url(f'{APP_NAME}:search'), {'q': 'a' * 101})
+        self.assertEqual(200, resp.status_code)
+
 
 class LevelSelectTests(TestCase):
     def test_get(self):
