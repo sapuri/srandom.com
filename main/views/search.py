@@ -9,7 +9,12 @@ def search(request: HttpRequest) -> HttpResponse:
     """ 検索結果 """
 
     search_form = SearchForm(request.GET)
-    q = search_form.cleaned_data['q'] if search_form.is_valid() else ''
+    if search_form.is_valid():
+        q = search_form.cleaned_data['q']
+    else:
+        # 無効な入力は空検索と同じ扱いにする (入力値も再描画しない)
+        search_form = SearchForm()
+        q = ''
 
     if q:
         # 大文字小文字区別無しの部分一致
