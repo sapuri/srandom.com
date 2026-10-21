@@ -1,7 +1,8 @@
+import os
+import subprocess
+import sys
 from unittest.mock import patch
 
-from django.conf import settings
-from django.core.files.storage import storages
 from django.http import HttpResponseRedirect
 from django.test import Client, SimpleTestCase, TestCase
 from django.urls import reverse
@@ -12,20 +13,27 @@ from social_core.exceptions import AuthAlreadyAssociated, AuthMissingParameter, 
 from social_core.pipeline.social_auth import social_user
 from social_django.models import UserSocialAuth
 from social_django.utils import load_strategy
-from storages.backends.gcloud import GoogleCloudStorage
 
 from users.tests.utils import create_user
 
 
 class StorageCompatibilityTests(SimpleTestCase):
     def test_production_keeps_google_storage_for_media_and_static_files(self):
-        if settings.DEBUG:
-            self.skipTest('Production storage requires DEBUG=False')
-        for alias in ('default', 'staticfiles'):
-            self.assertIsInstance(storages[alias], GoogleCloudStorage)
-            self.assertEqual(storages[alias].bucket_name, 'static.srandom.com')
-            self.assertEqual(storages[alias].custom_endpoint, 'https://static.srandom.com')
-            self.assertFalse(storages[alias].querystring_auth)
+        # Load production settings afresh; the test runner changes DEBUG only
+        # after settings (including STORAGES) have already been evaluated.
+        result = subprocess.run([sys.executable, '-c', '''
+from django.core.files.storage import storages
+from storages.backends.gcloud import GoogleCloudStorage
+
+for alias in ('default', 'staticfiles'):
+    storage = storages[alias]
+    assert isinstance(storage, GoogleCloudStorage)
+    assert storage.bucket_name == 'static.srandom.com'
+    assert storage.custom_endpoint == 'https://static.srandom.com'
+    assert not storage.querystring_auth
+'''], env={**os.environ, 'DEBUG': 'False', 'DJANGO_SETTINGS_MODULE': 'srandom.settings'},
+            capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
 
 
 class SessionCompatibilityTests(TestCase):

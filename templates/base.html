@@ -20,8 +20,8 @@
     <title>{% block title %}スパランドットコム - ポップンミュージックのスパラン愛好家のためのクリア状況管理サイト{% endblock %}</title>
     {% bootstrap_css %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    {% if user.theme.id == 2 %}<link rel="stylesheet" href="{% static 'css/dark.css' %}">{% endif %}
+    <link rel="stylesheet" href="{% static 'css/style.20261021.css' %}">
+    {% if user.theme.id == 2 %}<link rel="stylesheet" href="{% static 'css/dark.20261021.css' %}">{% endif %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>const STATIC_URL = "{% static "" %}"</script>
     <script src="{% static 'js/global.js' %}"></script>
@@ -89,10 +89,14 @@
             <div class="collapse navbar-collapse target">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
+                        {% if csrf_token %}
                         <form method="post" action="{% url 'social:begin' 'twitter' %}">
                             {% csrf_token %}
                             <button type="submit" class="auth-button">{% bootstrap_icon "log-in" %} Twitterでログイン</button>
                         </form>
+                        {% else %}
+                        <a href="{% url 'main:index' %}">トップへ戻る</a>
+                        {% endif %}
                     </li>
                 </ul>
             </div>
