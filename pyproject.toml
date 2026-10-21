@@ -29,4 +29,4 @@ dev = [
 ]
 
 [tool.uv]
-required-version = "~=0.13.0"
+required-version = ">=0.12.18"
