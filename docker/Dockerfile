@@ -1,6 +1,6 @@
-FROM python:3.11-slim AS builder
+FROM python:3.11.17-slim AS builder
 
-COPY --from=ghcr.io/astral-sh/uv:0.11 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.13.4 /uv /uvx /bin/
 
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
@@ -8,7 +8,10 @@ COPY pyproject.toml uv.lock ./
 ENV UV_COMPILE_BYTECODE=1
 RUN uv sync --frozen --no-dev
 
-FROM python:3.11-slim AS runner
+FROM python:3.11.17-slim AS runner
+
+# Dependencies are already installed by uv; packaging tools are not used at runtime.
+RUN /usr/local/bin/python -m pip uninstall --yes pip setuptools wheel
 
 ENV PATH="/app/.venv/bin:$PATH"
 

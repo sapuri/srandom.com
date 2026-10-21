@@ -29,3 +29,15 @@ updates:
       github-actions:
         patterns:
           - "*"
+  - package-ecosystem: docker
+    directory: "/docker"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7
+  - package-ecosystem: terraform
+    directory: "/terraform/production"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7

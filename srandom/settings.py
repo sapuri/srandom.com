@@ -148,8 +148,6 @@ TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
 
 
@@ -162,13 +160,15 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 if not DEBUG:
     # django-storages
-    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    STORAGES = {
+        'default': {'BACKEND': 'storages.backends.gcloud.GoogleCloudStorage'},
+        'staticfiles': {'BACKEND': 'storages.backends.gcloud.GoogleCloudStorage'},
+    }
     GS_BUCKET_NAME = 'static.srandom.com'
     GS_DEFAULT_ACL = None
     GS_QUERYSTRING_AUTH = False
     GS_CUSTOM_ENDPOINT = "https://static.srandom.com"
 
-    STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     STATIC_URL = 'https://static.srandom.com/'
 
 # メッセージ設定
@@ -186,7 +186,8 @@ if DEBUG:
 
 # django-bootstrap3
 BOOTSTRAP3 = {
-    'css_url': f'{STATIC_URL}css/bootstrap.min.css'
+    'css_url': f'{STATIC_URL}css/bootstrap.min.css',
+    'javascript_url': f'{STATIC_URL}js/libraries/bootstrap-components.js',
 }
 
 
