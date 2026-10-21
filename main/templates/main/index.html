@@ -20,7 +20,10 @@
 {% else %}
     <p>スパランドットコムをご利用頂くにはログインが必要です。</p>
     <p>Twitter アカウントをお持ちであればすぐにログインできます。</p>
-    <p><a href="{% url 'social:begin' 'twitter' %}"><img src="{% static 'img/sign-in-with-twitter-gray.png' %}" alt="Sign in with Twitter" width="158" height="28"></a></p>
+    <form method="post" action="{% url 'social:begin' 'twitter' %}">
+        {% csrf_token %}
+        <button type="submit" class="social-login-button"><img src="{% static 'img/sign-in-with-twitter-gray.png' %}" alt="Sign in with Twitter" width="158" height="28"></button>
+    </form>
     <p>※ スパランドットコムが許可無くツイートすることはありません。</p>
 {% endif %}
 
@@ -50,7 +53,10 @@
         <p>別のGoogleアカウントと関連付ける場合は再度下のボタンからGoogleにログインしてください。</p>
         {% endif %}
 
-        <p><a href="{% url 'social:begin' 'google-oauth2' %}"><img src="{% static 'img/google_signin_light.png' %}" alt="Sign in with Google" width="191" height="46"></a></p>
+        <form method="post" action="{% url 'social:begin' 'google-oauth2' %}">
+            {% csrf_token %}
+            <button type="submit" class="social-login-button"><img src="{% static 'img/google_signin_light.png' %}" alt="Sign in with Google" width="191" height="46"></button>
+        </form>
     {% else %}
         <p>ログイン後にGoogleアカウントとの関連付けを行うと、今後Googleアカウントによるログイン機能が提供された際に現在使用しているアカウントでログインできるようになります。</p>
     {% endif %}

@@ -1,3 +1,4 @@
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
@@ -37,7 +38,7 @@ def deactivate(request: HttpRequest) -> HttpResponse:
         # 保存
         myself.save()
 
-        # ログアウトページにリダイレクト
-        return redirect('/auth/logout/?next=/')
+        logout(request)
+        return redirect('main:index')
 
     return render(request, 'users/deactivate.html')

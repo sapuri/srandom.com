@@ -44,11 +44,13 @@ select {
     border: none;
 }
 
-    #header a {
+    #header a,
+    #header .auth-button {
         color: #c0c0c0;
     }
 
-    #header a:hover {
+    #header a:hover,
+    #header .auth-button:hover {
         background-color: inherit;
         color: #4183C4;
     }
@@ -57,11 +59,13 @@ select {
         background-color: #111
     }
 
-    #header .dropdown-menu a {
+    #header .dropdown-menu a,
+    #header .dropdown-menu .logout-button {
         color: #c0c0c0;
     }
 
-    #header .dropdown-menu a:hover {
+    #header .dropdown-menu a:hover,
+    #header .dropdown-menu .logout-button:hover {
         color: #4183C4;
         background-color: inherit;
     }

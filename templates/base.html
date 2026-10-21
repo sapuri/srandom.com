@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% if user.theme.id == 2 %}<link rel="stylesheet" href="{% static 'css/dark.css' %}">{% endif %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>const STATIC_URL = "{% static "" %}"</script>
     <script src="{% static 'js/global.js' %}"></script>
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
@@ -75,14 +75,25 @@
                         <li><a href="{% url 'users:mypage' user.username %}">{% bootstrap_icon "book" %} マイページ</a></li>
                         <li><a href="{% url 'users:settings' %}">{% bootstrap_icon "cog" %} 設定</a></li>
                         <li class="divider"></li>
-                        <li><a href="{% url 'auth:logout' %}?next={% url 'main:index' %}">{% bootstrap_icon "log-out" %} ログアウト</a></li>
+                        <li>
+                            <form method="post" action="{% url 'auth:logout' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{% url 'main:index' %}">
+                                <button type="submit" class="logout-button">{% bootstrap_icon "log-out" %} ログアウト</button>
+                            </form>
+                        </li>
                     </ul>
                 </ul>
             </div>
             {% else %}
             <div class="collapse navbar-collapse target">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'social:begin' 'twitter' %}">{% bootstrap_icon "log-in" %} Twitterでログイン</a></li>
+                    <li>
+                        <form method="post" action="{% url 'social:begin' 'twitter' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="auth-button">{% bootstrap_icon "log-in" %} Twitterでログイン</button>
+                        </form>
+                    </li>
                 </ul>
             </div>
             {% endif %}
