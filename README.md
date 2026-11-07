@@ -4,7 +4,6 @@ A site for the management of clear statuses for super-random enthusiasts of pop'
 ## Installation
 ### Requirements
 - [uv](https://github.com/astral-sh/uv) (Python is installed automatically by uv)
-- [direnv](https://github.com/direnv/direnv#install) (optional)
 
 ### Setup the development environment
 ```
