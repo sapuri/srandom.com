@@ -3,14 +3,36 @@ resource "google_cloud_run_service" "app" {
   location = local.region
 
   autogenerate_revision_name = true
+  depends_on                 = [google_secret_manager_secret_iam_member.runtime_env_reader]
 
   template {
     spec {
       containers {
         image = "asia-northeast1-docker.pkg.dev/srandom/app/app"
 
+        env {
+          name  = "APP_ENV_FILE"
+          value = "/etc/srandom/production.env"
+        }
+
+        volume_mounts {
+          name       = "production-env"
+          mount_path = "/etc/srandom"
+        }
+
         resources {
           limits = { "memory" : "256Mi", "cpu" : "1000m" }
+        }
+      }
+
+      volumes {
+        name = "production-env"
+        secret {
+          secret_name = google_secret_manager_secret.production_env.secret_id
+          items {
+            key  = var.production_env_secret_version
+            path = "production.env"
+          }
         }
       }
 

@@ -1,0 +1,6 @@
+assertion.repository_id == '57981173' &&
+assertion.repository_owner_id == '18478610' &&
+assertion.ref == 'refs/heads/master' &&
+assertion.event_name == 'push' &&
+assertion.workflow_ref == 'sapuri/srandom.com/.github/workflows/app.yml@refs/heads/master' &&
+assertion.environment == 'production'

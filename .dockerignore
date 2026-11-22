@@ -7,4 +7,5 @@ terraform/
 .venv/
 .git/
 .github/
-gha-creds-*.json
+**/gha-creds-*.json
+**/.env*
