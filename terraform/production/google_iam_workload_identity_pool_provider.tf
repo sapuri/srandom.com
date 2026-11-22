@@ -1,3 +1,4 @@
+# Manage the existing provider in place when updating its trust condition.
 import {
   to = google_iam_workload_identity_pool_provider.github
   id = "projects/682889726379/locations/global/workloadIdentityPools/github-actions/providers/github-actions"

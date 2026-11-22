@@ -10,5 +10,5 @@ resource "google_cloud_run_service_iam_member" "github_deployer" {
   location = local.region
   service  = google_cloud_run_service.app.name
   role     = "roles/run.developer"
-  member   = "serviceAccount:${google_service_account.github.email}"
+  member   = google_service_account.github.member
 }

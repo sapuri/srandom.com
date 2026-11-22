@@ -1,4 +1,3 @@
-# Adopt the existing trust configuration; do not leave the permissive provider behind.
 import {
   to = google_iam_workload_identity_pool.github
   id = "projects/682889726379/locations/global/workloadIdentityPools/github-actions"
