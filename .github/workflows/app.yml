@@ -35,9 +35,10 @@ jobs:
           POSTGRES_DB: ci
     permissions:
       contents: read
-      id-token: write
 
     env:
+      # Use local static storage; production backend configuration is tested separately.
+      DEBUG: "True"
       ALLOWED_HOSTS: 127.0.0.1
       DATABASE_ENGINE: django.db.backends.postgresql
       DATABASE_NAME: ci
@@ -59,18 +60,16 @@ jobs:
       - name: Migration
         run: uv run python manage.py migrate
 
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v3
-        with:
-          workload_identity_provider: projects/682889726379/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-          service_account: github@srandom.iam.gserviceaccount.com
-
       - name: Test
         run: make test
 
   deploy:
     needs: [lint, test]
-    if: github.ref == 'refs/heads/master'
+    if: github.repository == 'sapuri/srandom.com' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+    environment: production
+    concurrency:
+      group: production-deploy
+      cancel-in-progress: false
 
     runs-on: ubuntu-latest
     permissions:
@@ -79,45 +78,61 @@ jobs:
 
     env:
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+      CLOUDSDK_CORE_PROJECT: srandom
       SERVICE: app
       REGION: asia-northeast1
       IMAGE: asia-northeast1-docker.pkg.dev/srandom/app/app:${{ github.sha }}
+      RUNTIME_SERVICE_ACCOUNT: cloud-run-app@srandom.iam.gserviceaccount.com
+      # Keep aligned with production_env_secret_version in Terraform.
+      ENV_SECRET_VERSION: "1"
 
     steps:
       - uses: actions/checkout@v7
 
+      - name: Build container without production credentials or configuration
+        run: docker build . -f docker/Dockerfile -t "$IMAGE"
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v3
         with:
+          project_id: srandom
           workload_identity_provider: projects/682889726379/locations/global/workloadIdentityPools/github-actions/providers/github-actions
           service_account: github@srandom.iam.gserviceaccount.com
 
       - name: Configure auth
         run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
 
-      - name: Build and push container
-        run: |
-          ./scripts/decrypt-env.sh production
-          docker build . -f docker/Dockerfile -t ${{ env.IMAGE }}
-          docker push ${{ env.IMAGE }}
+      - name: Push container
+        run: docker push "$IMAGE"
 
       - name: Publish static assets before deploying the application
         run: |
           docker run --rm \
             --volume "$GOOGLE_APPLICATION_CREDENTIALS:/tmp/gcp-credentials.json:ro" \
             --env GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-credentials.json \
-            ${{ env.IMAGE }} python manage.py collectstatic --noinput
+            --env SECRET_KEY=collectstatic-not-a-runtime-key \
+            --env DEBUG=False --env ALLOWED_HOSTS=srandom.com \
+            --env DATABASE_ENGINE=django.db.backends.dummy \
+            --env DATABASE_NAME=unused --env DATABASE_USER=unused \
+            --env DATABASE_PASSWORD=unused --env DATABASE_HOST=unused \
+            "$IMAGE" python manage.py collectstatic --noinput
 
       - name: Update Cloud Run Jobs
         run: |
           gcloud run jobs update update-music \
             --image ${{ env.IMAGE }} \
             --region ${{ env.REGION }} \
+            --service-account "$RUNTIME_SERVICE_ACCOUNT" \
+            --update-env-vars APP_ENV_FILE=/etc/srandom/production.env \
+            --update-secrets "/etc/srandom/production.env=app-env:$ENV_SECRET_VERSION" \
             --command /bin/sh \
             --args "-c,python manage.py scraping --silent && python manage.py update_music"
           gcloud run jobs update export2csv \
             --image ${{ env.IMAGE }} \
             --region ${{ env.REGION }} \
+            --service-account "$RUNTIME_SERVICE_ACCOUNT" \
+            --update-env-vars APP_ENV_FILE=/etc/srandom/production.env \
+            --update-secrets "/etc/srandom/production.env=app-env:$ENV_SECRET_VERSION" \
             --command /bin/sh \
             --args "-c,python manage.py export2csv"
 
@@ -127,3 +142,7 @@ jobs:
           service: ${{ env.SERVICE }}
           image: ${{ env.IMAGE }}
           region: ${{ env.REGION }}
+          flags: >-
+            --service-account=${{ env.RUNTIME_SERVICE_ACCOUNT }}
+            --update-env-vars=APP_ENV_FILE=/etc/srandom/production.env
+            --update-secrets=/etc/srandom/production.env=app-env:${{ env.ENV_SECRET_VERSION }}

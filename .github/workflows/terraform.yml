@@ -24,17 +24,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@v7
       - uses: hashicorp/setup-terraform@v4
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v3
-        with:
-          workload_identity_provider: projects/682889726379/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-          service_account: github@srandom.iam.gserviceaccount.com
       - name: validate
         working-directory: terraform/production
         run: |
-          terraform init
+          terraform init -backend=false -input=false
           terraform validate

@@ -19,9 +19,14 @@ from django.core.management.utils import get_random_secret_key
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Take environment variables from .env file
+# A configured runtime secret must exist; never silently fall back to image config.
 env = environ.Env()
-env.read_env(os.path.join(BASE_DIR, '.env'))
+env_file = os.environ.get('APP_ENV_FILE')
+if env_file is not None:
+    with open(env_file, encoding='utf-8') as config:
+        env.read_env(config)
+else:
+    env.read_env(os.path.join(BASE_DIR, '.env'))
 
 ENV = env  # for import from other files
 

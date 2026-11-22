@@ -15,3 +15,9 @@ resource "google_storage_bucket_iam_member" "all_users_are_legacy_object_reader_
   role   = "roles/storage.legacyObjectReader"
   member = "allUsers"
 }
+
+resource "google_storage_bucket_iam_member" "github_static_publisher" {
+  bucket = google_storage_bucket.static_srandom_com.name
+  role   = "roles/storage.objectAdmin"
+  member = google_service_account.github.member
+}

@@ -11,6 +11,8 @@ services:
       POSTGRES_USER: srandom
       POSTGRES_PASSWORD: srandom
   app:
+    volumes:
+      - ./.env:/app/.env:ro
     build:
       context: .
       dockerfile: docker/Dockerfile-dev
